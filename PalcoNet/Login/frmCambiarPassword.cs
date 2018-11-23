@@ -48,7 +48,7 @@ namespace PalcoNet.Login
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@ID_User", Interfaz.usuario.IdUsuario);
             SqlConnector.agregarParametro(listaParametros, "@Password", password);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT Password FROM MERCADONEGRO.Usuarios WHERE ID_User = @ID_User AND Password = @Password", listaParametros, SqlConnector.iniciarConexion());
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT Password FROM PalcoNet.Usuarios WHERE ID_User = @ID_User AND Password = @Password", listaParametros, SqlConnector.iniciarConexion());
             Boolean res = lector.HasRows;
             SqlConnector.cerrarConexion();
             return res;

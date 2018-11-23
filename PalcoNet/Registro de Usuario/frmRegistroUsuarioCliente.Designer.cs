@@ -54,6 +54,8 @@
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.txtTelefono = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtCuil = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.cbTipoDocumento = new System.Windows.Forms.ComboBox();
@@ -282,6 +284,7 @@
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(191, 22);
             this.txtNombre.TabIndex = 0;
+            this.txtNombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // txtCodigoPostal
             // 
@@ -291,6 +294,7 @@
             this.txtCodigoPostal.Name = "txtCodigoPostal";
             this.txtCodigoPostal.Size = new System.Drawing.Size(164, 22);
             this.txtCodigoPostal.TabIndex = 11;
+            this.txtCodigoPostal.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
             // txtApellido
             // 
@@ -300,6 +304,7 @@
             this.txtApellido.Name = "txtApellido";
             this.txtApellido.Size = new System.Drawing.Size(191, 22);
             this.txtApellido.TabIndex = 1;
+            this.txtApellido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // txtDireccion
             // 
@@ -309,6 +314,7 @@
             this.txtDireccion.Name = "txtDireccion";
             this.txtDireccion.Size = new System.Drawing.Size(191, 22);
             this.txtDireccion.TabIndex = 2;
+            this.txtDireccion.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // txtEmail
             // 
@@ -318,6 +324,7 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(191, 22);
             this.txtEmail.TabIndex = 7;
+            this.txtEmail.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // txtTelefono
             // 
@@ -330,6 +337,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label12);
+            this.groupBox1.Controls.Add(this.txtCuil);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.cbTipoDocumento);
@@ -343,20 +352,40 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Datos identificatorios";
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(470, 36);
+            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(50, 17);
+            this.label12.TabIndex = 3;
+            this.label12.Text = "Cuil (*)";
+            // 
+            // txtCuil
+            // 
+            this.txtCuil.Location = new System.Drawing.Point(522, 33);
+            this.txtCuil.Margin = new System.Windows.Forms.Padding(4);
+            this.txtCuil.MaxLength = 18;
+            this.txtCuil.Name = "txtCuil";
+            this.txtCuil.Size = new System.Drawing.Size(191, 22);
+            this.txtCuil.TabIndex = 2;
+            this.txtCuil.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(8, 36);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(149, 17);
+            this.label1.Size = new System.Drawing.Size(88, 17);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Tipo de documento (*)";
+            this.label1.Text = "Tipo Doc. (*)";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(418, 36);
+            this.label2.Location = new System.Drawing.Point(213, 36);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(77, 17);
@@ -366,20 +395,21 @@
             // cbTipoDocumento
             // 
             this.cbTipoDocumento.FormattingEnabled = true;
-            this.cbTipoDocumento.Location = new System.Drawing.Point(175, 32);
+            this.cbTipoDocumento.Location = new System.Drawing.Point(103, 33);
             this.cbTipoDocumento.Margin = new System.Windows.Forms.Padding(4);
             this.cbTipoDocumento.Name = "cbTipoDocumento";
-            this.cbTipoDocumento.Size = new System.Drawing.Size(191, 24);
+            this.cbTipoDocumento.Size = new System.Drawing.Size(93, 24);
             this.cbTipoDocumento.TabIndex = 0;
             // 
             // txtNumeroDocumento
             // 
-            this.txtNumeroDocumento.Location = new System.Drawing.Point(512, 31);
+            this.txtNumeroDocumento.Location = new System.Drawing.Point(294, 33);
             this.txtNumeroDocumento.Margin = new System.Windows.Forms.Padding(4);
             this.txtNumeroDocumento.MaxLength = 18;
             this.txtNumeroDocumento.Name = "txtNumeroDocumento";
-            this.txtNumeroDocumento.Size = new System.Drawing.Size(191, 22);
+            this.txtNumeroDocumento.Size = new System.Drawing.Size(158, 22);
             this.txtNumeroDocumento.TabIndex = 1;
+            this.txtNumeroDocumento.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
             // btnAceptar
             // 
@@ -446,5 +476,7 @@
         private System.Windows.Forms.Label ASDASD;
         private System.Windows.Forms.TextBox txtNroPiso;
         private System.Windows.Forms.TextBox txtDepartamento;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox txtCuil;
     }
 }

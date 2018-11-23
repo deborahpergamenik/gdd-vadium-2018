@@ -129,17 +129,17 @@ namespace PalcoNet.Registro_de_Usuario
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            if (!txtRazonSocial.Text.Equals("") && !txtCuil.Text.Equals("") && !txtDireccion.Text.Equals("") && !txtCodigoPostal.Text.Equals("") && !txtEmail.Text.Equals(""))
+            if (!txtRazonSocial.Text.Equals("") && !txtCuit.Text.Equals("") && !txtDireccion.Text.Equals("") && !txtCodigoPostal.Text.Equals("") && !txtEmail.Text.Equals(""))
             {
                 if (!SqlConnector.existeString(txtRazonSocial.Text, "PalcoNet.Empresas", "Razon_Social"))
                 {
-                    if (!SqlConnector.existeString(txtCuil.Text, "PalcoNet.Empresas", "CUIT"))
+                    if (!SqlConnector.existeString(txtCuit.Text, "PalcoNet.Empresas", "CUIT"))
                     {
                         if (Interfaz.esNumerico(txtTelefono.Text, System.Globalization.NumberStyles.Integer) || txtTelefono.Text.Equals(""))
                         {
                             if (!SqlConnector.existeTelefono(Convert.ToInt32(txtTelefono.Text)))
                             {
-                                registrarEmpresa(username, password, txtRazonSocial.Text, txtCuil.Text, txtTelefono.Text, txtDireccion.Text, txtCodigoPostal.Text, txtCiudad.Text, txtEmail.Text, txtLocalidad.Text,txtNroPiso.Text, txtDepartamento.Text, DateTime.ParseExact(DateTime.Now.ToShortDateString(), "dd/MM/yyyy", null));
+                                registrarEmpresa(username, password, txtRazonSocial.Text, txtCuit.Text, txtTelefono.Text, txtDireccion.Text, txtCodigoPostal.Text, txtCiudad.Text, txtEmail.Text, txtLocalidad.Text,txtNroPiso.Text, txtDepartamento.Text, DateTime.ParseExact(DateTime.Now.ToShortDateString(), "dd/MM/yyyy", null));
                                 MessageBox.Show("Alta finalizada. Puede ingresar al sistema.", "Registro exitoso");
                                 frmLogin frmLogin = new frmLogin();
                                 this.Hide();

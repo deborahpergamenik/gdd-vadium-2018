@@ -163,7 +163,7 @@ namespace PalcoNet.Login
                         formPass.Show();
                         break;
                     case 1:
-                        frmCliente form1 = new frmCliente(this);
+                        frmAbmCliente form1 = new frmAbmCliente(this);
                         this.Hide();
                         form1.Show();
                         break;

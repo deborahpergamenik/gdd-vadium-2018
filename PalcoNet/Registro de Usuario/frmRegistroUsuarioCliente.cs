@@ -66,7 +66,7 @@ namespace PalcoNet.Registro_de_Usuario
             this.cbTipoDocumento.Items.Add("LC");
         }
 
-        public Boolean registrarCliente(string username, string passwordNoHash, string tipoDocumento, string numeroDocumento, string nombre, string apellido, string email, string telefono, string direccion, string codigoPostal, string nroPiso, string departamento, string localidad, DateTime fechaNacimiento)
+        public Boolean registrarCliente(string username, string passwordNoHash, string tipoDocumento, string numeroDocumento, string cuil, string nombre, string apellido, string email, string telefono, string direccion, string codigoPostal, string nroPiso, string departamento, string localidad, DateTime fechaNacimiento)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace PalcoNet.Registro_de_Usuario
                 SqlConnector.agregarParametro(listaParametros, "@NombreUsuario", username);
                 SqlConnector.agregarParametro(listaParametros, "@Password", password);
                 SqlConnector.agregarParametro(listaParametros, "@Intentos", 0);
-                SqlConnector.agregarParametro(listaParametros, "@Primera_Vez", 0);
+                SqlConnector.agregarParametro(listaParametros, "@PrimeraVez", 0);
 
                 SqlConnector.agregarParametro(listaParametros, "@Email", email);                
                 SqlConnector.agregarParametro(listaParametros, "@Direccion", direccion);
@@ -98,7 +98,7 @@ namespace PalcoNet.Registro_de_Usuario
                 SqlConnector.agregarParametro(listaParametros, "@CodigoPostal", codigoPostal);
                 SqlConnector.agregarParametro(listaParametros, "@Estado", 1);
 
-                SqlConnector.ejecutarQuery("INSERT INTO PalcoNet.Usuario (NombreUsuario, Password, Intentos, Primera_Vez, Email, Direccion, Telefono, NroPiso, Departamento, Localidad, CodigoPostal, Estado) VALUES (@NombreUsuario, @Password, @Intentos, @Primera_Vez, @Email, @Direccion, @Telefono, @NroPiso, @Departamento, @Localidad, @CodigoPostal, @Estado)", listaParametros, SqlConnector.iniciarConexion());
+                SqlConnector.ejecutarQuery("INSERT INTO PalcoNet.Usuario (NombreUsuario, Password, Intentos, PrimeraVez, Email, Direccion, Telefono, NroPiso, Departamento, Localidad, CodigoPostal, Estado) VALUES (@NombreUsuario, @Password, @Intentos, @Primera_Vez, @Email, @Direccion, @Telefono, @NroPiso, @Departamento, @Localidad, @CodigoPostal, @Estado)", listaParametros, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros2 = new List<SqlParameter>();
@@ -114,7 +114,7 @@ namespace PalcoNet.Registro_de_Usuario
                 SqlConnector.agregarParametro(listaParametros3, "@Apellido", apellido);
                 SqlConnector.agregarParametro(listaParametros3, "@TipoDoc", tipoDocumento);
                 SqlConnector.agregarParametro(listaParametros3, "@NumDoc", numeroDocumento);
-                SqlConnector.agregarParametro(listaParametros3, "@Cuil", direccion);
+                SqlConnector.agregarParametro(listaParametros3, "@Cuil", cuil);
                 SqlConnector.agregarParametro(listaParametros3, "@FechaNacimiento", fechaNacimiento);
                 SqlConnector.agregarParametro(listaParametros3, "@FechaCreacion", DateTime.ParseExact(DateTime.Now.ToShortDateString(), "dd/MM/yyyy", null));
 
@@ -169,7 +169,7 @@ namespace PalcoNet.Registro_de_Usuario
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            if (cbTipoDocumento.SelectedIndex != -1 && !txtNumeroDocumento.Text.Equals("") && !txtNombre.Text.Equals("") && !txtApellido.Text.Equals("") && !txtEmail.Text.Equals("") && !txtDireccion.Text.Equals("") && !txtCodigoPostal.Text.Equals("") && cbDia.SelectedIndex != -1 && cbMes.SelectedIndex != -1 && cbAno.SelectedIndex != -1)
+            if (cbTipoDocumento.SelectedIndex != -1 && !txtNumeroDocumento.Text.Equals("") && !txtCuil.Text.Equals("") && !txtNombre.Text.Equals("") && !txtApellido.Text.Equals("") && !txtEmail.Text.Equals("") && !txtDireccion.Text.Equals("") && !txtCodigoPostal.Text.Equals("") && cbDia.SelectedIndex != -1 && cbMes.SelectedIndex != -1 && cbAno.SelectedIndex != -1)
             {
                 if (Interfaz.esNumerico(txtNumeroDocumento.Text, System.Globalization.NumberStyles.Integer))
                 {
@@ -179,7 +179,7 @@ namespace PalcoNet.Registro_de_Usuario
                         {
                             if (!SqlConnector.existeTelefono(Convert.ToInt32(txtTelefono.Text)))
                             {
-                                registrarCliente(username, password, cbTipoDocumento.SelectedItem.ToString(), txtNumeroDocumento.Text, txtNombre.Text, txtApellido.Text, txtEmail.Text, txtTelefono.Text, txtDireccion.Text, txtCodigoPostal.Text, txtNroPiso.Text, txtDepartamento.Text, txtLocalidad.Text, fechaNacimiento(cbDia.SelectedItem.ToString(), cbMes.SelectedItem.ToString(), cbAno.SelectedItem.ToString()));
+                                registrarCliente(username, password, cbTipoDocumento.SelectedItem.ToString(), txtNumeroDocumento.Text, txtCuil.Text, txtNombre.Text, txtApellido.Text, txtEmail.Text, txtTelefono.Text, txtDireccion.Text, txtCodigoPostal.Text, txtNroPiso.Text, txtDepartamento.Text, txtLocalidad.Text, fechaNacimiento(cbDia.SelectedItem.ToString(), cbMes.SelectedItem.ToString(), cbAno.SelectedItem.ToString()));
                                 MessageBox.Show("Alta finalizada. Puede ingresar al sistema.", "Registro exitoso");
                                 frmLogin frmLogin = new frmLogin();
                                 this.Hide();
@@ -216,6 +216,23 @@ namespace PalcoNet.Registro_de_Usuario
             frmLogin frmLogin = new frmLogin();
             this.Hide();
             frmLogin.Show();
+        }
+
+
+        private void textboxNumerico_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void textboxNoNumerico_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar < 65 || e.KeyChar > 122)
+            {
+                e.Handled = true;
+            }
         }
     }
 }

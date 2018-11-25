@@ -363,9 +363,11 @@ BEGIN
 		---------ITEMFACTURA--------
 	INSERT INTO [VAIDUM].ITEMFACTURA(monto, cantidad, descripcion, factura_nro,ubicacion_id, cliente_id)
 		SELECT m.Item_Factura_Monto, m.Item_Factura_Cantidad, m.Item_Factura_Descripcion, 
-		(SELECT TOP 1 fac.factura_nro FROM FACTURA fac WHERE fac.factura_nro = m.m.Factura_Nro),
-		(SELECT TOP 1 fac.ubicacion_id FROM ubicacion_id fac WHERE fac.factura_nro = m.m.Factura_Nro),
-		(SELECT TOP 1 fac.factura_nro FROM FACTURA fac WHERE fac.factura_nro = m.m.Factura_Nro)
+		(SELECT TOP 1 fac.factura_nro FROM FACTURA fac WHERE fac.factura_nro = m.Factura_Nro),
+		(SELECT TOP 1 ubi.ubicacion_id FROM UBICACION ubi 
+			WHERE ubi.fila+ubi.asiento+ubi.sinNumerar+ubi.codigoTipoUbicacion+ubi.codigoEspectaculo = 
+					m.Ubicacion_Fila+m.Ubicacion_Asiento+ m.Ubicacion_Sin_numerar+m.Ubicacion_Tipo_Codigo+m.Espectaculo_Cod),
+		(SELECT TOP 1 cli.cliente_id  FROM CLIENTE cli WHERE cli.mail = m..Cli_Mail)
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Factura_Nro, m.Factura_Fecha, m.Factura_Total, m.Forma_Pago_Desc
 

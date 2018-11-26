@@ -261,9 +261,8 @@ BEGIN
 		WHERE NOT EXISTS(SELECT 2 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 1 AND rolUser.usuario_id = us.usuario_id)
 
 
-
-		INSERT INTO VADIUM.EMPRESA(razonSocial, cuit, mail,  fechaCreacion, usuario_id)
-		SELECT ins.razonSocial, ins.cuit, ins.mail, ins.fechaCreacion, (SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail)
+		INSERT INTO VADIUM.EMPRESA(razonSocial, cuit, mail,  fechaCreacion, usuario_id, direccion_id)
+		SELECT ins.razonSocial, ins.cuit, ins.mail, ins.fechaCreacion, (SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.direccion_id
 		FROM inserted ins
 	END TRY
 	BEGIN CATCH
@@ -290,9 +289,9 @@ BEGIN
 
 
 
-		INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,puntos,  usuario_id )
+		INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,puntos,  usuario_id, direccion_id )
 		SELECT ins.numeroDocumento, ins.tipoDocumento, ins.apellido, ins.nombre,ins.fechaNacimiento, ins.mail, 0, 
-		(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail)
+		(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.direccion_id
 		FROM inserted ins
 	END TRY
 	BEGIN CATCH

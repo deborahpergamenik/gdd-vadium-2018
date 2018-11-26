@@ -1,5 +1,20 @@
 USE GD2C2018
 GO
+
+-------------------------------DROP PROCEDURES-------------------
+IF OBJECT_ID('VADIUM.PR_DATOS_INSERT_DATOS_INICIALES') IS NOT NULL
+DROP PROCEDURE VADIUM.PR_DATOS_INSERT_DATOS_INICIALES;
+GO
+IF OBJECT_ID('VADIUM.PR_MIGRACION') IS NOT NULL
+DROP PROCEDURE VADIUM.PR_MIGRACION;
+GO
+------------------------------DROP TRIGGERS ---------------------------------
+IF OBJECT_ID('VADIUM.TriggerNuevaEmpresa') IS NOT NULL
+DROP TRIGGER VADIUM.TriggerNuevaEmpresa
+GO
+IF OBJECT_ID('VADIUM.TriggerNuevoCliente') IS NOT NULL
+DROP TRIGGER VADIUM.TriggerNuevoCliente
+GO
 -----------------------DROP TABLES-------------------------------
 IF OBJECT_ID('VADIUM.ROL') IS NOT NULL
 DROP TABLE [VADIUM].ROL
@@ -17,7 +32,7 @@ IF OBJECT_ID('VADIUM.ROL_POR_FUNCIONALIDAD') IS NOT NULL
 DROP TABLE [VADIUM].ROL_POR_FUNCIONALIDAD
 GO
 IF OBJECT_ID('VADIUM.DIRECCION') IS NOT NULL
-DROP TABLE [VADIUM].ROL_POR_FUNCIONALIDAD
+DROP TABLE [VADIUM].DIRECCION
 GO
 IF OBJECT_ID('VADIUM.CLIENTE') IS NOT NULL
 DROP TABLE [VADIUM].CLIENTE
@@ -61,7 +76,7 @@ DROP TABLE [VADIUM].PREMIO_POR_CLIENTE
 GO
 -----------------------DROP SCHEMA--------------------------------
 IF SCHEMA_ID('VADIUM') IS NOT NULL
-	DROP SCHEMA [LOSNOOBS]
+	DROP SCHEMA [VADIUM]
 GO
 
 -----------------------------CREACION SCHEMA --------------------------------
@@ -172,9 +187,9 @@ CREATE TABLE [VADIUM].ESTADO(
 )
 GO
 CREATE TABLE [VADIUM].PUBLICACION(
-	codigo int PRIMARY KEY,
+	codigo numeric(18,0),
 	descripcion nvarchar(255),
-	feach datetime, 
+	fecha datetime, 
 	fechaVencimiento datetime,
 	estado_id int,
 	direccion nvarchar(255),
@@ -185,7 +200,7 @@ CREATE TABLE [VADIUM].PUBLICACION(
 GO
 
 CREATE TABLE [VADIUM].TIPOUBICACION(
-	codigo int PRIMARY KEY IDENTITY(1,1),
+	codigo numeric(18,0),
 	descripcion nvarchar(255)
 )
 GO
@@ -216,6 +231,16 @@ CREATE TABLE [VADIUM].ITEMFACTURA(
 	descripcion nvarchar(60)
 )
 GO
+CREATE TABLE [VADIUM].PREMIO(
+ premioId int PRIMARY KEY IDENTITY(1,1),
+ descripcion varchar(255),
+ puntos numeric(18,0)
+)
+CREATE TABLE [VADIUM].PREMIO_POR_CLIENTE(
+ premioId int,
+ clienteId int
+)
+GO
 ----------------------------TRIGGERS-------------------------------
 
     -----------EMPRESA-------
@@ -223,52 +248,57 @@ CREATE TRIGGER [VADIUM].TriggerNuevaEmpresa
 ON VADIUM.EMPRESA
 INSTEAD OF INSERT
 AS
-BEGIN TRY
-	INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
-	SELECT I.mail,  HashBytes('SHA2_256',I.cuit), 1,0, 1
-	FROM inserted I
-	WHERE I.mail NOT IN(SELECT users.usuario_username FROM VADIUM.USUARIO users)
+BEGIN
+	BEGIN TRY
+		INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
+		SELECT I.mail,  HashBytes('SHA2_256',I.cuit), 1,0, 1
+		FROM inserted I
+		WHERE I.mail NOT IN(SELECT usuario_username FROM VADIUM.USUARIO )
 
-	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
-	SELECT 2, user.usuario_id
-	FROM inserted I JOIN VAIDUM.USUARIO us ON (us.usuario_username = I.mail)
-	WHERE NOT EXISTS(SELECT 2 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 1 AND rolUser.usuario_id = user.usuario_id)
+		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
+		SELECT 2, us.usuario_id
+		FROM inserted I JOIN USUARIO us ON (us.usuario_username = I.mail)
+		WHERE NOT EXISTS(SELECT 2 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 1 AND rolUser.usuario_id = us.usuario_id)
 
 
 
-	INSERT INTO VADIUM.EMPRESA(razonSocial, cuit, mail,  fechaCreacion, usuario_id)
-	SELECT ins.razonSocial, ins.cuit, ins.mail, ins.fechaCreacion, (SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = I.mail)
-	FROM inserted ins
-END TRY
-BEGIN CATCH
-  SELECT 'ERROR', ERROR_MESSAGE()
-END CATCH
+		INSERT INTO VADIUM.EMPRESA(razonSocial, cuit, mail,  fechaCreacion, usuario_id)
+		SELECT ins.razonSocial, ins.cuit, ins.mail, ins.fechaCreacion, (SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail)
+		FROM inserted ins
+	END TRY
+	BEGIN CATCH
+	  SELECT 'ERROR', ERROR_MESSAGE()
+	END CATCH
+END
 GO
    -----CLIENTE--------
 CREATE TRIGGER [VADIUM].TriggerNuevoCliente
-ON VADIUM.EMPRESA
+ON VADIUM.CLIENTE
 INSTEAD OF INSERT
 AS
-BEGIN TRY
-	INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
-	SELECT I.mail,  HashBytes('SHA2_256',I.cuit), 1,0, 1
-	FROM inserted I
-	WHERE I.mail NOT IN(SELECT users.usuario_username FROM VADIUM.USUARIO users)
+BEGIN
+	BEGIN TRY
+		INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
+		SELECT I.mail,  HashBytes('SHA2_256',I.apellido), 1,0, 1
+		FROM inserted I
+		WHERE I.mail NOT IN(SELECT usuario_username FROM VADIUM.USUARIO )
 
-	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
-	SELECT 1, user.usuario_id
-	FROM inserted I JOIN VAIDUM.USUARIO us ON (us.usuario_username = I.mail)
-	WHERE NOT EXISTS(SELECT 2 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 2 AND rolUser.usuario_id = user.usuario_id)
+		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
+		SELECT 1, us.usuario_id
+		FROM inserted I JOIN USUARIO as us ON (us.usuario_username = I.mail)
+		WHERE NOT EXISTS(SELECT 2 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 2 AND rolUser.usuario_id = us.usuario_id)
 
 
 
-	INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,puntos,  usuario_id )
-	SELECT ins.numeroDocumento, ins.tipoDocumento, ins.apellido, ins.nombre,ins.fechaNacimiento, ins.mail, 0, (SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = I.mail)
-	FROM inserted ins
-END TRY
-BEGIN CATCH
-  SELECT 'ERROR', ERROR_MESSAGE()
-END CATCH
+		INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,puntos,  usuario_id )
+		SELECT ins.numeroDocumento, ins.tipoDocumento, ins.apellido, ins.nombre,ins.fechaNacimiento, ins.mail, 0, 
+		(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail)
+		FROM inserted ins
+	END TRY
+	BEGIN CATCH
+	  SELECT 'ERROR', ERROR_MESSAGE()
+	END CATCH
+END
 GO
 
 
@@ -280,13 +310,13 @@ BEGIN
 	INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion) VALUES('Comprar')
 
 	-- ROL 
-	INSERT INTO [VADIUM].ROL (rol_id,descripcion) values(0,'Administrador')
-	INSERT INTO [VADIUM].ROL (rol_id,descripcion) values(1,'Cliente')
-	INSERT INTO [VADIUM].ROL (rol_id,descripcion) values(2,'Empresa')
+	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(0,'Administrador',1)
+	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(1,'Cliente',1)
+	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(2,'Empresa',1)
 
 	-- PREMIOS
-	INSERT INTO [VADIUM].PREMIO (puntos, PREMIO) VALUES (100, ' voucher entrada gratis')
-	INSERT INTO [VADIUM].PREMIO (puntos, PREMIO) VALUES (50, ' voucher 50% descuento en entradas')
+	INSERT INTO [VADIUM].PREMIO (puntos, descripcion) VALUES (100, ' voucher entrada gratis')
+	INSERT INTO [VADIUM].PREMIO (puntos, descripcion) VALUES (50, ' voucher 50% descuento en entradas')
 END
 GO
 
@@ -300,76 +330,105 @@ BEGIN
 	SELECT  m.Ubicacion_Tipo_Codigo , m.Ubicacion_Tipo_Descripcion
 	FROM gd_esquema.Maestra m
 	GROUP BY Ubicacion_Tipo_Codigo, Ubicacion_Tipo_Descripcion
+	HAVING m.Ubicacion_Tipo_Codigo IS NOT NULL
 	-------DIRECCIONES EMPRESA----
 	INSERT INTO [VADIUM].DIRECCION(calle, nro_calle, piso, depto, cod_postal)
 	SELECT  m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Nro_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal
 	FROM gd_esquema.Maestra m
 	GROUP BY m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Nro_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal	
-
+	HAVING m.Espec_Empresa_Dom_Calle IS NOT NULL
 	-------EMPRESA------
 	INSERT INTO [VADIUM].EMPRESA(razonSocial, cuit, mail, fechaCreacion, direccion_id )
 	SELECT  m.Espec_Empresa_Razon_Social, m.Espec_Empresa_Cuit, m.Espec_Empresa_Mail, m.Espec_Empresa_Fecha_Creacion,
 			(SELECT TOP 1 dir.direccion_id FROM DIRECCION dir 
-						WHERE dir.calle+dir.nro_calle+dir.piso+dir.depto+dir.cod_postal = 
-							m.Espec_Empresa_Dom_Calle+ m.Espec_Empresa_Nro_Calle+ m.Espec_Empresa_Piso+ m.Espec_Empresa_Depto+ m.Espec_Empresa_Cod_Postal)
+						  WHERE dir.calle= m.Espec_Empresa_Dom_Calle AND dir.nro_calle = m.Espec_Empresa_Nro_Calle AND
+						    dir.piso =m.Espec_Empresa_Piso AND dir.depto=m.Espec_Empresa_Depto AND 
+							dir.cod_postal = m.Espec_Empresa_Cod_Postal)
 	FROM gd_esquema.Maestra m
 	GROUP BY m.Espec_Empresa_Razon_Social, m.Espec_Empresa_Cuit, m.Espec_Empresa_Mail, m.Espec_Empresa_Fecha_Creacion, m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Nro_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal	
+	HAVING m.Espec_Empresa_Razon_Social IS NOT NULL
 -------DIRECCIONES CLIENTE----
 	INSERT INTO [VADIUM].DIRECCION(calle, nro_calle, piso, depto, cod_postal)
 	SELECT  m.Cli_Dom_Calle, m.Cli_Nro_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
 	FROM gd_esquema.Maestra m
 	GROUP BY m.Cli_Dom_Calle, m.Cli_Nro_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal	
-
+	HAVING m.Cli_Dom_Calle IS NOT NULL
 	-------Cliente------
 	INSERT INTO [VADIUM].Cliente (numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail, direccion_id )
-	SELECT  m.Cli_Dni,'DNI' ,m.Cli_Apellido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Mail,
+	SELECT  m.Cli_Dni,'DNI' ,m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Mail,
 	(SELECT TOP 1 dir.direccion_id FROM DIRECCION dir 
-						WHERE dir.calle+dir.nro_calle+dir.piso+dir.depto+dir.cod_postal = 
-							m.Cli_Dom_Calle+ m.Cli_Nro_Calle+ m.Cli_Piso+ m.Cli_Depto+ m.Cli_Cod_Postal)
+						 WHERE dir.calle= m.Cli_Dom_Calle AND dir.nro_calle = m.Cli_Nro_Calle AND 
+									dir.piso =m.Cli_Piso AND dir.depto=m.Cli_Depto AND dir.cod_postal = m.Cli_Cod_Postal)
 
 	FROM gd_esquema.Maestra m
-	GROUP BY m.Cli_Dni, m.Cli_Apellido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Mail, m.Cli_Dom_Calle, m.Cli_Nro_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
+	GROUP BY m.Cli_Dni, m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Mail, m.Cli_Dom_Calle, m.Cli_Nro_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
+	HAVING m.Cli_Dni IS NOT NULL
 	------RUBRO--------
-	INSERT INTO [VAIDUM].RUBRO(descripcion)
+	INSERT INTO [VADIUM].RUBRO(descripcion)
 	SELECT m.Espectaculo_Rubro_Descripcion
 	FROM gd_esquema.Maestra m 
 	GROUP BY m.Espectaculo_Rubro_Descripcion
+	HAVING m.Espectaculo_Rubro_Descripcion IS NOT NULL
 	------ESTADO--------
-	INSERT INTO [VAIDUM].ESTADO(descripcion)
+	INSERT INTO [VADIUM].ESTADO(descripcion)
 	SELECT m.Espectaculo_Estado
 	FROM gd_esquema.Maestra m 
 	GROUP BY m.Espectaculo_Estado
+	HAVING m.Espectaculo_Estado IS NOT NULL
 	------PUBLICACION-----
-		INSERT INTO [VAIDUM].PUBLICACION(codigo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id)
+		INSERT INTO [VADIUM].PUBLICACION(codigo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id)
 		SELECT m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, 
 				(SELECT TOP 1 emp.empresa_id FROM EMPRESA emp WHERE emp.mail = m.Espec_Empresa_Mail), 
 				(SELECT TOP 1 ru.rubro_id FROM RUBRO ru WHERE ru.descripcion = m.Espectaculo_Rubro_Descripcion),
 				(SELECT TOP 1 es.codigo FROM ESTADO es WHERE es.descripcion = m.Espectaculo_Estado)
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, m.Espec_Empresa_Mail, m.Espectaculo_Rubro_Descripcion, Espectaculo_Estado
+	HAVING m.Espectaculo_Cod IS NOT NULL
  ----------- UBICACION--------
-	INSERT INTO [VAIDUM].UBICACION(fila, asiento, sinNumerar, precio, codigoTipoUbicacion, codigoEspectaculo)
+	INSERT INTO [VADIUM].UBICACION(fila, asiento, sinNumerar, precio, codigoTipoUbicacion, codigoEspectaculo)
 		SELECT m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, 
 				(SELECT TOP 1 tipou.codigo FROM TIPOUBICACION tipou WHERE tipou.codigo = m.Ubicacion_Tipo_Codigo),
 				(SELECT TOP 1 publi.codigo FROM PUBLICACION publi WHERE publi.codigo = m.Espectaculo_Cod)
 	
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, m.Ubicacion_Tipo_Codigo, m.Espectaculo_Cod
+		HAVING m.Ubicacion_Fila IS NOT NULL
 	---------FACTURA--------
-	INSERT INTO [VAIDUM].FACTURA(factura_nro, fecha, total, descripcion)
+	INSERT INTO [VADIUM].FACTURA(factura_nro, fecha, total, descripcion)
 		SELECT m.Factura_Nro, m.Factura_Fecha, m.Factura_Total, m.Forma_Pago_Desc
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Factura_Nro, m.Factura_Fecha, m.Factura_Total, m.Forma_Pago_Desc
+		HAVING m.Factura_Nro IS NOT NULL
 		---------ITEMFACTURA--------
-	INSERT INTO [VAIDUM].ITEMFACTURA(monto, cantidad, descripcion, factura_nro,ubicacion_id, cliente_id)
+	INSERT INTO [VADIUM].ITEMFACTURA(monto, cantidad, descripcion, factura_nro,ubicacion_id, cliente_id)
 		SELECT m.Item_Factura_Monto, m.Item_Factura_Cantidad, m.Item_Factura_Descripcion, 
 		(SELECT TOP 1 fac.factura_nro FROM FACTURA fac WHERE fac.factura_nro = m.Factura_Nro),
 		(SELECT TOP 1 ubi.ubicacion_id FROM UBICACION ubi 
-			WHERE ubi.fila+ubi.asiento+ubi.sinNumerar+ubi.codigoTipoUbicacion+ubi.codigoEspectaculo = 
-					m.Ubicacion_Fila+m.Ubicacion_Asiento+ m.Ubicacion_Sin_numerar+m.Ubicacion_Tipo_Codigo+m.Espectaculo_Cod),
-		(SELECT TOP 1 cli.cliente_id  FROM CLIENTE cli WHERE cli.mail = m..Cli_Mail)
+			WHERE ubi.fila = m.Ubicacion_Fila AND ubi.asiento =m.Ubicacion_Asiento AND ubi.sinNumerar = m.Ubicacion_Sin_numerar AND
+								 ubi.codigoTipoUbicacion = m.Ubicacion_Tipo_Codigo AND ubi.codigoEspectaculo = m.Espectaculo_Cod),
+		(SELECT TOP 1 cli.cliente_id  FROM CLIENTE cli WHERE cli.mail = m.Cli_Mail)
 		FROM gd_esquema.Maestra m 
-		GROUP BY m.Factura_Nro, m.Factura_Fecha, m.Factura_Total, m.Forma_Pago_Desc
-
+		GROUP BY m.Item_Factura_Monto, m.Item_Factura_Cantidad, m.Item_Factura_Descripcion, m.Factura_Nro, m.Factura_Fecha, m.Factura_Total, m.Forma_Pago_Desc, m.Ubicacion_Fila,m.Ubicacion_Asiento,m.Ubicacion_Sin_numerar,m.Ubicacion_Tipo_Codigo,m.Espectaculo_Cod, m.Cli_Mail
+		
 END
 GO
+
+--------------------------------FKS------------------------------
+
+--ALTER TABLE [LOSNOOBS].ROL_POR_USUARIO ADD FOREIGN KEY (rol_id) REFERENCES [LOSNOOBS].ROL
+--ALTER TABLE [LOSNOOBS].ROL_POR_USUARIO ADD FOREIGN KEY (usuario_id) REFERENCES [LOSNOOBS].USUARIO
+--ALTER TABLE [LOSNOOBS].ROL_POR_FUNCIONALIDAD ADD FOREIGN KEY (rol_id) REFERENCES [LOSNOOBS].ROL
+--ALTER TABLE [LOSNOOBS].ROL_POR_FUNCIONALIDAD ADD FOREIGN KEY (funcionalidad_id) REFERENCES [LOSNOOBS].FUNCIONALIDAD
+--ALTER TABLE [LOSNOOBS].VIAJE ADD FOREIGN KEY (viaje_cliente) REFERENCES [LOSNOOBS].CLIENTE
+--ALTER TABLE [LOSNOOBS].VIAJE ADD FOREIGN KEY (viaje_auto) REFERENCES [LOSNOOBS].AUTOMOVIL
+--ALTER TABLE [LOSNOOBS].VIAJE ADD FOREIGN KEY (viaje_chofer) REFERENCES [LOSNOOBS].AUTOMOVIL
+--ALTER TABLE [LOSNOOBS].VIAJE ADD FOREIGN KEY (viaje_factura) REFERENCES [LOSNOOBS].FACTURACION
+--ALTER TABLE [LOSNOOBS].VIAJE ADD FOREIGN KEY (viaje_turno) REFERENCES [LOSNOOBS].TURNO
+--ALTER TABLE [LOSNOOBS].AUTOMOVIL ADD FOREIGN KEY (auto_chofer) REFERENCES [LOSNOOBS].CHOFER
+--ALTER TABLE [LOSNOOBS].AUTOMOVIL ADD FOREIGN KEY (auto_turno) REFERENCES [LOSNOOBS].TURNO
+--ALTER TABLE [LOSNOOBS].PAGO ADD FOREIGN KEY (pago_turno) REFERENCES [LOSNOOBS].TURNO
+--ALTER TABLE [LOSNOOBS].PAGO ADD FOREIGN KEY (pago_chofer) REFERENCES [LOSNOOBS].CHOFER
+--ALTER TABLE [LOSNOOBS].FACTURACION ADD FOREIGN KEY (factura_cliente) REFERENCES [LOSNOOBS].CLIENTE
+--ALTER TABLE [LOSNOOBS].CLIENTE ADD FOREIGN KEY (usuario_id) REFERENCES [LOSNOOBS].USUARIO
+--ALTER TABLE [LOSNOOBS].CHOFER ADD FOREIGN KEY (usuario_id) REFERENCES [LOSNOOBS].USUARIO
+--GO

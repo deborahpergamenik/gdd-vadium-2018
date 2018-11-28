@@ -69,11 +69,23 @@
     <Compile Include="Abm Cliente\frmModificarCliente.Designer.cs">
       <DependentUpon>frmModificarCliente.cs</DependentUpon>
     </Compile>
-    <Compile Include="Abm Empresa Espectaculo\frmEmpresa.cs">
+    <Compile Include="Abm Empresa Espectaculo\frmAbmEmpresa.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Abm Empresa Espectaculo\frmEmpresa.Designer.cs">
-      <DependentUpon>frmEmpresa.cs</DependentUpon>
+    <Compile Include="Abm Empresa Espectaculo\frmAbmEmpresa.Designer.cs">
+      <DependentUpon>frmAbmEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Empresa Espectaculo\frmBuscarEmpresa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Empresa Espectaculo\frmBuscarEmpresa.Designer.cs">
+      <DependentUpon>frmBuscarEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Empresa Espectaculo\frmModificarEmpresa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Empresa Espectaculo\frmModificarEmpresa.Designer.cs">
+      <DependentUpon>frmModificarEmpresa.cs</DependentUpon>
     </Compile>
     <Compile Include="Abm Grado\frmGrado.cs">
       <SubType>Form</SubType>
@@ -205,6 +217,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Abm Cliente\frmModificarCliente.resx">
       <DependentUpon>frmModificarCliente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Empresa Espectaculo\frmAbmEmpresa.resx">
+      <DependentUpon>frmAbmEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Empresa Espectaculo\frmBuscarEmpresa.resx">
+      <DependentUpon>frmBuscarEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Empresa Espectaculo\frmModificarEmpresa.resx">
+      <DependentUpon>frmModificarEmpresa.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login\frmCambiarPassword.resx">
       <DependentUpon>frmCambiarPassword.cs</DependentUpon>

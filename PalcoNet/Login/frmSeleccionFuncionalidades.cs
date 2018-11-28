@@ -168,7 +168,7 @@ namespace PalcoNet.Login
                         form1.Show();
                         break;
                     case 2:
-                        frmEmpresa form2 = new frmEmpresa(this);
+                        frmAbmEmpresa form2 = new frmAbmEmpresa(this);
                         this.Hide();
                         form2.Show();
                         break;

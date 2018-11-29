@@ -177,6 +177,10 @@
     <Compile Include="Model\Funcionalidad.cs" />
     <Compile Include="Model\Funcionalidades.cs" />
     <Compile Include="Model\Globals.cs" />
+    <Compile Include="Model\ListadoEstadistico.cs" />
+    <Compile Include="Model\ListadoLocNoVendidas.cs" />
+    <Compile Include="Model\ListadoMayorCantCompras.cs" />
+    <Compile Include="Model\ListadoMayorPuntosVencidos.cs" />
     <Compile Include="Model\Rol.cs" />
     <Compile Include="Model\Roles.cs" />
     <Compile Include="Model\Usuario.cs" />
@@ -226,6 +230,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Abm Empresa Espectaculo\frmModificarEmpresa.resx">
       <DependentUpon>frmModificarEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Listado Estadistico\frmListadoEstadistico.resx">
+      <DependentUpon>frmListadoEstadistico.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login\frmCambiarPassword.resx">
       <DependentUpon>frmCambiarPassword.cs</DependentUpon>

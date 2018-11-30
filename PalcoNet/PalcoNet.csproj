@@ -45,23 +45,59 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abm Cliente\frmCliente.cs">
+    <Compile Include="Abm Cliente\frmAbmCliente.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Abm Cliente\frmCliente.Designer.cs">
-      <DependentUpon>frmCliente.cs</DependentUpon>
+    <Compile Include="Abm Cliente\frmAbmCliente.Designer.cs">
+      <DependentUpon>frmAbmCliente.cs</DependentUpon>
     </Compile>
-    <Compile Include="Abm Empresa Espectaculo\frmEmpresa.cs">
+    <Compile Include="Abm Cliente\frmBuscarCliente.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Abm Empresa Espectaculo\frmEmpresa.Designer.cs">
-      <DependentUpon>frmEmpresa.cs</DependentUpon>
+    <Compile Include="Abm Cliente\frmBuscarCliente.Designer.cs">
+      <DependentUpon>frmBuscarCliente.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Cliente\frmConfirmacionCliente.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Cliente\frmConfirmacionCliente.Designer.cs">
+      <DependentUpon>frmConfirmacionCliente.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Cliente\frmModificarCliente.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Cliente\frmModificarCliente.Designer.cs">
+      <DependentUpon>frmModificarCliente.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Empresa Espectaculo\frmAbmEmpresa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Empresa Espectaculo\frmAbmEmpresa.Designer.cs">
+      <DependentUpon>frmAbmEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Empresa Espectaculo\frmBuscarEmpresa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Empresa Espectaculo\frmBuscarEmpresa.Designer.cs">
+      <DependentUpon>frmBuscarEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Empresa Espectaculo\frmModificarEmpresa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Empresa Espectaculo\frmModificarEmpresa.Designer.cs">
+      <DependentUpon>frmModificarEmpresa.cs</DependentUpon>
     </Compile>
     <Compile Include="Abm Grado\frmGrado.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Abm Grado\frmGrado.Designer.cs">
       <DependentUpon>frmGrado.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Grado\frmModificarGrado.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Grado\frmModificarGrado.Designer.cs">
+      <DependentUpon>frmModificarGrado.cs</DependentUpon>
     </Compile>
     <Compile Include="Abm Rol\frmRol.cs">
       <SubType>Form</SubType>
@@ -147,7 +183,13 @@
     <Compile Include="Model\Funcionalidad.cs" />
     <Compile Include="Model\Funcionalidades.cs" />
     <Compile Include="Model\Globals.cs" />
+    <Compile Include="Model\Grado.cs" />
+    <Compile Include="Model\ListadoEstadistico.cs" />
+    <Compile Include="Model\ListadoLocNoVendidas.cs" />
+    <Compile Include="Model\ListadoMayorCantCompras.cs" />
+    <Compile Include="Model\ListadoMayorPuntosVencidos.cs" />
     <Compile Include="Model\Rol.cs" />
+    <Compile Include="Model\Roles.cs" />
     <Compile Include="Model\Usuario.cs" />
     <Compile Include="PantallaPrincipal\frmPrincipal.cs">
       <SubType>Form</SubType>
@@ -175,6 +217,39 @@
     <Compile Include="Registro de Usuario\frmRegistroUsuarioEmpresa.Designer.cs">
       <DependentUpon>frmRegistroUsuarioEmpresa.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Abm Cliente\frmAbmCliente.resx">
+      <DependentUpon>frmAbmCliente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Cliente\frmBuscarCliente.resx">
+      <DependentUpon>frmBuscarCliente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Cliente\frmConfirmacionCliente.resx">
+      <DependentUpon>frmConfirmacionCliente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Cliente\frmModificarCliente.resx">
+      <DependentUpon>frmModificarCliente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Empresa Espectaculo\frmAbmEmpresa.resx">
+      <DependentUpon>frmAbmEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Empresa Espectaculo\frmBuscarEmpresa.resx">
+      <DependentUpon>frmBuscarEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Empresa Espectaculo\frmModificarEmpresa.resx">
+      <DependentUpon>frmModificarEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Grado\frmGrado.resx">
+      <DependentUpon>frmGrado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Grado\frmModificarGrado.resx">
+      <DependentUpon>frmModificarGrado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Rubro\frmRubro.resx">
+      <DependentUpon>frmRubro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Listado Estadistico\frmListadoEstadistico.resx">
+      <DependentUpon>frmListadoEstadistico.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Login\frmCambiarPassword.resx">
       <DependentUpon>frmCambiarPassword.cs</DependentUpon>
     </EmbeddedResource>

@@ -1,4 +1,6 @@
-﻿using PalcoNet.Login;
+﻿using PalcoNet.Common;
+using PalcoNet.Login;
+using PalcoNet.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,10 +17,41 @@ namespace PalcoNet.Abm_Grado
     {
         public frmSeleccionFuncionalidades _frmSeleccionFuncionalidad { get; set; }
 
-        public frmGrado(frmSeleccionFuncionalidades frmSeleccionFuncionalidad)
+        public frmGrado()
         {
             InitializeComponent();
-            this._frmSeleccionFuncionalidad = frmSeleccionFuncionalidad;
+            this.cargarVisibilidades();
+            Interfaz.bloquearDataGridView(this.dgvGrados);
+        }
+
+
+        private void cargarVisibilidades()
+        {
+            this.dgvGrados.DataSource = Grado.ObtenerTodosLosGrados();
+            this.dgvGrados.Refresh();
+        }
+
+        private void btnNuevo_Click(object sender, EventArgs e)
+        {
+            frmModificarGrado editForm = new frmModificarGrado(this.btnNuevo, this.dgvGrados);
+            editForm.ShowDialog();
+
+            this.cargarVisibilidades();
+            this.dgvGrados.Refresh();
+        }
+
+        private void btnModificar_Click(object sender, EventArgs e)
+        {
+            frmModificarGrado editForm = new frmModificarGrado(this.btnModificar, this.dgvGrados);
+            editForm.ShowDialog();
+
+            this.cargarVisibilidades();
+            this.dgvGrados.Refresh();
+        }
+
+        private void btnAtras_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -50,7 +50,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtRazonSocial = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtCuil = new System.Windows.Forms.TextBox();
+            this.txtCuit = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.btnAceptar = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
@@ -252,7 +252,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txtRazonSocial);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.txtCuil);
+            this.groupBox1.Controls.Add(this.txtCuit);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
@@ -291,14 +291,14 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "CUIT (*)";
             // 
-            // txtCuil
+            // txtCuit
             // 
-            this.txtCuil.Location = new System.Drawing.Point(501, 37);
-            this.txtCuil.Margin = new System.Windows.Forms.Padding(4);
-            this.txtCuil.MaxLength = 50;
-            this.txtCuil.Name = "txtCuil";
-            this.txtCuil.Size = new System.Drawing.Size(209, 22);
-            this.txtCuil.TabIndex = 1;
+            this.txtCuit.Location = new System.Drawing.Point(501, 37);
+            this.txtCuit.Margin = new System.Windows.Forms.Padding(4);
+            this.txtCuit.MaxLength = 50;
+            this.txtCuit.Name = "txtCuit";
+            this.txtCuit.Size = new System.Drawing.Size(209, 22);
+            this.txtCuit.TabIndex = 1;
             // 
             // label9
             // 
@@ -360,7 +360,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtRazonSocial;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtCuil;
+        private System.Windows.Forms.TextBox txtCuit;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnAceptar;
         private System.Windows.Forms.Label label11;

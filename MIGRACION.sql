@@ -58,6 +58,13 @@ GO
 IF OBJECT_ID('VADIUM.TriggerNuevoCliente') IS NOT NULL
 DROP TRIGGER VADIUM.TriggerNuevoCliente
 GO
+IF OBJECT_ID('VADIUM.TR_NuevaEmpresa') IS NOT NULL
+DROP TRIGGER VADIUM.TR_NuevaEmpresa
+GO
+IF OBJECT_ID('VADIUM.TR_NuevoCliente') IS NOT NULL
+DROP TRIGGER VADIUM.TR_NuevoCliente
+GO
+
 -----------------------DROP TABLES-------------------------------
 IF OBJECT_ID('VADIUM.ROL_POR_FUNCIONALIDAD') IS NOT NULL
 DROP TABLE [VADIUM].ROL_POR_FUNCIONALIDAD
@@ -146,7 +153,7 @@ CREATE SCHEMA [VADIUM]
 GO
 ------------------------------CRATE TABLES---------------------------------
 CREATE TABLE [VADIUM].ROL(
-	rol_id int PRIMARY KEY IDENTITY(1,1),
+	rol_id int PRIMARY KEY,
 	rol_habilitado bit DEFAULT 1, 
 	rol_nombre nvarchar(255) UNIQUE not null
 )
@@ -234,7 +241,7 @@ CREATE TABLE [VADIUM].EMPRESA(
 )
 GO
 CREATE TABLE [VADIUM].RUBRO(
-	rubro_id int PRIMARY KEY,
+	rubro_id int PRIMARY KEY IDENTITY(1,1),
 	descripcion nvarchar(255),
 )
 GO
@@ -340,39 +347,25 @@ INSTEAD OF INSERT
 AS
 BEGIN
 	BEGIN TRY
-	   
-	   DECLARE @val int
-
-	   SELECT @val = COUNT(I.mail)
-		FROM inserted I
-		WHERE I.mail NOT IN(SELECT usuario_username FROM VADIUM.USUARIO )
-
-		print @val
-
 		INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
 		SELECT I.mail,  HashBytes('SHA2_256',I.mail), 1,0, 1
 		FROM inserted I
-		WHERE I.mail NOT IN(SELECT us2.usuario_username FROM VADIUM.USUARIO us2 )
+		GROUP BY I.mail
+		HAVING I.mail NOT IN(SELECT us2.usuario_username FROM VADIUM.USUARIO us2 )
 		
-		 SELECT @val = COUNT(I.usuario_username)
-		FROM USUARIO I
-		
-		print @val
-
-		
-
 
 		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
 		SELECT 1, us.usuario_id
 		FROM inserted I JOIN VADIUM.USUARIO us ON (us.usuario_username = I.mail)
 		WHERE NOT EXISTS(SELECT 1 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 2 AND rolUser.usuario_id = us.usuario_id)
-
+		GROUP BY us.usuario_id,us.usuario_username, i.mail
 
 
 		INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,puntos,  usuario_id, direccion_id )
 		SELECT ins.numeroDocumento, ins.tipoDocumento, ins.apellido, ins.nombre,ins.fechaNacimiento, ins.mail, 0, 
 		(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.direccion_id
 		FROM inserted ins
+
 	END TRY
 	BEGIN CATCH
 	  SELECT 'ERROR', ERROR_MESSAGE()
@@ -424,7 +417,7 @@ BEGIN
 									dir.piso =m.Cli_Piso AND dir.depto=m.Cli_Depto AND dir.cod_postal = m.Cli_Cod_Postal)
 
 	FROM gd_esquema.Maestra m
-	GROUP BY m.Cli_Dni, m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Mail, m.Cli_Dom_Calle, m.Cli_Nro_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
+	GROUP BY m.Cli_Mail, m.Cli_Dni, m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Dom_Calle, m.Cli_Nro_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
 	HAVING m.Cli_Mail IS NOT NULL
 	-------DIRECCIONES EMPRESA----
 	INSERT INTO [VADIUM].DIRECCION(calle, nro_calle, piso, depto, cod_postal)

@@ -93,6 +93,12 @@
     <Compile Include="Abm Grado\frmGrado.Designer.cs">
       <DependentUpon>frmGrado.cs</DependentUpon>
     </Compile>
+    <Compile Include="Abm Grado\frmModificarGrado.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Grado\frmModificarGrado.Designer.cs">
+      <DependentUpon>frmModificarGrado.cs</DependentUpon>
+    </Compile>
     <Compile Include="Abm Rol\frmRol.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -177,6 +183,7 @@
     <Compile Include="Model\Funcionalidad.cs" />
     <Compile Include="Model\Funcionalidades.cs" />
     <Compile Include="Model\Globals.cs" />
+    <Compile Include="Model\Grado.cs" />
     <Compile Include="Model\ListadoEstadistico.cs" />
     <Compile Include="Model\ListadoLocNoVendidas.cs" />
     <Compile Include="Model\ListadoMayorCantCompras.cs" />
@@ -230,6 +237,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Abm Empresa Espectaculo\frmModificarEmpresa.resx">
       <DependentUpon>frmModificarEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Grado\frmGrado.resx">
+      <DependentUpon>frmGrado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Grado\frmModificarGrado.resx">
+      <DependentUpon>frmModificarGrado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Rubro\frmRubro.resx">
+      <DependentUpon>frmRubro.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Listado Estadistico\frmListadoEstadistico.resx">
       <DependentUpon>frmListadoEstadistico.cs</DependentUpon>

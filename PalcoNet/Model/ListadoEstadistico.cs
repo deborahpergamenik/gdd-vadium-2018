@@ -45,7 +45,7 @@ namespace PalcoNet.Model
         {
             if (opcionElegida == 1)
             {
-                ListadoLocNoVendidas listadoEmpresas = new ListadoLocNoVendidas(trimestre, anio);
+                ListadoLocNoVendidas listadoEmpresas = new ListadoLocNoVendidas(trimestre, anio,null);
                 return listadoEmpresas.obtenerListado();
             }
             else if (opcionElegida == 2)

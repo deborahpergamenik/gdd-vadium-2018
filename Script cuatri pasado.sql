@@ -500,6 +500,169 @@ BEGIN CATCH
   SELECT 'ERROR', ERROR_MESSAGE()
 END CATCH
 GO
+--------------------------------LOGIN------------------------------
+
+--CREATE PROCEDURE [VADIUM].PR_LOGIN @USERNAME NVARCHAR(255),@PASSWORD VARCHAR(255)
+--AS
+--BEGIN TRY
+--	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @USERNAME))
+--	BEGIN
+--		UPDATE USUARIO SET usuario_intentosLogin = usuario_intentosLogin + 1 WHERE usuario_username = @USERNAME;
+
+--		SELECT	U.usuario_password Password, 
+--				U.usuario_username Username, 
+--				U.usuario_activo Activo, 
+--				U.usuario_id Id, 
+--				U.usuario_intentosLogin Intentos,  
+--				(CASE WHEN U.usuario_password = HashBytes('SHA2_256', @PASSWORD) THEN 1 ELSE 0 END) PasswordMatched
+--		FROM [VADIUM].USUARIO U WHERE usuario_username = @USERNAME;
+--	END
+--END TRY
+--BEGIN CATCH
+--  SELECT 'ERROR', ERROR_MESSAGE()
+--END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].PR_USUARIO_LOGUEADO @USERNAME NVARCHAR(255)
+--AS
+--BEGIN TRY
+--	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @USERNAME))
+--	BEGIN
+--		UPDATE USUARIO SET usuario_intentosLogin = 0, usuario_activo = 1 WHERE usuario_username = @USERNAME;
+--	END
+--END TRY
+--BEGIN CATCH
+--  SELECT 'ERROR', ERROR_MESSAGE()
+--END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].PR_BLOQUEAR_USUARIO @USERNAME NVARCHAR(255)
+--AS
+--BEGIN TRY
+--	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @USERNAME))
+--	BEGIN
+--		UPDATE USUARIO SET usuario_intentosLogin = 0, usuario_activo = 0 WHERE usuario_username = @USERNAME;
+--	END
+--END TRY
+--BEGIN CATCH
+--  SELECT 'ERROR', ERROR_MESSAGE()
+--END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].[SP_Get_Usuario_Rol] @idUsuario INT
+--AS
+--  BEGIN TRY
+--    SELECT R.rol_nombre Nombre, RPU.rol_id ID FROM [VADIUM].ROL_POR_USUARIO RPU
+--    INNER JOIN [VADIUM].ROL R
+--        ON RPU.rol_id = R.rol_id
+--    WHERE RPU.usuario_id = @idUsuario
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
+
+
+--------------------------------ABM ROL------------------------------
+
+--CREATE PROCEDURE [VADIUM].[SP_Create_Rol]  @nombre_rol VARCHAR(255),  @habilitado BIT
+--AS
+--  BEGIN TRY
+--    INSERT INTO VADIUM.ROL (rol_habilitado, rol_nombre) VALUES(@habilitado, @nombre_rol);
+
+--	SELECT SCOPE_IDENTITY();
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].[SP_Update_Rol]  @ID NVARCHAR(255),  @habilitado BIT,  @nuevo_nombre VARCHAR(255)
+--AS
+--  BEGIN TRY
+--	 UPDATE VADIUM.ROL SET rol_habilitado = @habilitado, rol_nombre = @nuevo_nombre WHERE rol_id = @ID
+--	 -- IF(@habilitado = 0 )
+--		--DELETE FROM VADIUM.ROL_POR_USUARIO WHERE rol_id = @ID --Verificar esto, si se desactiva un rol, se mantiene la relacion con sus usuarios? por si se vuelve a activar 
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+-- GO
+ 
+--CREATE PROCEDURE [VADIUM].[SP_Update_Funcionalidad_Por_Rol]  @ID_Rol int, @funcionalidad_nombre VARCHAR(255), @habilitado bit
+--AS
+--  BEGIN TRY
+--    DECLARE @ID_Funcionalidad NUMERIC(18)
+--    DECLARE @ID_Rol_Aux NUMERIC(18)
+--    DECLARE @ID_Funcionalidad_Aux NUMERIC(18)
+
+--    SELECT @ID_Funcionalidad = funcionalidad_id FROM [VADIUM].FUNCIONALIDAD WHERE funcionalidad_descripcion = @funcionalidad_nombre
+
+--    SELECT @ID_Rol_Aux = rol_id, @ID_Funcionalidad_Aux = funcionalidad_id FROM VADIUM.ROL_POR_FUNCIONALIDAD WHERE rol_id = @ID_Rol AND funcionalidad_id = @ID_Funcionalidad
+
+--    IF @ID_Rol_Aux IS NOT NULL AND @ID_Funcionalidad_Aux IS NOT NULL
+--	BEGIN
+--	  IF(@habilitado = 0)
+--		 DELETE FROM [VADIUM].ROL_POR_FUNCIONALIDAD WHERE funcionalidad_id = @ID_Funcionalidad_Aux AND rol_id = @ID_Rol_Aux
+--    END
+--	ELSE IF @habilitado = 1
+--      INSERT INTO [VADIUM].[ROL_POR_FUNCIONALIDAD](funcionalidad_id, rol_id) VALUES (@ID_Funcionalidad, @ID_Rol)
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].PR_INHABILITAR_ROL @ID_ROL INT
+--AS
+--DECLARE @NOMBRE_ROL NVARCHAR(50)
+--BEGIN TRY
+--	UPDATE [VADIUM].ROL SET rol_habilitado = 0 WHERE rol_id = @ID_ROL
+
+--	DELETE FROM [VADIUM].ROL_POR_USUARIO WHERE rol_id = @ID_ROL
+--END TRY
+--BEGIN CATCH
+--  SELECT 'ERROR', ERROR_MESSAGE()
+--END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].[SP_Get_Funcionalidades_Rol]
+--  @nombre_rol VARCHAR(255)
+--AS
+--  BEGIN TRY
+--    SELECT f.funcionalidad_descripcion AS Funcionalidad FROM [VADIUM].ROL_POR_FUNCIONALIDAD AS rf
+--      INNER JOIN [VADIUM].FUNCIONALIDAD AS f
+--      ON f.funcionalidad_id = rf.funcionalidad_id
+--      INNER JOIN [VADIUM].ROL AS r
+--      ON rf.rol_id = r.rol_id
+--        WHERE r.rol_nombre = @nombre_rol
+--    ORDER BY Funcionalidad
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].[PR_Get_Funcionalidades]
+--AS
+--  BEGIN TRY
+--	SELECT F.funcionalidad_descripcion AS Funcionalidades FROM [VADIUM].FUNCIONALIDAD F
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].[PR_Get_Roles]
+--AS
+--  BEGIN TRY
+--	SELECT R.rol_id ID, R.rol_nombre Rol,R.rol_habilitado Habilitado FROM [VADIUM].ROL R
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
+
 
 ------------------------------ABM ROL------------------------------
 

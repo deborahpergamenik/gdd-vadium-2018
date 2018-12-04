@@ -1,5 +1,6 @@
 ﻿using PalcoNet.Common;
 using PalcoNet.Login;
+using PalcoNet.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,28 +39,39 @@ namespace PalcoNet.Canje_Puntos
             dgvCanjearPuntos.DataSource = premios;
             dgvCanjearPuntos.Columns["premioId"].Visible = false;
 
+            idCliente = (int)UserInstance.getUserInstance().clienteId;
+             List<SqlParameter> parametros = new List<SqlParameter>();
+             SqlConnector.agregarParametro(parametros, "@cliente", idCliente);
+            SqlConnector.agregarParametro(parametros, "@fechaActual", Configuration.getActualDate());
+            SqlDataReader lectorPuntos = SqlConnector.ObtenerDataReader("VADIUM.puntajeCliente", "SP", parametros);
 
-            List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.idUsuario);
-            SqlDataReader lector2 = SqlConnector.ejecutarReader("SELECT c.cliente_id " +
-                                                                "FROM VADIUM.Cliente c" +
-                                                                "JOIN Usuario u ON u.usuario_id = c.usuario_id" +
-                                                                "WHERE c.usuario_id = @idUsuario AND u.usuario_activo = 1", listaParametros, SqlConnector.iniciarConexion());
-            lector2.Read();
-            idCliente = Convert.ToInt32(lector["cliente_id"]);
-            SqlConnector.cerrarConexion();
+            if (lectorPuntos.HasRows)
+            {
+                lectorPuntos.Read();
+                puntos = Convert.ToInt32(lectorPuntos["puntos"]);
+            }
+
+            //List<SqlParameter> listaParametros = new List<SqlParameter>();
+            //SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.idUsuario);
+            //SqlDataReader lector2 = SqlConnector.ejecutarReader("SELECT c.cliente_id " +
+            //                                                    "FROM VADIUM.Cliente c" +
+            //                                                    "JOIN Usuario u ON u.usuario_id = c.usuario_id" +
+            //                                                    "WHERE c.usuario_id = @idUsuario AND u.usuario_activo = 1", listaParametros, SqlConnector.iniciarConexion());
+            //lector2.Read();
+            //idCliente = Convert.ToInt32(lector2["cliente_id"]);
+            //SqlConnector.cerrarConexion();
 
 
-            List<SqlParameter> listaParametros2 = new List<SqlParameter>();        
-            SqlConnector.agregarParametro(listaParametros2, "@cliente_id", this.idCliente);
-            SqlConnector.agregarParametro(listaParametros2, "@año", DateTime.Now.Year + 1);
-            SqlDataReader lector3 = SqlConnector.ejecutarReader("SELECT SUM(cantidad) " +
-                                                                "FROM VADIUM.PREMIO_POR_CLIENTE " +
-                                                                "WHERE cliente_id = @cliente_id AND vencimiento = @año" +
-                                                                "GROUP BY cliente_id", listaParametros2, SqlConnector.iniciarConexion());
-            lector3.Read();
-            puntos = Convert.ToDouble(lector["IdCliente"]);
-            SqlConnector.cerrarConexion();
+            //List<SqlParameter> listaParametros2 = new List<SqlParameter>();        
+            //SqlConnector.agregarParametro(listaParametros2, "@cliente_id", this.idCliente);
+            //SqlConnector.agregarParametro(listaParametros2, "@año", DateTime.Now.Year + 1);
+            //SqlDataReader lector3 = SqlConnector.ejecutarReader("SELECT SUM(cantidad) " +
+            //                                                    "FROM VADIUM.PREMIO_POR_CLIENTE " +
+            //                                                    "WHERE cliente_id = @cliente_id AND vencimiento = @año" +
+            //                                                    "GROUP BY cliente_id", listaParametros2, SqlConnector.iniciarConexion());
+            //lector3.Read();
+            //puntos = Convert.ToDouble(lector["IdCliente"]);
+            //SqlConnector.cerrarConexion();
             txtPuntos.Text = puntos.ToString();
         }
 
@@ -84,7 +96,7 @@ namespace PalcoNet.Canje_Puntos
                     List<SqlParameter> parametros = new List<SqlParameter>();
                     SqlConnector.agregarParametro(parametros, "@id_Cliente", idCliente);
                     SqlConnector.agregarParametro(parametros, "@premioId", (int)dgvCanjearPuntos.Rows[e.RowIndex].Cells["premioId"].Value);
-                    SqlConnector.agregarParametro(parametros, "@fechaActual", DateTime.Now);
+                    SqlConnector.agregarParametro(parametros, "@fechaActual", Configuration.getActualDate());
                     //Exec storedProcedure
                     //Hacer insert en PREMIO_POR_CLIENTE
                     SqlConnector.ExecStoredProcedureSinRet("VADIUM.CanjearPremio", parametros);

@@ -48,6 +48,7 @@ namespace PalcoNet
                                     if (usuarioLogin.Roles.Count() == 1)
                                     {
                                         this.Hide();
+                                        UserInstance.getUserInstance().loadInformation(usuarioLogin, usuarioLogin.Roles[0]);
                                         frmSeleccionFuncionalidades formSeleccionFuncionalidades = new frmSeleccionFuncionalidades(usuarioLogin, usuarioLogin.Roles[0].Id, true);
                                         formSeleccionFuncionalidades.Show();
                                     }

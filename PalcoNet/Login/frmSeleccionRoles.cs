@@ -64,6 +64,7 @@ namespace PalcoNet.Login
                 if (this.usuario.Roles[cmbRoles.SelectedIndex].Funcionalidades.Count != 0)
                 {
                     itemComboBox seleccion = cmbRoles.SelectedItem as itemComboBox;
+                    UserInstance.getUserInstance().loadInformation(usuario, usuario.Roles.Where(x => x.Id == seleccion.IdRol).FirstOrDefault());
                     frmSeleccionFuncionalidades formFuncionalidades = new frmSeleccionFuncionalidades(usuario, seleccion.IdRol, false);
                     this.Hide();
                     formFuncionalidades.Show();

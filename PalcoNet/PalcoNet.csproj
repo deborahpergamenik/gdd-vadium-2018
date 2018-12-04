@@ -247,6 +247,9 @@
     <EmbeddedResource Include="Abm Rubro\frmRubro.resx">
       <DependentUpon>frmRubro.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Canje Puntos\frmCanjePuntos.resx">
+      <DependentUpon>frmCanjePuntos.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Listado Estadistico\frmListadoEstadistico.resx">
       <DependentUpon>frmListadoEstadistico.cs</DependentUpon>
     </EmbeddedResource>

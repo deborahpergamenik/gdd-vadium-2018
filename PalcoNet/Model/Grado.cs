@@ -11,21 +11,19 @@ namespace PalcoNet.Model
     class Grado
     {
         public string TipoGrado { get; set; }
-        public string Descripcion { get; set; }
-        public decimal Costo_Publicacion { get; set; }
+        public decimal Comision { get; set; }
 
-        public Grado(string grado, string descripcion, decimal costoPublicacion)
+        public Grado(string grado, decimal comision)
         {
             this.TipoGrado = grado;
-            this.Descripcion = descripcion;
-            this.Costo_Publicacion = costoPublicacion;
+            this.Comision = comision;
         }
 
         public static List<Grado> ObtenerTodosLosGrados()
         {
             List<Grado> grados = new List<Grado>();
 
-            string commandText = "SELECT * FROM PalcoNet.Grados";
+            string commandText = "SELECT * FROM PalcoNet.GRADO";
 
             SqlDataReader lector = SqlConnector.ejecutarReader(commandText, SqlConnector.iniciarConexion());
 
@@ -34,9 +32,8 @@ namespace PalcoNet.Model
             {
                 while (lector.Read())
                 {
-                    Grado unGrado = new Grado((string)lector["TipoGrado"],
-                                                    (string)lector["Descripcion"],
-                                                    (decimal)lector["CostoPublicacion"]);
+                    Grado unGrado = new Grado((string)lector["prioridad"],                                               
+                                                    (decimal)lector["comision"]);
                     grados.Add(unGrado);
                 }
             }

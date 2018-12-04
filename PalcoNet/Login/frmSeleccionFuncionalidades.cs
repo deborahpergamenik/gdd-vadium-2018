@@ -179,7 +179,7 @@ namespace PalcoNet.Login
                         this.Show();
                         break;
                     case 4:
-                        frmRol form4 = new frmRol();
+                        frmRol form4 = new frmRol(this);
                         this.Hide();
                         form4.Show();
                         break;
@@ -190,7 +190,7 @@ namespace PalcoNet.Login
                         this.Show();
                         break;
                     case 6:
-                        frmCanjePuntos form6 = new frmCanjePuntos();
+                        frmCanjePuntos form6 = new frmCanjePuntos(this.usuario.IdUsuario, this);
                         this.Hide();
                         form6.ShowDialog();
                         this.Show();

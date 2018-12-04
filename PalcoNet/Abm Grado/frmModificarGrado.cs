@@ -38,8 +38,14 @@ namespace PalcoNet.Abm_Grado
                 //Cargando la form con los datos de la fila del DGV seleccionada
                 //agregando al combo los codigos de grado
                 this.cargarComboBoxCodigos();
-
                 this.cargarForm(gradoViejo);
+                this.cmbGrado.Visible = false;
+            }
+            else
+            {
+                cmbGrado.Items.Add("BAJA");
+                cmbGrado.Items.Add("MEDIA");
+                cmbGrado.Items.Add("ALTA");
             }
         }
 
@@ -51,8 +57,7 @@ namespace PalcoNet.Abm_Grado
 
         private void cargarForm(Grado grado)
         {
-            this.txtNombre.Text = grado.Descripcion;
-            this.txtCostoPublicacion.Text = Convert.ToString(grado.Costo_Publicacion);
+            this.txtComision.Text = Convert.ToString(grado.Comision);
             this.cmbGrado.SelectedItem = grado.TipoGrado;
         }
 
@@ -76,18 +81,16 @@ namespace PalcoNet.Abm_Grado
 
                 if (chequeado)
                 {
-                    if (!SqlConnector.existeString(txtNombre.Text, "PalcoNet.Grados", "Descripcion"))
+                    if (!SqlConnector.existeString(cmbGrado.Text, "PalcoNet.GRADO", "prioridad"))
                     {
                         //Datos del form
-                        string nombre = this.txtNombre.Text;
-                        decimal costo = Convert.ToDecimal(this.txtCostoPublicacion.Text);
+                        decimal costo = Convert.ToDecimal(this.txtComision.Text);
                         string tipoGrado = this.cmbGrado.SelectedItem.ToString();
 
                         List<SqlParameter> parametros = new List<SqlParameter>();
 
-                        SqlConnector.agregarParametro(parametros, "@descripcion", nombre);
-                        SqlConnector.agregarParametro(parametros, "@costoPublicacion", costo);
-                        SqlConnector.agregarParametro(parametros, "@tipoGrado", tipoGrado);
+                        SqlConnector.agregarParametro(parametros, "@comision", costo);
+                        SqlConnector.agregarParametro(parametros, "@prioridad", tipoGrado);
 
                         SqlParameter paramRet = new SqlParameter("@ret", System.Data.SqlDbType.Decimal);
                         paramRet.Direction = System.Data.ParameterDirection.Output;
@@ -113,11 +116,10 @@ namespace PalcoNet.Abm_Grado
                 if (chequeado)
                 {
                     //Datos del form
-                    string nombre = this.txtNombre.Text;
-                    decimal costo = Convert.ToDecimal(this.txtCostoPublicacion.Text);
+                    decimal comision = Convert.ToDecimal(this.txtComision.Text);
                     string tipoGrado = this.cmbGrado.SelectedItem.ToString();
 
-                    Grado gradoNuevo = new Grado(tipoGrado, nombre, costo);
+                    Grado gradoNuevo = new Grado(tipoGrado, comision);
 
                     this.editarGrado(gradoNuevo, this.gradoViejo);
                     this.Close();                    
@@ -130,13 +132,7 @@ namespace PalcoNet.Abm_Grado
         {
             List<SqlParameter> parametros = new List<SqlParameter>();
             
-            SqlConnector.agregarParametro(parametros, "@descripcion", gradoNuevo.Descripcion);
-            SqlConnector.agregarParametro(parametros, "@costoPublicacion", gradoNuevo.Costo_Publicacion);
-
-            //nombre viejo, para usarlo en el string
-            String nombreViejo = gradoViejo.Descripcion;
-
-            SqlConnector.agregarParametro(parametros, "@descripcionVieja", nombreViejo);
+            SqlConnector.agregarParametro(parametros, "@comision", gradoNuevo.Comision);
 
             //Exec storedProcedure
             SqlConnector.ExecStoredProcedureSinRet("PalcoNet.EditarGrado", parametros);
@@ -152,7 +148,7 @@ namespace PalcoNet.Abm_Grado
             bool chequeado = false;
 
             //chequeo de campos obligatorios
-            if (this.txtNombre.Text.Equals("") || this.txtCostoPublicacion.Text.Equals("") || this.cmbGrado.SelectedIndex == -1)
+            if (this.txtComision.Text.Equals("") || this.cmbGrado.SelectedIndex == -1)
             {
                 MessageBox.Show("Por favor complete los campos obligatorios", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -174,7 +170,7 @@ namespace PalcoNet.Abm_Grado
 
         private void txtCostoPublicacionTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (txtCostoPublicacion.Text.Contains(','))
+            if (txtComision.Text.Contains(','))
             {
                 if (!char.IsDigit(e.KeyChar))
                 {

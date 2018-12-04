@@ -250,7 +250,7 @@ CREATE TABLE [VADIUM].RUBRO(
 	descripcion nvarchar(255),
 )
 GO
-CREATE TABLE [VADIUM].GRADO(
+CREATE TABLE [VADIUM].GRADO( 
 	grado_id int PRIMARY KEY,
 	comision numeric(18,2),
 	prioridad int

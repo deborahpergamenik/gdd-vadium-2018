@@ -179,7 +179,7 @@ namespace PalcoNet.Login
                         this.Show();
                         break;
                     case 4:
-                        frmRol form4 = new frmRol();
+                        frmRol form4 = new frmRol(this);
                         this.Hide();
                         form4.Show();
                         break;

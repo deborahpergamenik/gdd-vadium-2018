@@ -99,11 +99,29 @@
     <Compile Include="Abm Grado\frmModificarGrado.Designer.cs">
       <DependentUpon>frmModificarGrado.cs</DependentUpon>
     </Compile>
+    <Compile Include="Abm Rol\frmAsignarRolesUsuario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Rol\frmAsignarRolesUsuario.Designer.cs">
+      <DependentUpon>frmAsignarRolesUsuario.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Rol\frmEditarRoles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Rol\frmEditarRoles.Designer.cs">
+      <DependentUpon>frmEditarRoles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Abm Rol\frmRol.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Abm Rol\frmRol.Designer.cs">
       <DependentUpon>frmRol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Rol\frmRolesUsuarioDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Rol\frmRolesUsuarioDialog.Designer.cs">
+      <DependentUpon>frmRolesUsuarioDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Abm Rubro\frmRubro.cs">
       <SubType>Form</SubType>
@@ -243,6 +261,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Abm Grado\frmModificarGrado.resx">
       <DependentUpon>frmModificarGrado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Rol\frmAsignarRolesUsuario.resx">
+      <DependentUpon>frmAsignarRolesUsuario.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Rol\frmEditarRoles.resx">
+      <DependentUpon>frmEditarRoles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Rol\frmRol.resx">
+      <DependentUpon>frmRol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Rol\frmRolesUsuarioDialog.resx">
+      <DependentUpon>frmRolesUsuarioDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Abm Rubro\frmRubro.resx">
       <DependentUpon>frmRubro.cs</DependentUpon>

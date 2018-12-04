@@ -2,6 +2,12 @@ USE GD2C2018
 GO
 
 -------------------------------DROP PROCEDURES-------------------
+
+
+IF OBJECT_ID('VADIUM.MayorCantLocalidadesNoVendidos') IS NOT NULL
+DROP PROCEDURE VADIUM.MayorCantLocalidadesNoVendidos;
+GO
+
 IF OBJECT_ID('VADIUM.PR_BLOQUEAR_USUARIO') IS NOT NULL
 DROP PROCEDURE VADIUM.PR_BLOQUEAR_USUARIO;
 GO
@@ -213,7 +219,6 @@ CREATE TABLE [VADIUM].CLIENTE(
 	tarjetaCredito numeric(18,0),
 	mail nvarchar(255),
 	telefono nvarchar(255),
-	puntos int,
 	direccion_id int
 
 )
@@ -303,7 +308,8 @@ GO
 CREATE TABLE [VADIUM].PREMIO(
  premioId int PRIMARY KEY IDENTITY(1,1),
  descripcion varchar(255),
- puntos numeric(18,0)
+ puntos numeric(18,0),
+ fecha datetime
 )
 CREATE TABLE [VADIUM].PREMIO_POR_CLIENTE(
  premioId int,
@@ -361,8 +367,8 @@ BEGIN
 		GROUP BY us.usuario_id,us.usuario_username, i.mail
 
 
-		INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,puntos,  usuario_id, direccion_id )
-		SELECT ins.numeroDocumento, ins.tipoDocumento, ins.apellido, ins.nombre,ins.fechaNacimiento, ins.mail, 0, 
+		INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,  usuario_id, direccion_id )
+		SELECT ins.numeroDocumento, ins.tipoDocumento, ins.apellido, ins.nombre,ins.fechaNacimiento, ins.mail, 
 		(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.direccion_id
 		FROM inserted ins
 
@@ -482,7 +488,7 @@ BEGIN
 		(SELECT TOP 1 cli.cliente_id  FROM CLIENTE cli WHERE cli.mail = m.Cli_Mail)
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Item_Factura_Monto, m.Item_Factura_Cantidad, m.Item_Factura_Descripcion, m.Factura_Nro, m.Factura_Fecha, m.Factura_Total, m.Forma_Pago_Desc, m.Ubicacion_Fila,m.Ubicacion_Asiento,m.Ubicacion_Sin_numerar,m.Ubicacion_Tipo_Codigo,m.Espectaculo_Cod, m.Cli_Mail
-		
+		HAVING m.Factura_Nro IS NOT NULL AND m.Cli_Mail IS NOT NULL
 END
 GO
 
@@ -514,166 +520,205 @@ ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (cliente_id) REFERENCES 
 ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (premioId) REFERENCES [VADIUM].PREMIO
 GO
 
-------------------------------LOGIN------------------------------
 
-CREATE PROCEDURE [VADIUM].PR_LOGIN @USERNAME NVARCHAR(255),@PASSWORD VARCHAR(255)
+------------------------------Estadisticas------------------------------
+CREATE PROCEDURE [VADIUM].MayorCantLocalidadesNoVendidos @year int, @month int, @grado int
+
 AS
-BEGIN TRY
-	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @USERNAME))
-	BEGIN
-		UPDATE USUARIO SET usuario_intentosLogin = usuario_intentosLogin + 1 WHERE usuario_username = @USERNAME;
+BEGIN
+SELECT TOP 5 emp.razonSocial , COUNT(*) as cantidad
+FROM VADIUM.EMPRESA emp JOIN VADIUM.PUBLICACION pub ON(emp.empresa_id = pub.empresa_id )
+						JOIN VADIUM.UBICACION ubi ON (pub.codigoEspectaculo = ubi.codigoEspectaculo)
 
-		SELECT	U.usuario_password Password, 
-				U.usuario_username Username, 
-				U.usuario_activo Activo, 
-				U.usuario_id Id, 
-				U.usuario_intentosLogin Intentos,  
-				(CASE WHEN U.usuario_password = HashBytes('SHA2_256', @PASSWORD) THEN 1 ELSE 0 END) PasswordMatched
-		FROM [VADIUM].USUARIO U WHERE usuario_username = @USERNAME;
-	END
-END TRY
-BEGIN CATCH
-  SELECT 'ERROR', ERROR_MESSAGE()
-END CATCH
-GO
+	WHERE ubicacion_id NOT IN (SELECT ubicacion_id FROM VADIUM.ITEMFACTURA item) AND
+			 (@year is null or year(pub.fecha) =  @year) AND
+			 (@month is null or (month(pub.fecha) > @month AND month(pub.fecha) < (@month + 2) )) AND
+			 (@grado is null or pub.grado_id = @grado)
+	GROUP BY emp.empresa_id, emp.razonSocial
+	ORDER BY COUNT(*) DESC
 
-CREATE PROCEDURE [VADIUM].PR_USUARIO_LOGUEADO @USERNAME NVARCHAR(255)
-AS
-BEGIN TRY
-	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @USERNAME))
-	BEGIN
-		UPDATE USUARIO SET usuario_intentosLogin = 0, usuario_activo = 1 WHERE usuario_username = @USERNAME;
-	END
-END TRY
-BEGIN CATCH
-  SELECT 'ERROR', ERROR_MESSAGE()
-END CATCH
-GO
-
-CREATE PROCEDURE [VADIUM].PR_BLOQUEAR_USUARIO @USERNAME NVARCHAR(255)
-AS
-BEGIN TRY
-	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @USERNAME))
-	BEGIN
-		UPDATE USUARIO SET usuario_intentosLogin = 0, usuario_activo = 0 WHERE usuario_username = @USERNAME;
-	END
-END TRY
-BEGIN CATCH
-  SELECT 'ERROR', ERROR_MESSAGE()
-END CATCH
-GO
-
-CREATE PROCEDURE [VADIUM].[SP_Get_Usuario_Rol] @idUsuario INT
-AS
-  BEGIN TRY
-    SELECT R.rol_nombre Nombre, RPU.rol_id ID FROM [VADIUM].ROL_POR_USUARIO RPU
-    INNER JOIN [VADIUM].ROL R
-        ON RPU.rol_id = R.rol_id
-    WHERE RPU.usuario_id = @idUsuario
-  END TRY
-  BEGIN CATCH
-    SELECT 'ERROR', ERROR_MESSAGE()
-  END CATCH
+END
 GO
 
 
-------------------------------ABM ROL------------------------------
+CREATE PROCEDURE [VADIUM].ClientesPuntosVencidos @year int, @month int
 
-CREATE PROCEDURE [VADIUM].[SP_Create_Rol]  @nombre_rol VARCHAR(255),  @habilitado BIT
 AS
-  BEGIN TRY
-    INSERT INTO VADIUM.ROL (rol_habilitado, rol_nombre) VALUES(@habilitado, @nombre_rol);
+BEGIN
+SELECT TOP 5 cli.mail , SUM(item.monto) as cantidad
+FROM VADIUM.CLIENTE cli  JOIN VADIUM.ITEMFACTURA item on (cli.cliente_id = item.cliente_id)
+						JOIN VADIUM.FACTURA fact on (item.factura_nro = fact.factura_nro)
+	WHERE    (@year is null or year(fact.fecha) =  @year -1) AND
+			 (@month is null or (month(fact.fecha) > @month AND month(fact.fecha) < (@month + 2) )) 
+			 
+	GROUP BY cli.cliente_id, cli.mail
+	ORDER BY SUM(item.monto) DESC
 
-	SELECT SCOPE_IDENTITY();
-  END TRY
-  BEGIN CATCH
-    SELECT 'ERROR', ERROR_MESSAGE()
-  END CATCH
+END
 GO
 
-CREATE PROCEDURE [VADIUM].[SP_Update_Rol]  @ID NVARCHAR(255),  @habilitado BIT,  @nuevo_nombre VARCHAR(255)
-AS
-  BEGIN TRY
-	 UPDATE VADIUM.ROL SET rol_habilitado = @habilitado, rol_nombre = @nuevo_nombre WHERE rol_id = @ID
-	 -- IF(@habilitado = 0 )
-		--DELETE FROM VADIUM.ROL_POR_USUARIO WHERE rol_id = @ID --Verificar esto, si se desactiva un rol, se mantiene la relacion con sus usuarios? por si se vuelve a activar 
-  END TRY
-  BEGIN CATCH
-    SELECT 'ERROR', ERROR_MESSAGE()
-  END CATCH
- GO
+--------------------------------LOGIN------------------------------
+
+--CREATE PROCEDURE [VADIUM].PR_LOGIN @USERNAME NVARCHAR(255),@PASSWORD VARCHAR(255)
+--AS
+--BEGIN TRY
+--	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @USERNAME))
+--	BEGIN
+--		UPDATE USUARIO SET usuario_intentosLogin = usuario_intentosLogin + 1 WHERE usuario_username = @USERNAME;
+
+--		SELECT	U.usuario_password Password, 
+--				U.usuario_username Username, 
+--				U.usuario_activo Activo, 
+--				U.usuario_id Id, 
+--				U.usuario_intentosLogin Intentos,  
+--				(CASE WHEN U.usuario_password = HashBytes('SHA2_256', @PASSWORD) THEN 1 ELSE 0 END) PasswordMatched
+--		FROM [VADIUM].USUARIO U WHERE usuario_username = @USERNAME;
+--	END
+--END TRY
+--BEGIN CATCH
+--  SELECT 'ERROR', ERROR_MESSAGE()
+--END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].PR_USUARIO_LOGUEADO @USERNAME NVARCHAR(255)
+--AS
+--BEGIN TRY
+--	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @USERNAME))
+--	BEGIN
+--		UPDATE USUARIO SET usuario_intentosLogin = 0, usuario_activo = 1 WHERE usuario_username = @USERNAME;
+--	END
+--END TRY
+--BEGIN CATCH
+--  SELECT 'ERROR', ERROR_MESSAGE()
+--END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].PR_BLOQUEAR_USUARIO @USERNAME NVARCHAR(255)
+--AS
+--BEGIN TRY
+--	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @USERNAME))
+--	BEGIN
+--		UPDATE USUARIO SET usuario_intentosLogin = 0, usuario_activo = 0 WHERE usuario_username = @USERNAME;
+--	END
+--END TRY
+--BEGIN CATCH
+--  SELECT 'ERROR', ERROR_MESSAGE()
+--END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].[SP_Get_Usuario_Rol] @idUsuario INT
+--AS
+--  BEGIN TRY
+--    SELECT R.rol_nombre Nombre, RPU.rol_id ID FROM [VADIUM].ROL_POR_USUARIO RPU
+--    INNER JOIN [VADIUM].ROL R
+--        ON RPU.rol_id = R.rol_id
+--    WHERE RPU.usuario_id = @idUsuario
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
+
+
+--------------------------------ABM ROL------------------------------
+
+--CREATE PROCEDURE [VADIUM].[SP_Create_Rol]  @nombre_rol VARCHAR(255),  @habilitado BIT
+--AS
+--  BEGIN TRY
+--    INSERT INTO VADIUM.ROL (rol_habilitado, rol_nombre) VALUES(@habilitado, @nombre_rol);
+
+--	SELECT SCOPE_IDENTITY();
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
+
+--CREATE PROCEDURE [VADIUM].[SP_Update_Rol]  @ID NVARCHAR(255),  @habilitado BIT,  @nuevo_nombre VARCHAR(255)
+--AS
+--  BEGIN TRY
+--	 UPDATE VADIUM.ROL SET rol_habilitado = @habilitado, rol_nombre = @nuevo_nombre WHERE rol_id = @ID
+--	 -- IF(@habilitado = 0 )
+--		--DELETE FROM VADIUM.ROL_POR_USUARIO WHERE rol_id = @ID --Verificar esto, si se desactiva un rol, se mantiene la relacion con sus usuarios? por si se vuelve a activar 
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+-- GO
  
-CREATE PROCEDURE [VADIUM].[SP_Update_Funcionalidad_Por_Rol]  @ID_Rol int, @funcionalidad_nombre VARCHAR(255), @habilitado bit
-AS
-  BEGIN TRY
-    DECLARE @ID_Funcionalidad NUMERIC(18)
-    DECLARE @ID_Rol_Aux NUMERIC(18)
-    DECLARE @ID_Funcionalidad_Aux NUMERIC(18)
+--CREATE PROCEDURE [VADIUM].[SP_Update_Funcionalidad_Por_Rol]  @ID_Rol int, @funcionalidad_nombre VARCHAR(255), @habilitado bit
+--AS
+--  BEGIN TRY
+--    DECLARE @ID_Funcionalidad NUMERIC(18)
+--    DECLARE @ID_Rol_Aux NUMERIC(18)
+--    DECLARE @ID_Funcionalidad_Aux NUMERIC(18)
 
-    SELECT @ID_Funcionalidad = funcionalidad_id FROM [VADIUM].FUNCIONALIDAD WHERE funcionalidad_descripcion = @funcionalidad_nombre
+--    SELECT @ID_Funcionalidad = funcionalidad_id FROM [VADIUM].FUNCIONALIDAD WHERE funcionalidad_descripcion = @funcionalidad_nombre
 
-    SELECT @ID_Rol_Aux = rol_id, @ID_Funcionalidad_Aux = funcionalidad_id FROM VADIUM.ROL_POR_FUNCIONALIDAD WHERE rol_id = @ID_Rol AND funcionalidad_id = @ID_Funcionalidad
+--    SELECT @ID_Rol_Aux = rol_id, @ID_Funcionalidad_Aux = funcionalidad_id FROM VADIUM.ROL_POR_FUNCIONALIDAD WHERE rol_id = @ID_Rol AND funcionalidad_id = @ID_Funcionalidad
 
-    IF @ID_Rol_Aux IS NOT NULL AND @ID_Funcionalidad_Aux IS NOT NULL
-	BEGIN
-	  IF(@habilitado = 0)
-		 DELETE FROM [VADIUM].ROL_POR_FUNCIONALIDAD WHERE funcionalidad_id = @ID_Funcionalidad_Aux AND rol_id = @ID_Rol_Aux
-    END
-	ELSE IF @habilitado = 1
-      INSERT INTO [VADIUM].[ROL_POR_FUNCIONALIDAD](funcionalidad_id, rol_id) VALUES (@ID_Funcionalidad, @ID_Rol)
-  END TRY
-  BEGIN CATCH
-    SELECT 'ERROR', ERROR_MESSAGE()
-  END CATCH
-GO
+--    IF @ID_Rol_Aux IS NOT NULL AND @ID_Funcionalidad_Aux IS NOT NULL
+--	BEGIN
+--	  IF(@habilitado = 0)
+--		 DELETE FROM [VADIUM].ROL_POR_FUNCIONALIDAD WHERE funcionalidad_id = @ID_Funcionalidad_Aux AND rol_id = @ID_Rol_Aux
+--    END
+--	ELSE IF @habilitado = 1
+--      INSERT INTO [VADIUM].[ROL_POR_FUNCIONALIDAD](funcionalidad_id, rol_id) VALUES (@ID_Funcionalidad, @ID_Rol)
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
 
-CREATE PROCEDURE [VADIUM].PR_INHABILITAR_ROL @ID_ROL INT
-AS
-DECLARE @NOMBRE_ROL NVARCHAR(50)
-BEGIN TRY
-	UPDATE [VADIUM].ROL SET rol_habilitado = 0 WHERE rol_id = @ID_ROL
+--CREATE PROCEDURE [VADIUM].PR_INHABILITAR_ROL @ID_ROL INT
+--AS
+--DECLARE @NOMBRE_ROL NVARCHAR(50)
+--BEGIN TRY
+--	UPDATE [VADIUM].ROL SET rol_habilitado = 0 WHERE rol_id = @ID_ROL
 
-	DELETE FROM [VADIUM].ROL_POR_USUARIO WHERE rol_id = @ID_ROL
-END TRY
-BEGIN CATCH
-  SELECT 'ERROR', ERROR_MESSAGE()
-END CATCH
-GO
+--	DELETE FROM [VADIUM].ROL_POR_USUARIO WHERE rol_id = @ID_ROL
+--END TRY
+--BEGIN CATCH
+--  SELECT 'ERROR', ERROR_MESSAGE()
+--END CATCH
+--GO
 
-CREATE PROCEDURE [VADIUM].[SP_Get_Funcionalidades_Rol]
-  @nombre_rol VARCHAR(255)
-AS
-  BEGIN TRY
-    SELECT f.funcionalidad_descripcion AS Funcionalidad FROM [VADIUM].ROL_POR_FUNCIONALIDAD AS rf
-      INNER JOIN [VADIUM].FUNCIONALIDAD AS f
-      ON f.funcionalidad_id = rf.funcionalidad_id
-      INNER JOIN [VADIUM].ROL AS r
-      ON rf.rol_id = r.rol_id
-        WHERE r.rol_nombre = @nombre_rol
-    ORDER BY Funcionalidad
-  END TRY
-  BEGIN CATCH
-    SELECT 'ERROR', ERROR_MESSAGE()
-  END CATCH
-GO
+--CREATE PROCEDURE [VADIUM].[SP_Get_Funcionalidades_Rol]
+--  @nombre_rol VARCHAR(255)
+--AS
+--  BEGIN TRY
+--    SELECT f.funcionalidad_descripcion AS Funcionalidad FROM [VADIUM].ROL_POR_FUNCIONALIDAD AS rf
+--      INNER JOIN [VADIUM].FUNCIONALIDAD AS f
+--      ON f.funcionalidad_id = rf.funcionalidad_id
+--      INNER JOIN [VADIUM].ROL AS r
+--      ON rf.rol_id = r.rol_id
+--        WHERE r.rol_nombre = @nombre_rol
+--    ORDER BY Funcionalidad
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
 
-CREATE PROCEDURE [VADIUM].[PR_Get_Funcionalidades]
-AS
-  BEGIN TRY
-	SELECT F.funcionalidad_descripcion AS Funcionalidades FROM [VADIUM].FUNCIONALIDAD F
-  END TRY
-  BEGIN CATCH
-    SELECT 'ERROR', ERROR_MESSAGE()
-  END CATCH
-GO
+--CREATE PROCEDURE [VADIUM].[PR_Get_Funcionalidades]
+--AS
+--  BEGIN TRY
+--	SELECT F.funcionalidad_descripcion AS Funcionalidades FROM [VADIUM].FUNCIONALIDAD F
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
 
-CREATE PROCEDURE [VADIUM].[PR_Get_Roles]
-AS
-  BEGIN TRY
-	SELECT R.rol_id ID, R.rol_nombre Rol,R.rol_habilitado Habilitado FROM [VADIUM].ROL R
-  END TRY
-  BEGIN CATCH
-    SELECT 'ERROR', ERROR_MESSAGE()
-  END CATCH
-GO
+--CREATE PROCEDURE [VADIUM].[PR_Get_Roles]
+--AS
+--  BEGIN TRY
+--	SELECT R.rol_id ID, R.rol_nombre Rol,R.rol_habilitado Habilitado FROM [VADIUM].ROL R
+--  END TRY
+--  BEGIN CATCH
+--    SELECT 'ERROR', ERROR_MESSAGE()
+--  END CATCH
+--GO
 
+EXECUTE VADIUM.PR_DATOS_INSERT_DATOS_INICIALES;
+EXECUTE VADIUM.PR_MIGRACION;

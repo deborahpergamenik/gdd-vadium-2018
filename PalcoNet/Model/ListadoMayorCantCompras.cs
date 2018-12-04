@@ -12,23 +12,20 @@ namespace PalcoNet.Model
     class ListadoMayorCantCompras
     {
 
-        public int anio { get; set; }
-        public int mesMinimo { get; set; }
-        public int mesMaximo { get; set; }
+        public int? anio { get; set; }
+        public int? mes { get; set; }
 
-        public ListadoMayorCantCompras(int trimestreMinimo, int anio)
+        public ListadoMayorCantCompras(int? anio, int? mes)
         {
             this.anio = anio;
-            this.mesMinimo = trimestreMinimo;
-            this.mesMaximo = trimestreMinimo + 2;
+            this.mes = mes;
         }
 
         public DataTable obtenerListado()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@Año", this.anio);
-            SqlConnector.agregarParametro(listaParametros, "@mesMinimo", this.mesMinimo);
-            SqlConnector.agregarParametro(listaParametros, "@mesMaximo", this.mesMaximo);
+            SqlConnector.agregarParametro(listaParametros, "@year", this.anio);
+            SqlConnector.agregarParametro(listaParametros, "@moth", this.mes);
 
             //revisar query
             String commandtext = "realizar query";

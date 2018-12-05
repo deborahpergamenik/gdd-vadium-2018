@@ -90,55 +90,50 @@ namespace PalcoNet.Login
 
                     if (rolActual.Funcionalidades[i].Id == 3)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Roles", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Grado", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 4)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Rubros", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Roles", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 5)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Visibilidades", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Rubro", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 6)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Generar Publicación", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Puntos", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 7)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Editar Publicación", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Compras", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 8)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Gestionar Preguntas", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Editar Publicación", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 9)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Comprar/Ofertar", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Generar Publicación", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 10)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Calificar", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Generar Rendiciones por Comisión", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 11)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Historial de operaciones", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Historial de Cliente", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 12)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Facturar", rolActual.Funcionalidades[i].Id));
-                    }
-
-                    if (rolActual.Funcionalidades[i].Id == 13)
                     {
                         cmbFuncionalidades.Items.Add(new itemComboBox("Listado Estadístico", rolActual.Funcionalidades[i].Id));
                     }

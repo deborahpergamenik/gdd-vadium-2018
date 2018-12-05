@@ -28,9 +28,9 @@ namespace PalcoNet.Model
             SqlConnector.agregarParametro(listaParametros, "@moth", this.mes);
 
             //revisar query
-            String commandtext = "realizar query";
+            String commandtext = "VADIUM.ClientesMayorCompras";
 
-            return SqlConnector.obtenerDataTable(commandtext, "T", listaParametros);
+            return SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
 
         }
     }

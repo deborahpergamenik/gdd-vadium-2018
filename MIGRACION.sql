@@ -3,58 +3,30 @@ GO
 
 -------------------------------DROP PROCEDURES-------------------
 
-
 IF OBJECT_ID('VADIUM.MayorCantLocalidadesNoVendidos') IS NOT NULL
 DROP PROCEDURE VADIUM.MayorCantLocalidadesNoVendidos;
 GO
 IF OBJECT_ID('VADIUM.ClientesPuntosVencidos') IS NOT NULL
 DROP PROCEDURE VADIUM.ClientesPuntosVencidos;
 GO
-
-
-IF OBJECT_ID('VADIUM.PR_BLOQUEAR_USUARIO') IS NOT NULL
-DROP PROCEDURE VADIUM.PR_BLOQUEAR_USUARIO;
+IF OBJECT_ID('VADIUM.ClientesMayorCompras') IS NOT NULL
+DROP PROCEDURE VADIUM.ClientesMayorCompras;
 GO
-
-IF OBJECT_ID('VADIUM.PR_USUARIO_LOGUEADO') IS NOT NULL
-DROP PROCEDURE VADIUM.PR_USUARIO_LOGUEADO;
+IF OBJECT_ID('VADIUM.puntajeCliente') IS NOT NULL
+DROP PROCEDURE VADIUM.puntajeCliente;
 GO
-
-IF OBJECT_ID('VADIUM.SP_Create_Rol') IS NOT NULL
-DROP PROCEDURE [VADIUM].[SP_Create_Rol]
+IF OBJECT_ID('VADIUM.CanjearPremio') IS NOT NULL
+DROP PROCEDURE VADIUM.CanjearPremio;
 GO
-
-IF OBJECT_ID('VADIUM.SP_Update_Rol') IS NOT NULL
-DROP PROCEDURE [VADIUM].[SP_Update_Rol]
+IF OBJECT_ID('VADIUM.InsertGrado') IS NOT NULL
+DROP PROCEDURE VADIUM.InsertGrado;
 GO
-
-IF OBJECT_ID('VADIUM.SP_Update_Funcionalidad_Por_Rol') IS NOT NULL
-DROP PROCEDURE [VADIUM].[SP_Update_Funcionalidad_Por_Rol]
+IF OBJECT_ID('VADIUM.UpdateGrado') IS NOT NULL
+DROP PROCEDURE VADIUM.UpdateGrado;
 GO
-
-IF OBJECT_ID('VADIUM.PR_INHABILITAR_ROL') IS NOT NULL
-DROP PROCEDURE [VADIUM].[PR_INHABILITAR_ROL]
+IF OBJECT_ID('VADIUM.removeGrado') IS NOT NULL
+DROP PROCEDURE VADIUM.removeGrado;
 GO
-
-IF OBJECT_ID('VADIUM.SP_Get_Funcionalidades_Rol') IS NOT NULL
-DROP PROCEDURE [VADIUM].[SP_Get_Funcionalidades_Rol]
-GO
-
-IF OBJECT_ID('VADIUM.PR_Get_Funcionalidades') IS NOT NULL
-DROP PROCEDURE [VADIUM].[PR_Get_Funcionalidades]
-GO
-
-IF OBJECT_ID('VADIUM.PR_Get_Roles') IS NOT NULL
-DROP PROCEDURE [VADIUM].[PR_Get_Roles]
-GO
-IF OBJECT_ID('VADIUM.PR_LOGIN') IS NOT NULL
-DROP PROCEDURE [VADIUM].[PR_LOGIN]
-GO
-
-IF OBJECT_ID('VADIUM.SP_Get_Usuario_Rol') IS NOT NULL
-DROP PROCEDURE [VADIUM].[SP_Get_Usuario_Rol]
-GO
-
 IF OBJECT_ID('VADIUM.PR_DATOS_INSERT_DATOS_INICIALES') IS NOT NULL
 DROP PROCEDURE VADIUM.PR_DATOS_INSERT_DATOS_INICIALES;
 GO
@@ -257,7 +229,7 @@ GO
 CREATE TABLE [VADIUM].GRADO( 
 	grado_id int PRIMARY KEY,
 	comision numeric(18,2),
-	prioridad int
+	descripcion nvarchar(255)
 )
 CREATE TABLE [VADIUM].ESTADO(
 	codigo int PRIMARY KEY IDENTITY(1,1),
@@ -399,6 +371,21 @@ BEGIN
 	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(1,'Cliente',1)
 	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(2,'Empresa',1)
 
+		-- USUARIO
+	DECLARE @userId int
+	INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
+	VALUES('admin', HashBytes('SHA2_256','admin'), 1, 0,1)
+	SELECT @userId =  SCOPE_IDENTITY()
+
+	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(1,@userId)
+	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(2,@userId)
+	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(3,@userId)
+	
+	-- GRADO 
+	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(0,5,'BAJO')
+	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(1,10,'MEDIO')
+	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(2,15,'ALTO')
+
 	-- PREMIOS
 	INSERT INTO [VADIUM].PREMIO (puntos, descripcion, stock, fechaVencimiento) VALUES (100, ' voucher entrada gratis', 10, convert(datetime,'18-06-19 10:34:09 PM',5))
 	INSERT INTO [VADIUM].PREMIO (puntos, descripcion,stock, fechaVencimiento) VALUES (50, ' voucher 50% descuento en entradas', 10 ,convert(datetime,'31-12-18 10:34:09 PM',5))
@@ -462,11 +449,12 @@ BEGIN
 	GROUP BY m.Espectaculo_Estado
 	HAVING m.Espectaculo_Estado IS NOT NULL
 	------PUBLICACION-----
-		INSERT INTO [VADIUM].PUBLICACION(codigoEspectaculo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id)
+		INSERT INTO [VADIUM].PUBLICACION(codigoEspectaculo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id, grado_id)
 		SELECT m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, 
 				(SELECT TOP 1 emp.empresa_id FROM EMPRESA emp WHERE emp.mail = m.Espec_Empresa_Mail), 
 				(SELECT TOP 1 ru.rubro_id FROM RUBRO ru WHERE ru.descripcion = m.Espectaculo_Rubro_Descripcion),
-				(SELECT TOP 1 es.codigo FROM ESTADO es WHERE es.descripcion = m.Espectaculo_Estado)
+				(SELECT TOP 1 es.codigo FROM ESTADO es WHERE es.descripcion = m.Espectaculo_Estado),
+				 0
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, m.Espec_Empresa_Mail, m.Espectaculo_Rubro_Descripcion, Espectaculo_Estado
 	HAVING m.Espectaculo_Cod IS NOT NULL
@@ -614,6 +602,42 @@ INSERT INTO VADIUM.PREMIO_POR_CLIENTE(cliente_id, fecha, premioId,puntos) VALUES
 
 END
 GO
+
+---------------GRADO DE PUBLICACION-----------------------------------
+CREATE PROCEDURE [VADIUM].InsertGrado  @comision numeric(18,0), @descripcion nvarchar(255)
+AS
+BEGIN
+
+	if (SELECT COUNT(*) FROM VADIUM.GRADO gr WHERE gr.descripcion = @descripcion) = 0
+		BEGIN
+			INSERT INTO GRADO (comision, descripcion) VALUES (@comision, @descripcion)
+		END
+
+END 
+GO
+CREATE PROCEDURE [VADIUM].UpdateGrado  @gradoId int, @comision numeric(18,0), @descripcion nvarchar(255)
+AS
+BEGIN TRY
+			UPDATE  VADIUM.GRADO   SET comision = @comision,  descripcion = @descripcion WHERE grado_id = @gradoId
+
+END TRY
+  BEGIN CATCH
+  SELECT 'ERROR', ERROR_MESSAGE()
+  END CATCH
+GO 
+
+CREATE PROCEDURE [VADIUM].removeGrado  @gradoId int
+AS
+BEGIN TRY 
+			DELETE FROM  VADIUM.GRADO WHERE grado_id = @gradoId
+
+END TRY
+  BEGIN CATCH
+  SELECT 'ERROR', ERROR_MESSAGE()
+  END CATCH
+GO
+
+
 --------ejecutar datos iniciales y migracion---------------------------
 EXECUTE VADIUM.PR_DATOS_INSERT_DATOS_INICIALES;
 EXECUTE VADIUM.PR_MIGRACION;

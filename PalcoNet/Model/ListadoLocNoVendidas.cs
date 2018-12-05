@@ -31,7 +31,7 @@ namespace PalcoNet.Model
             SqlConnector.agregarParametro(listaParametros, "@grado", this.grado);
 
             //revisar query
-            String commandtext = "MayorCantLocalidadesNoVendidos";
+            String commandtext = "VADIUM.MayorCantLocalidadesNoVendidos";
 
             return SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
         }

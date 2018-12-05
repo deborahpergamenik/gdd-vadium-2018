@@ -11,32 +11,25 @@ namespace PalcoNet.Model
 {
     class ListadoMayorPuntosVencidos
     {
-        public int anio { get; set; }
-        public int mesMinimo { get; set; }
-        public int mesMaximo { get; set; }
+        public int? anio { get; set; }
+        public int? mes { get; set; }
 
-        public ListadoMayorPuntosVencidos(int trimestreMinimo, int anio)
+        public ListadoMayorPuntosVencidos(int? mes, int? anio, )
         {
-            this.anio = anio;
-            this.mesMinimo = trimestreMinimo;
-            this.mesMaximo = trimestreMinimo + 2;
+             this.anio = anio;
+            this.mes = mes;
         }
 
         public DataTable obtenerListado()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@Año", this.anio);
-            SqlConnector.agregarParametro(listaParametros, "@mesMinimo", this.mesMinimo);
-            SqlConnector.agregarParametro(listaParametros, "@mesMaximo", this.mesMaximo);
+            SqlConnector.agregarParametro(listaParametros, "@year", this.anio);
+            SqlConnector.agregarParametro(listaParametros, "@month", this.mes);
 
             //revisar query
-            String commandtext = "SELECT TOP(5) Cliente, SUM([Puntos_Vencidos]) AS [Puntos Total] " +
-                                                                "FROM PalcoNet.MayorClientePuntosVencidosView " +
-                                                                "WHERE Mes BETWEEN @mesMinimo AND @mesMaximo AND Año = @año " +
-                                                                "GROUP BY Cliente " +
-                                                                "ORDER BY [Puntos Total] DESC";
+            String commandtext = "VADIUM.ClientesPuntosVencidos";
 
-            return SqlConnector.obtenerDataTable(commandtext, "T", listaParametros);
+            return SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
 
         }
     }

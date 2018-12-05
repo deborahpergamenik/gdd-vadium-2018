@@ -27,6 +27,12 @@ GO
 IF OBJECT_ID('VADIUM.removeGrado') IS NOT NULL
 DROP PROCEDURE VADIUM.removeGrado;
 GO
+IF OBJECT_ID('VADIUM.LISTADO_SELECCION_EMPRESA') IS NOT NULL
+DROP PROCEDURE VADIUM.LISTADO_SELECCION_EMPRESA;
+GO
+IF OBJECT_ID('VADIUM.LISTADO_SELECCION_CLIENTE') IS NOT NULL
+DROP PROCEDURE VADIUM.LISTADO_SELECCION_CLIENTE;
+GO
 IF OBJECT_ID('VADIUM.PR_DATOS_INSERT_DATOS_INICIALES') IS NOT NULL
 DROP PROCEDURE VADIUM.PR_DATOS_INSERT_DATOS_INICIALES;
 GO
@@ -569,6 +575,41 @@ FROM VADIUM.CLIENTE cli  JOIN VADIUM.ITEMFACTURA item on (cli.cliente_id = item.
 	ORDER BY COUNT(DISTINCT pub.empresa_id) DESC
 
 END
+GO
+---------------------------CLIENTE -----------------------------------
+
+CREATE	 PROCEDURE [VADIUM].LISTADO_SELECCION_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI numeric(18), @mail nvarchar(255)
+AS
+BEGIN TRY
+	SELECT *, cli.nombre + ' ' + cli.apellido NombreCompleto
+	FROM [VADIUM].CLIENTE cli 
+	WHERE
+	(@NOMBRE = '' OR @NOMBRE is null OR  lower(cli.nombre) LIKE '%' + lower(@NOMBRE) + '%') AND
+	(@APELLIDO = '' OR @APELLIDO is null OR lower(cli.apellido) LIKE '%' + lower(@APELLIDO) + '%') AND
+	(@DNI = '' OR @DNI is null OR cli.numeroDocumento = @DNI) AND
+	(@mail = '' OR @mail is null OR lower(cli.mail) LIKE '%' + lower(@mail) + '%');
+END TRY
+BEGIN CATCH
+  SELECT 'ERROR', ERROR_MESSAGE()
+END CATCH
+GO
+
+---------------------------EMPRESA -----------------------------------
+
+
+CREATE	 PROCEDURE [VADIUM].LISTADO_SELECCION_EMPRESA @razonSocial NVARCHAR(255),@CUIT NVARCHAR(255),@mail numeric(18)
+AS
+BEGIN TRY
+	SELECT *
+	FROM [VADIUM].EMPRESA emp 
+	WHERE
+	(@razonSocial = '' OR @razonSocial is null OR  lower(emp.razonSocial) LIKE '%' + lower(@razonSocial) + '%') AND	
+	(@mail = '' OR @mail is null OR lower(emp.mail) LIKE '%' + lower(@mail) + '%')AND
+	(@CUIT = '' OR @CUIT is null OR emp.cuit = @CUIT) ;
+END TRY
+BEGIN CATCH
+  SELECT 'ERROR', ERROR_MESSAGE()
+END CATCH
 GO
 
 

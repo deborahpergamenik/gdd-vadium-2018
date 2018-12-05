@@ -426,6 +426,73 @@ namespace PalcoNet.Abm_Cliente
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             Interfaz.limpiarInterfaz(this);
+        }
+
+        private void frmAbmCliente_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnBusqueda_Click(object sender, EventArgs e)
+        {
+
+            List<SqlParameter> listaParametros2 = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros2, "@nombreUsuario", this.nombre);
+
+
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@NOMBRE", txtNameFilter.Text);
+            SqlConnector.agregarParametro(listaParametros, "@APELLIDO", txtLastNameFilter.Text);
+            SqlConnector.agregarParametro(listaParametros, "@DNI", txtFilterDoc.Text);
+            SqlConnector.agregarParametro(listaParametros, "@mail", txtEmailFilter.Text);
+
+            //revisar query
+            String commandtext = "VADIUM.LISTADO_SELECCION_CLIENTE";
+            DataTable table = SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
+            if (table.Rows.Count > 0 && table.Rows[0].ItemArray[0].ToString() == "ERROR")
+            {
+                MessageBox.Show(table.Rows[0].ItemArray[1].ToString());
+            }
+            else
+            {
+                dgResultados.DataSource = table;
+            }
+        }
+
+        private void dgResultados_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dgResultados_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            foreach (DataGridViewRow row in dgResultados.SelectedRows)
+            {
+                try
+                {
+                    txtApellido.Text = row.Cells[0].Value.ToString();
+                    //Completar los siguientes campos para editar
+                    
+                }
+                catch (Exception ex)
+                {
+                    // NOTHING TODO
+                }
         }      
 
     }

@@ -37,15 +37,18 @@ namespace PalcoNet.Abm_Grado
 
                 //Cargando la form con los datos de la fila del DGV seleccionada
                 //agregando al combo los codigos de grado
+                this.txtGrado.Visible = false;
                 this.cargarComboBoxCodigos();
                 this.cargarForm(gradoViejo);
                 this.cmbGrado.Visible = false;
             }
             else
             {
-                cmbGrado.Items.Add("BAJA");
-                cmbGrado.Items.Add("MEDIA");
-                cmbGrado.Items.Add("ALTA");
+                txtGrado.Visible = true;
+                cmbGrado.Visible = false;
+                //cmbGrado.Items.Add("BAJA");
+                //cmbGrado.Items.Add("MEDIA");
+                //cmbGrado.Items.Add("ALTA");
             }
         }
 
@@ -81,30 +84,38 @@ namespace PalcoNet.Abm_Grado
 
                 if (chequeado)
                 {
-                    if (!SqlConnector.existeString(cmbGrado.Text, "PalcoNet.GRADO", "prioridad"))
+                    if (!SqlConnector.existeString(cmbGrado.Text, "VADIUM.GRADO", "descripcion"))
                     {
                         //Datos del form
                         decimal costo = Convert.ToDecimal(this.txtComision.Text);
-                        string tipoGrado = this.cmbGrado.SelectedItem.ToString();
+                        string tipoGrado = txtGrado.Text;
 
                         List<SqlParameter> parametros = new List<SqlParameter>();
 
                         SqlConnector.agregarParametro(parametros, "@comision", costo);
-                        SqlConnector.agregarParametro(parametros, "@prioridad", tipoGrado);
+                        SqlConnector.agregarParametro(parametros, "@descripcion", tipoGrado);
 
-                        SqlParameter paramRet = new SqlParameter("@ret", System.Data.SqlDbType.Decimal);
-                        paramRet.Direction = System.Data.ParameterDirection.Output;
-                        parametros.Add(paramRet);
+                        //SqlParameter paramRet = new SqlParameter("@ret", System.Data.SqlDbType.Decimal);
+                        //paramRet.Direction = System.Data.ParameterDirection.Output;
+                        //parametros.Add(paramRet);
 
-                        int idInsertada = (int)SqlConnector.ExecStoredProcedure("PalcoNet.AgregarGrado", parametros);
+                        try
+                        {
+                            SqlConnector.ExecStoredProcedure("VADIUM.InsertGrado", parametros);
+                            MessageBox.Show("¡Grado Agregado!", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        catch(Exception ex)
+                        {
+                            //En el SP lanza un error cuando ya se encuentra registrado ese grado
+                             MessageBox.Show("Ya existe un Grado con ese nombre.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
                         SqlConnector.cerrarConexion();
 
-                        MessageBox.Show("¡Grado Agregado!", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                      
 
                         this.Close();
                     }
-                    else
-                        MessageBox.Show("Ya existe un Grado con ese nombre.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                       
                 }
 
             } 
@@ -119,7 +130,7 @@ namespace PalcoNet.Abm_Grado
                     decimal comision = Convert.ToDecimal(this.txtComision.Text);
                     string tipoGrado = this.cmbGrado.SelectedItem.ToString();
 
-                    Grado gradoNuevo = new Grado(tipoGrado, comision);
+                    Grado gradoNuevo = new Grado(tipoGrado, comision, null);
 
                     this.editarGrado(gradoNuevo, this.gradoViejo);
                     this.Close();                    
@@ -133,9 +144,11 @@ namespace PalcoNet.Abm_Grado
             List<SqlParameter> parametros = new List<SqlParameter>();
             
             SqlConnector.agregarParametro(parametros, "@comision", gradoNuevo.Comision);
-
+            SqlConnector.agregarParametro(parametros, "@descripcion", gradoNuevo.TipoGrado);
+            SqlConnector.agregarParametro(parametros, "@gradoId", gradoViejo.TipoGrado);
+          
             //Exec storedProcedure
-            SqlConnector.ExecStoredProcedureSinRet("PalcoNet.EditarGrado", parametros);
+            SqlConnector.ExecStoredProcedureSinRet("VADIUM.UpdateGrado", parametros);
             SqlConnector.cerrarConexion();
 
 
@@ -148,7 +161,7 @@ namespace PalcoNet.Abm_Grado
             bool chequeado = false;
 
             //chequeo de campos obligatorios
-            if (this.txtComision.Text.Equals("") || this.cmbGrado.SelectedIndex == -1)
+            if (String.IsNullOrEmpty(this.txtComision.Text) || (this.cmbGrado.SelectedIndex == -1 && String.IsNullOrEmpty(this.txtGrado.Text)))
             {
                 MessageBox.Show("Por favor complete los campos obligatorios", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

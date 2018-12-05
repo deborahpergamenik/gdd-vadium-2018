@@ -10,14 +10,20 @@ namespace PalcoNet.Model
 {
     class Grado
     {
+        private string p1;
+        private decimal p2;
+        private int p3;
+
         public string TipoGrado { get; set; }
         public decimal Comision { get; set; }
-
-        public Grado(string grado, decimal comision)
+        public int? id { get; set; }
+        public Grado(string grado, decimal comision, int? id)
         {
             this.TipoGrado = grado;
             this.Comision = comision;
+            this.id = id;
         }
+
 
         public static List<Grado> ObtenerTodosLosGrados()
         {
@@ -32,8 +38,8 @@ namespace PalcoNet.Model
             {
                 while (lector.Read())
                 {
-                    Grado unGrado = new Grado((string)lector["prioridad"],                                               
-                                                    (decimal)lector["comision"]);
+                    Grado unGrado = new Grado((string)lector["descripcion"],
+                                                    (decimal)lector["comision"], (int)lector["grado_id"]);
                     grados.Add(unGrado);
                 }
             }

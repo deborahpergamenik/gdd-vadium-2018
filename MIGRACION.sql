@@ -612,6 +612,10 @@ BEGIN
 		BEGIN
 			INSERT INTO GRADO (comision, descripcion) VALUES (@comision, @descripcion)
 		END
+	ELSE 
+		BEGIN
+			RAISERROR('El grado ya existe',1,1);
+		END
 
 END 
 GO

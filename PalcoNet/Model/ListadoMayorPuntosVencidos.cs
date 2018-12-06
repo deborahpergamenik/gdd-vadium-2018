@@ -14,7 +14,7 @@ namespace PalcoNet.Model
         public int? anio { get; set; }
         public int? mes { get; set; }
 
-        public ListadoMayorPuntosVencidos(int? mes, int? anio, )
+        public ListadoMayorPuntosVencidos(int? mes, int? anio)
         {
              this.anio = anio;
             this.mes = mes;

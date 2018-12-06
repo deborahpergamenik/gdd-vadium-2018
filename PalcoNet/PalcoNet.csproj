@@ -137,11 +137,23 @@
     </Compile>
     <Compile Include="Common\Interfaz.cs" />
     <Compile Include="Common\SqlConnector.cs" />
+    <Compile Include="Comprar\frmAgregarRubro.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Comprar\frmAgregarRubro.Designer.cs">
+      <DependentUpon>frmAgregarRubro.cs</DependentUpon>
+    </Compile>
     <Compile Include="Comprar\frmComprar.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Comprar\frmComprar.Designer.cs">
       <DependentUpon>frmComprar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Comprar\frmDetallePublicacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Comprar\frmDetallePublicacion.Designer.cs">
+      <DependentUpon>frmDetallePublicacion.cs</DependentUpon>
     </Compile>
     <Compile Include="Editar Publicacion\frmEditarPublicacion.cs">
       <SubType>Form</SubType>
@@ -206,8 +218,12 @@
     <Compile Include="Model\ListadoLocNoVendidas.cs" />
     <Compile Include="Model\ListadoMayorCantCompras.cs" />
     <Compile Include="Model\ListadoMayorPuntosVencidos.cs" />
+    <Compile Include="Model\Publicacion.cs" />
+    <Compile Include="Model\Publicaciones.cs" />
     <Compile Include="Model\Rol.cs" />
     <Compile Include="Model\Roles.cs" />
+    <Compile Include="Model\Rubro.cs" />
+    <Compile Include="Model\Ubicacion.cs" />
     <Compile Include="Model\Usuario.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -273,6 +289,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Canje Puntos\frmCanjePuntos.resx">
       <DependentUpon>frmCanjePuntos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Comprar\frmAgregarRubro.resx">
+      <DependentUpon>frmAgregarRubro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Comprar\frmComprar.resx">
+      <DependentUpon>frmComprar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Comprar\frmDetallePublicacion.resx">
+      <DependentUpon>frmDetallePublicacion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Listado Estadistico\frmListadoEstadistico.resx">
       <DependentUpon>frmListadoEstadistico.cs</DependentUpon>

@@ -379,7 +379,7 @@ namespace PalcoNet.Abm_Cliente
             int idUsuario = Convert.ToInt32(lector["IdUsuario"]);
             SqlConnector.cerrarConexion();
 
-            List<SqlParameter> listaParametros = new List<SqlParameter>();     
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@IdUsuario", idUsuario);
             SqlConnector.agregarParametro(listaParametros, "@Nombre", this.nombre);
             SqlConnector.agregarParametro(listaParametros, "@Apellido", this.apellido);
@@ -487,13 +487,14 @@ namespace PalcoNet.Abm_Cliente
                 {
                     txtApellido.Text = row.Cells[0].Value.ToString();
                     //Completar los siguientes campos para editar
-                    
+
                 }
                 catch (Exception ex)
                 {
                     // NOTHING TODO
                 }
-        }      
+            }
 
+        }
     }
 }

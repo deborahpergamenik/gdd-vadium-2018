@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PalcoNet.Model
 {
-    class Grado
+    public class Grado
     {
         private string p1;
         private decimal p2;

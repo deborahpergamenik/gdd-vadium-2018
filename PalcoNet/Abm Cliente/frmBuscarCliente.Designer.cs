@@ -37,11 +37,11 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.dgResultados);
-            this.groupBox1.Location = new System.Drawing.Point(13, 13);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Location = new System.Drawing.Point(15, 16);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(560, 246);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Size = new System.Drawing.Size(630, 308);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Clientes encontrados";
@@ -50,21 +50,23 @@
             // 
             this.dgResultados.BackgroundColor = System.Drawing.SystemColors.Menu;
             this.dgResultados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgResultados.Location = new System.Drawing.Point(12, 25);
-            this.dgResultados.Margin = new System.Windows.Forms.Padding(4);
+            this.dgResultados.Location = new System.Drawing.Point(14, 31);
+            this.dgResultados.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dgResultados.Name = "dgResultados";
-            this.dgResultados.Size = new System.Drawing.Size(535, 209);
+            this.dgResultados.Size = new System.Drawing.Size(602, 261);
             this.dgResultados.TabIndex = 0;
             this.dgResultados.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgResultados_CellContentClick);
             // 
             // frmBuscarCliente
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(594, 281);
+            this.ClientSize = new System.Drawing.Size(668, 351);
             this.Controls.Add(this.groupBox1);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmBuscarCliente";
             this.Text = "frmBuscarCliente";
+            this.Load += new System.EventHandler(this.frmBuscarCliente_Load);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgResultados)).EndInit();
             this.ResumeLayout(false);

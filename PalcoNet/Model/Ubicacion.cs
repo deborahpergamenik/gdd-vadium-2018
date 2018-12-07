@@ -8,6 +8,7 @@ namespace PalcoNet.Model
 {
     public class Ubicacion
     {
+        public Publicacion publicacion { get; set; }
         public int UbicacionId { get; set; }
         public string Fila { get; set; }
         public int Asiento { get; set; }

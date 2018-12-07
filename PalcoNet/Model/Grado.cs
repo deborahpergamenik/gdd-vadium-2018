@@ -10,9 +10,7 @@ namespace PalcoNet.Model
 {
     public class Grado
     {
-        private string p1;
-        private decimal p2;
-        private int p3;
+        
 
         public string TipoGrado { get; set; }
         public decimal Comision { get; set; }
@@ -23,6 +21,7 @@ namespace PalcoNet.Model
             this.Comision = comision;
             this.id = id;
         }
+
 
 
         public static List<Grado> ObtenerTodosLosGrados()

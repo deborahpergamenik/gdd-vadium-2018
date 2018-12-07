@@ -314,5 +314,15 @@ namespace PalcoNet.Comprar
             this.Hide();
             frmSeleccionFuncionalidades.Show();
         }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Publicaciones_Datagrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

@@ -11,13 +11,15 @@ namespace PalcoNet.Model
     class Publicaciones
     {
 
-        public static List<Publicacion> obtenerPublicacionesPaginadas(int desde, int hasta, string filtro, bool filtroRubros)
+        public static List<Publicacion> obtenerPublicacionesPaginadas(int start, int finish, string rubro, string  desc, DateTime desde, DateTime hasta)
         {
             List<Publicacion> publicaciones = new List<Publicacion>();
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@desde", desde);
             SqlConnector.agregarParametro(listaParametros, "@hasta", hasta);
+            SqlConnector.agregarParametro(listaParametros, "@rubro", hasta);
+            SqlConnector.agregarParametro(listaParametros, "@descripcion", hasta);
             SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.ObtenerPublicaciones", "SP", listaParametros);
 
             if (lector.HasRows)
@@ -26,37 +28,37 @@ namespace PalcoNet.Model
                 {
                     Publicacion publi = new Publicacion();
 
-                    publi.CodigoPublicacion = Convert.ToInt32(lector["Cod_Publicacion"]);
+                    publi.CodigoPublicacion = Convert.ToInt32(lector["codigoEspectaculo"]);
                     publi.Descripcion = lector["descripcion"].ToString();
 
-                    publi.Ubicacion.CodigoPublicacion = Convert.ToInt32(lector["Cod_Publicacion"]);
-                    publi.Ubicacion.Asiento = Convert.ToInt32(lector["asiento"]);
-                    publi.Ubicacion.Fila = lector["fila"].ToString();
-                    publi.Ubicacion.Precio = Convert.ToInt32(lector["precio"]);
-                    publi.Ubicacion.EmpresaId = Convert.ToInt32(lector["empresa_id"]);
-                    publi.Ubicacion.SinNumerar = Convert.ToBoolean(lector["sinNumerar"]);
-                    publi.Ubicacion.UbicacionId = Convert.ToInt32(lector["ubicacion_id"]);
+                    //publi.Ubicacion.CodigoPublicacion = Convert.ToInt32(lector["Cod_Publicacion"]);
+                    //publi.Ubicacion.Asiento = Convert.ToInt32(lector["asiento"]);
+                    //publi.Ubicacion.Fila = lector["fila"].ToString();
+                    //publi.Ubicacion.Precio = Convert.ToInt32(lector["precio"]);
+                    //publi.Ubicacion.EmpresaId = Convert.ToInt32(lector["empresa_id"]);
+                    //publi.Ubicacion.SinNumerar = Convert.ToBoolean(lector["sinNumerar"]);
+                    //publi.Ubicacion.UbicacionId = Convert.ToInt32(lector["ubicacion_id"]);
 
-                    publi.Ubicacion.TipoUbicacion.id = Convert.ToInt32(lector["tipoUbicacion_id"]);
-                    publi.Ubicacion.TipoUbicacion.descripcion = lector["tipoUbicacion_descripcion"].ToString();
-                    publi.Ubicacion.TipoUbicacion.codigo = Convert.ToDecimal(lector["tipoUbicacion_codigo"]);
+                    //publi.Ubicacion.TipoUbicacion.id = Convert.ToInt32(lector["tipoUbicacion_id"]);
+                    //publi.Ubicacion.TipoUbicacion.descripcion = lector["tipoUbicacion_descripcion"].ToString();
+                    //publi.Ubicacion.TipoUbicacion.codigo = Convert.ToDecimal(lector["tipoUbicacion_codigo"]);
 
                     publi.FechaPublicacion = Convert.ToDateTime(lector["fecha_publicacion"]);
                     publi.FechaEspectaculo = Convert.ToDateTime(lector["fecha_espectaculo"]);
 
-                    publi.Rubro.Id = Convert.ToInt32(lector["rubro_id"]);
-                    publi.Rubro.Descripcion = lector["rubro_descripcion"].ToString();
+                    publi.Rubro = new Rubro(Convert.ToInt32(lector["rubro_id"]), lector["rubro_descripcion"].ToString());
+             
 
                     publi.DireccionEspectaculo = lector["direccionEspectaculo"].ToString();
 
-                    publi.GradoPublicacion.id = Convert.ToInt32(lector["tipoGrado_id"]);
-                    publi.GradoPublicacion.TipoGrado = lector["tipoGrado_descripcion"].ToString();
+                    publi.GradoPublicacion = new Grado(lector["grado_descripcion"].ToString(),Convert.ToDecimal(lector["comision"]), Convert.ToInt32(lector["grado_id"]));
 
-                    publi.userId = Convert.ToInt32(lector["user_id"]);
-                    publi.EstadoPublicacion = Convert.ToInt32(lector["estadoPublicacion"]);
+                    publi.empresaId = Convert.ToInt32(lector["empresa_id"]);
+                    publi.estado = new Estado(Convert.ToInt32(lector["estado_id"]),lector["estado_descripcion"].ToString());
+                    publicaciones.Add(publi);
                 }
             }
-
+            publicaciones = publicaciones.Skip(start).Take(finish).ToList();
             SqlConnector.cerrarConexion();
             return publicaciones;
         }

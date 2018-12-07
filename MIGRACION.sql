@@ -18,6 +18,9 @@ GO
 IF OBJECT_ID('VADIUM.CanjearPremio') IS NOT NULL
 DROP PROCEDURE VADIUM.CanjearPremio;
 GO
+IF OBJECT_ID('VADIUM.ObtenerPublicaciones') IS NOT NULL
+DROP PROCEDURE VADIUM.ObtenerPublicaciones;
+GO
 IF OBJECT_ID('VADIUM.InsertGrado') IS NOT NULL
 DROP PROCEDURE VADIUM.InsertGrado;
 GO
@@ -377,15 +380,15 @@ BEGIN
 	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(1,'Cliente',1)
 	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(2,'Empresa',1)
 
-		-- USUARIO
-	DECLARE @userId int
-	INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
-	VALUES('admin', HashBytes('SHA2_256','admin'), 1, 0,1)
-	SELECT @userId =  SCOPE_IDENTITY()
+	--	-- USUARIO
+	--DECLARE @userId int
+	--INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
+	--VALUES('admin', HashBytes('SHA2_256','admin'), 1, 0,1)
+	--SELECT @userId =  SCOPE_IDENTITY()
 
-	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(1,@userId)
-	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(2,@userId)
-	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(3,@userId)
+	--INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(1,@userId)
+	--INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(2,@userId)
+	--INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(3,@userId)
 	
 	-- GRADO 
 	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(0,5,'BAJO')
@@ -637,13 +640,29 @@ DECLARE @puntos int
 
 SELECT TOP 1 @puntos = puntos from VADIUM.PREMIO pr WHERE pr.premioId = @premioId
 
-INSERT INTO VADIUM.PREMIO_POR_CLIENTE(cliente_id, fecha, premioId,puntos) VALUES (@id_Cliente,@premioId, @fechaActual, @puntos )
+INSERT INTO VADIUM.PREMIO_POR_CLIENTE(cliente_id, premioId, fecha,puntos) VALUES (@id_Cliente,@premioId, @fechaActual, @puntos )
 
 
 
 END
 GO
-
+----------------Publicaciones--------------------------------------
+CREATE PROCEDURE [VADIUM].ObtenerPublicaciones @desde datetime, @hasta datetime, @rubro nvarchar(255), @descripcion nvarchar(255)
+AS 
+BEGIN
+	SELECT pub.codigoEspectaculo, pub.descripcion,pub.fecha, pub.fechaVencimiento, rub.rubro_id, rub.descripcion as rubro_descripcion, 
+			pub.direccion as direccionEspectaculo, gr.descripcion as grado_descripcion, gr.comision as comision, gr.grado_id as grado_id,
+			pub.empresa_id, es.codigo as estado_id, es.descripcion as estado_descripcion
+	FROM VADIUM.PUBLICACION pub JOIN ESTADO es ON (pub.estado_id = es.codigo)
+								JOIN RUBRO rub ON (pub.rubro_id = rub.rubro_id)
+								JOIN GRADO gr ON (pub.grado_id = gr.grado_id)
+								--JOIN EMPRESA emp ON (pub.empresa_id = emp.empresa_id)
+	WHERE (@desde IS NULL OR @desde > pub.fecha) AND
+		 (@hasta IS NULL OR @hasta < pub.fecha) AND
+		 (@rubro = '' OR @rubro is null OR  lower(rub.descripcion) LIKE '%' + lower(@rubro) + '%') AND
+		 (@descripcion = '' OR @descripcion is null OR  lower(pub.descripcion) LIKE '%' + lower(@descripcion) + '%') 
+END
+GO
 ---------------GRADO DE PUBLICACION-----------------------------------
 CREATE PROCEDURE [VADIUM].InsertGrado  @comision numeric(18,0), @descripcion nvarchar(255)
 AS

@@ -16,7 +16,7 @@ namespace PalcoNet.Model
         public Rubro Rubro { get; set; }
         public string DireccionEspectaculo { get; set; }
         public Grado GradoPublicacion { get; set; }
-        public int userId { get; set; }
+        //public int userId { get; set; }
         public int empresaId { get; set; }//la publicacion tiene asociada una empresa
         //public int EstadoPublicacion { get; set; } el estado es una entidad y te va a convenir traete el id con la descripcion
         public Estado estado { get; set; }

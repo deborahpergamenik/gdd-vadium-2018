@@ -217,6 +217,7 @@
     </Compile>
     <Compile Include="Model\Configuration.cs" />
     <Compile Include="Model\Encriptacion.cs" />
+    <Compile Include="Model\Estado.cs" />
     <Compile Include="Model\Funcionalidad.cs" />
     <Compile Include="Model\Funcionalidades.cs" />
     <Compile Include="Model\Globals.cs" />

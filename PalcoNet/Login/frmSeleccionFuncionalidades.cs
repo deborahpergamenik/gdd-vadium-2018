@@ -191,7 +191,7 @@ namespace PalcoNet.Login
                         this.Show();
                         break;
                     case 7:
-                        frmComprar form7 = new frmComprar();
+                        frmComprar form7 = new frmComprar(this);
                         this.Hide();
                         form7.ShowDialog();
                         this.Show();

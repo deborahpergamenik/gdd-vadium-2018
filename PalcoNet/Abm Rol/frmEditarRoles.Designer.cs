@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.Nombre_Label = new System.Windows.Forms.Label();
-            this.txtNombre = new System.Windows.Forms.TextBox();
+            this.nombre_Label = new System.Windows.Forms.Label();
+            this.txtnombre = new System.Windows.Forms.TextBox();
             this.chkListFuncionalidades = new System.Windows.Forms.CheckedListBox();
-            this.chkEstado = new System.Windows.Forms.CheckBox();
+            this.chkusuario_activo = new System.Windows.Forms.CheckBox();
             this.Funcionalidades_Label = new System.Windows.Forms.Label();
             this.Habilitado_Label = new System.Windows.Forms.Label();
             this.btnGuardar = new System.Windows.Forms.Button();
@@ -42,10 +42,10 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.Nombre_Label);
-            this.groupBox1.Controls.Add(this.txtNombre);
+            this.groupBox1.Controls.Add(this.nombre_Label);
+            this.groupBox1.Controls.Add(this.txtnombre);
             this.groupBox1.Controls.Add(this.chkListFuncionalidades);
-            this.groupBox1.Controls.Add(this.chkEstado);
+            this.groupBox1.Controls.Add(this.chkusuario_activo);
             this.groupBox1.Controls.Add(this.Funcionalidades_Label);
             this.groupBox1.Controls.Add(this.Habilitado_Label);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
@@ -57,23 +57,23 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Seleccione las funcionalidades:";
             // 
-            // Nombre_Label
+            // nombre_Label
             // 
-            this.Nombre_Label.AutoSize = true;
-            this.Nombre_Label.Location = new System.Drawing.Point(8, 41);
-            this.Nombre_Label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Nombre_Label.Name = "Nombre_Label";
-            this.Nombre_Label.Size = new System.Drawing.Size(58, 17);
-            this.Nombre_Label.TabIndex = 0;
-            this.Nombre_Label.Text = "Nombre";
+            this.nombre_Label.AutoSize = true;
+            this.nombre_Label.Location = new System.Drawing.Point(8, 41);
+            this.nombre_Label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.nombre_Label.Name = "nombre_Label";
+            this.nombre_Label.Size = new System.Drawing.Size(58, 17);
+            this.nombre_Label.TabIndex = 0;
+            this.nombre_Label.Text = "nombre";
             // 
-            // txtNombre
+            // txtnombre
             // 
-            this.txtNombre.Location = new System.Drawing.Point(127, 41);
-            this.txtNombre.Margin = new System.Windows.Forms.Padding(4);
-            this.txtNombre.Name = "txtNombre";
-            this.txtNombre.Size = new System.Drawing.Size(241, 22);
-            this.txtNombre.TabIndex = 1;
+            this.txtnombre.Location = new System.Drawing.Point(127, 41);
+            this.txtnombre.Margin = new System.Windows.Forms.Padding(4);
+            this.txtnombre.Name = "txtnombre";
+            this.txtnombre.Size = new System.Drawing.Size(241, 22);
+            this.txtnombre.TabIndex = 1;
             // 
             // chkListFuncionalidades
             // 
@@ -84,15 +84,15 @@
             this.chkListFuncionalidades.Size = new System.Drawing.Size(241, 123);
             this.chkListFuncionalidades.TabIndex = 2;
             // 
-            // chkEstado
+            // chkusuario_activo
             // 
-            this.chkEstado.AutoSize = true;
-            this.chkEstado.Location = new System.Drawing.Point(127, 226);
-            this.chkEstado.Margin = new System.Windows.Forms.Padding(4);
-            this.chkEstado.Name = "chkEstado";
-            this.chkEstado.Size = new System.Drawing.Size(18, 17);
-            this.chkEstado.TabIndex = 3;
-            this.chkEstado.UseVisualStyleBackColor = true;
+            this.chkusuario_activo.AutoSize = true;
+            this.chkusuario_activo.Location = new System.Drawing.Point(127, 226);
+            this.chkusuario_activo.Margin = new System.Windows.Forms.Padding(4);
+            this.chkusuario_activo.Name = "chkusuario_activo";
+            this.chkusuario_activo.Size = new System.Drawing.Size(18, 17);
+            this.chkusuario_activo.TabIndex = 3;
+            this.chkusuario_activo.UseVisualStyleBackColor = true;
             // 
             // Funcionalidades_Label
             // 
@@ -112,7 +112,7 @@
             this.Habilitado_Label.Name = "Habilitado_Label";
             this.Habilitado_Label.Size = new System.Drawing.Size(52, 17);
             this.Habilitado_Label.TabIndex = 4;
-            this.Habilitado_Label.Text = "Estado";
+            this.Habilitado_Label.Text = "usuario_activo";
             // 
             // btnGuardar
             // 
@@ -156,10 +156,10 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label Nombre_Label;
-        private System.Windows.Forms.TextBox txtNombre;
+        private System.Windows.Forms.Label nombre_Label;
+        private System.Windows.Forms.TextBox txtnombre;
         private System.Windows.Forms.CheckedListBox chkListFuncionalidades;
-        private System.Windows.Forms.CheckBox chkEstado;
+        private System.Windows.Forms.CheckBox chkusuario_activo;
         private System.Windows.Forms.Label Funcionalidades_Label;
         private System.Windows.Forms.Label Habilitado_Label;
         private System.Windows.Forms.Button btnGuardar;

@@ -13,15 +13,15 @@ using System.Windows.Forms;
 
 namespace PalcoNet.Login
 {
-    public partial class frmCambiarPassword : Form
+    public partial class frmCambiarpassword : Form
     {
-        public Boolean primeraVez { get; set; }
-        public frmCambiarPassword(Boolean pVez)
+        public Boolean primera_vez { get; set; }
+        public frmCambiarpassword(Boolean pVez)
         {
-            this.primeraVez = pVez;
+            this.primera_vez = pVez;
             InitializeComponent();
 
-            if (primeraVez)
+            if (primera_vez)
             {
                 passViejoNH.Enabled = false;
                 MessageBox.Show("Con el fin de mejorar la protección de sus datos personales, hemos implementado\njunto al nuevo sistema de gestión una nueva política de seguridad.\n\nPara ello, le solicitamos que ingrese nuevamente su contraseña, o escoja una nueva. \n\nAtte,\nPalcoNet ", "Bienvenido al nuevo sistema");
@@ -30,25 +30,25 @@ namespace PalcoNet.Login
 
         private void pass2_TextChanged(object sender, EventArgs e)
         {
-            pass2.PasswordChar = '*';
+            pass2.passwordChar = '*';
         }
 
         private void pass1_TextChanged(object sender, EventArgs e)
         {
-            pass1.PasswordChar = '*';
+            pass1.passwordChar = '*';
         }
 
         private void passViejo_TextChanged(object sender, EventArgs e)
         {
-            passViejoNH.PasswordChar = '*';
+            passViejoNH.passwordChar = '*';
         }
 
-        public Boolean chequearPassword(string password)
+        public Boolean chequearpassword(string password)
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@ID_User", Interfaz.usuario.IdUsuario);
-            SqlConnector.agregarParametro(listaParametros, "@Password", password);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT Password FROM PalcoNet.Usuarios WHERE ID_User = @ID_User AND Password = @Password", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", Interfaz.usuario.usuario_id);
+            SqlConnector.agregarParametro(listaParametros, "@password", password);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT password FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id AND password = @password", listaParametros, SqlConnector.iniciarConexion());
             Boolean res = lector.HasRows;
             SqlConnector.cerrarConexion();
             return res;
@@ -56,20 +56,20 @@ namespace PalcoNet.Login
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if ((!passViejoNH.Text.Equals("") || primeraVez == true) && !pass1.Text.Equals("") && !pass2.Text.Equals(""))
+            if ((!passViejoNH.Text.Equals("") || primera_vez == true) && !pass1.Text.Equals("") && !pass2.Text.Equals(""))
             {
-                if (primeraVez == false)
+                if (primera_vez == false)
                 {
                     UTF8Encoding encoderHash = new UTF8Encoding();
                     SHA256Managed hasher = new SHA256Managed();
                     byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passViejoNH.Text));
                     string passViejo = bytesDeHasheoToString(bytesDeHasheo);
 
-                    if (chequearPassword(passViejo))
+                    if (chequearpassword(passViejo))
                     {
                         if (pass1.Text == pass2.Text)
                         {
-                            Interfaz.usuario.cambiarPassword(pass1.Text);
+                            Interfaz.usuario.cambiarpassword(pass1.Text);
                             MessageBox.Show("Contraseña modificada.");
                             this.Hide();
                         }
@@ -87,7 +87,7 @@ namespace PalcoNet.Login
                 {
                     if (pass1.Text == pass2.Text)
                     {
-                        Interfaz.usuario.cambiarPassword(pass1.Text);
+                        Interfaz.usuario.cambiarpassword(pass1.Text);
                         MessageBox.Show("Contraseña modificada.");
                         this.Hide();
                     }

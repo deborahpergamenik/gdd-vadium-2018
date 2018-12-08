@@ -17,16 +17,16 @@ namespace PalcoNet.Canje_Puntos
     public partial class frmCanjePuntos : Form
     {
         DataTable premios = new DataTable();
-        int idUsuario = 0;
+        int usuario_id = 0;
         int idCliente = 0;
         double puntos = 0;
 
         public frmSeleccionFuncionalidades frmSeleccionFuncionalidades { get; set; }
 
-        public frmCanjePuntos(int _idUsuario, frmSeleccionFuncionalidades _frmSeleccionFuncionalidades)
+        public frmCanjePuntos(int _usuario_id, frmSeleccionFuncionalidades _frmSeleccionFuncionalidades)
         {
             InitializeComponent();
-            this.idUsuario = _idUsuario;
+            this.usuario_id = _usuario_id;
             this.frmSeleccionFuncionalidades = _frmSeleccionFuncionalidades;
         }
 
@@ -52,11 +52,11 @@ namespace PalcoNet.Canje_Puntos
             }
 
             //List<SqlParameter> listaParametros = new List<SqlParameter>();
-            //SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.idUsuario);
+            //SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
             //SqlDataReader lector2 = SqlConnector.ejecutarReader("SELECT c.cliente_id " +
             //                                                    "FROM VADIUM.Cliente c" +
             //                                                    "JOIN Usuario u ON u.usuario_id = c.usuario_id" +
-            //                                                    "WHERE c.usuario_id = @idUsuario AND u.usuario_activo = 1", listaParametros, SqlConnector.iniciarConexion());
+            //                                                    "WHERE c.usuario_id = @usuario_id AND u.usuario_activo = 1", listaParametros, SqlConnector.iniciarConexion());
             //lector2.Read();
             //idCliente = Convert.ToInt32(lector2["cliente_id"]);
             //SqlConnector.cerrarConexion();

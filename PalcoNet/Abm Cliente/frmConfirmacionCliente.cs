@@ -23,7 +23,7 @@ namespace PalcoNet.Abm_Cliente
             InitializeComponent();
 
             txtUsuario.Text = this.usuario;
-            txtPassword.Text = this.password;
+            txtpassword.Text = this.password;
         }
 
         private void btnAceptar_Click(object sender, EventArgs e)

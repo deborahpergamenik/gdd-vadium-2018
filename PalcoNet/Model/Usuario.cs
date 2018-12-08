@@ -12,28 +12,28 @@ namespace PalcoNet.Model
 {
     public class Usuario
     {
-        public int IdUsuario { get; set; }
-        public string NombreUsuario { get; set; }
-        public string Password { get; set; }
-        public int Intentos { get; set; }
-        public string Mail { get; set; }
-        public string Telefono { get; set; }
-        public string Direccion { get; set; }
+        public int usuario_id { get; set; }
+        public string usuario_username { get; set; }
+        public string password { get; set; }
+        public int usuario_intentosLogin { get; set; }
+        public string mail { get; set; }
+        public string telefono { get; set; }
+        public string direccion { get; set; }
         public string Calle { get; set; }
         public string NroPiso { get; set; }
         public string Depto { get; set; }
         public string Localidad { get; set; }
-        public string CodigoPostal { get; set; }        
-        public bool Estado { get; set; }
+        public string cod_postal { get; set; }        
+        public bool usuario_activo { get; set; }
 
 
         public List<Rol> Roles = new List<Rol>();
 
-        public Usuario(int idUsuario, string nombreUsuario, string password)
+        public Usuario(int usuario_id, string usuario_username, string password)
         {
-            this.IdUsuario = idUsuario;
-            this.NombreUsuario = nombreUsuario;
-            this.Password = password;
+            this.usuario_id = usuario_id;
+            this.usuario_username = usuario_username;
+            this.password = password;
             Interfaz.usuarioLogeado(this);
         }
 
@@ -41,23 +41,23 @@ namespace PalcoNet.Model
         public Boolean esAdmin()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.IdUsuario);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
 
-            string commandText = "SELECT IdRol FROM PalcoNet.Rol_Usuario WHERE IdUsuario = @idUsuario";
+            string commandText = "SELECT rol_id FROM VADIUM.ROL_POR_USUARIO WHERE usuario_id = @usuario_id";
 
             SqlDataReader lector = SqlConnector.ObtenerDataReader(commandText, "T", listaParametros);
             if (lector.HasRows)
             {
                 lector.Read();
 
-                int idRol = Convert.ToInt32(lector["IdRol"]);
+                int rol_id = Convert.ToInt32(lector["rol_id"]);
                 SqlConnector.cerrarConexion();
 
 
                 listaParametros.Clear();
-                SqlConnector.agregarParametro(listaParametros, "@idRol", idRol);
+                SqlConnector.agregarParametro(listaParametros, "@rol_id", rol_id);
 
-                commandText = "SELECT Nombre FROM PalcoNet.Rol WHERE ID_ROL = @idRol";
+                commandText = "SELECT nombre FROM VADIUM.ROL WHERE rol_id = @rol_id";
 
                 lector = SqlConnector.ObtenerDataReader(commandText, "T", listaParametros);
 
@@ -65,7 +65,7 @@ namespace PalcoNet.Model
                 {
                     lector.Read();
 
-                    string nombre = Convert.ToString(lector["Nombre"]);
+                    string nombre = Convert.ToString(lector["nombre"]);
                     SqlConnector.cerrarConexion();
 
                     if (nombre == "Administrador General")
@@ -83,12 +83,12 @@ namespace PalcoNet.Model
         public Boolean obtenerPK()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@nombreUsuario", this.NombreUsuario);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario FROM PalcoNet.Usuario WHERE NombreUsuario = @nombreUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario_username);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = @usuario_username", listaParametros, SqlConnector.iniciarConexion());
             if (lector.HasRows)
             {
                 lector.Read();
-                this.IdUsuario = Convert.ToInt32(lector["IdUsuario"]);
+                this.usuario_id = Convert.ToInt32(lector["usuario_id"]);
                 SqlConnector.cerrarConexion();
                 return true;
             }
@@ -102,10 +102,10 @@ namespace PalcoNet.Model
         public Boolean habilitado()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.IdUsuario);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT Estado FROM PalcoNet.Usuario WHERE IdUsuario = @idUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_activo FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
-            if (Convert.ToInt32(lector["Estado"]) == 1)
+            if (Convert.ToInt32(lector["usuario_activo"]) == 1)
             {
                 SqlConnector.cerrarConexion();
                 return true;
@@ -118,13 +118,13 @@ namespace PalcoNet.Model
         }
 
       
-        public int primeraVez()
+        public int primera_vez()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.IdUsuario);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT Primera_Vez FROM PalcoNet.Usuario WHERE IdUsuario = @idUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT primera_vez FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
-            int pVez = Convert.ToInt32(lector["Primera_Vez"]);
+            int pVez = Convert.ToInt32(lector["primera_vez"]);
             if (pVez == 0)
             {
                 SqlConnector.cerrarConexion();
@@ -140,10 +140,10 @@ namespace PalcoNet.Model
         public Boolean verificarContraseniaSinHash(string password)
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.IdUsuario);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT Password FROM PalcoNet.Usuario WHERE IdUsuario = @idUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT password FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
-            if (password == Convert.ToString(lector["Password"]))
+            if (password == Convert.ToString(lector["password"]))
             {
                 SqlConnector.cerrarConexion();
                 return true;
@@ -159,50 +159,50 @@ namespace PalcoNet.Model
         public Boolean verificarContrasenia()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@Username", this.NombreUsuario);
-            SqlConnector.agregarParametro(listaParametros, "@password", this.Password);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT NombreUsuario, Password FROM PalcoNet.Usuario WHERE Username = @Username AND Password = @password", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@Username", this.usuario_username);
+            SqlConnector.agregarParametro(listaParametros, "@password", this.password);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_username, password FROM VADIUM.USUARIO WHERE Username = @Username AND password = @password", listaParametros, SqlConnector.iniciarConexion());
             Boolean res = lector.HasRows;
             SqlConnector.cerrarConexion();
             return res;
         }
 
-        public void ResetearIntentosFallidos()
+        public void Resetearusuario_intentosLoginFallidos()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.IdUsuario);
-            SqlConnector.ejecutarQuery("UPDATE PalcoNet.Usuario SET Intentos = 0 WHERE IdUsuario = @idUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_intentosLogin = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
         }
 
         public void sumarIntentoFallido()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.IdUsuario);
-            SqlConnector.ejecutarQuery("UPDATE PalcoNet.Usuario SET Intentos = (Intentos+1) WHERE IdUsuario = @idUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_intentosLogin = (usuario_intentosLogin+1) WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
         }
 
-        public int intentosFallidos()
+        public int usuario_intentosLoginFallidos()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.IdUsuario);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT Intentos FROM PalcoNet.Usuario WHERE IdUsuario = @idUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_intentosLogin FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
-            int res = Convert.ToInt32(lector["Intentos"]);
+            int res = Convert.ToInt32(lector["usuario_intentosLogin"]);
             SqlConnector.cerrarConexion();
             return res;
         }
 
-        public int cantidadIntentosFallidos()
+        public int cantidadusuario_intentosLoginFallidos()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.IdUsuario);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT Intentos FROM PalcoNet.Usuario WHERE IdUsuario = @idUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_intentosLogin FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             if (lector.HasRows)
             {
                 lector.Read();
-                int resultado = Convert.ToInt32(lector["Intentos"]);
+                int resultado = Convert.ToInt32(lector["usuario_intentosLogin"]);
                 SqlConnector.cerrarConexion();
                 return resultado;
             }
@@ -216,12 +216,12 @@ namespace PalcoNet.Model
         public void inhabilitarUsuario()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.IdUsuario);
-            SqlConnector.ejecutarQuery("UPDATE PalcoNet.Usuario SET Estado = 0 WHERE IdUsuario = @idUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_activo = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
         }
 
-        public void cambiarPassword(string nuevoPass)
+        public void cambiarpassword(string nuevoPass)
         {
             UTF8Encoding encoderHash = new UTF8Encoding();
             SHA256Managed hasher = new SHA256Managed();
@@ -229,9 +229,9 @@ namespace PalcoNet.Model
             string password = bytesDeHasheoToString(bytesDeHasheo);
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", this.IdUsuario);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
             SqlConnector.agregarParametro(listaParametros, "@password", password);
-            SqlConnector.ejecutarQuery("UPDATE PalcoNet.Usuario SET Password = @password, Primera_Vez = 0 WHERE IdUsuario = @idUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET password = @password, primera_vez = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
         }
 
@@ -248,18 +248,18 @@ namespace PalcoNet.Model
         public Boolean obtenerRoles()
         {
             List<SqlParameter> listaParametros1 = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros1, "@idUsuario", this.IdUsuario);
+            SqlConnector.agregarParametro(listaParametros1, "@usuario_id", this.usuario_id);
             SqlConnection conexion = SqlConnector.iniciarConexion();
-            SqlDataReader lectorRolesUsuario = SqlConnector.ejecutarReader("SELECT IdRol FROM PalcoNet.Rol_Usuario WHERE IdUsuario = @idUsuario", listaParametros1, conexion);
+            SqlDataReader lectorRolesUsuario = SqlConnector.ejecutarReader("SELECT rol_id FROM VADIUM.ROL_POR_USUARIO WHERE usuario_id = @usuario_id", listaParametros1, conexion);
             if (lectorRolesUsuario.HasRows)
             {
                 while (lectorRolesUsuario.Read())
                 {
                     List<SqlParameter> listaParametros2 = new List<SqlParameter>();
-                    SqlConnector.agregarParametro(listaParametros2, "@idRol", Convert.ToInt32(lectorRolesUsuario["IdRol"]));
-                    SqlDataReader lectorRoles = SqlConnector.ejecutarReader("SELECT Nombre, Estado FROM PalcoNet.Rol WHERE ID_Rol = @idRol", listaParametros2, conexion);
+                    SqlConnector.agregarParametro(listaParametros2, "@rol_id", Convert.ToInt32(lectorRolesUsuario["rol_id"]));
+                    SqlDataReader lectorRoles = SqlConnector.ejecutarReader("SELECT nombre, usuario_activo FROM VADIUM.ROL WHERE rol_id = @rol_id", listaParametros2, conexion);
                     lectorRoles.Read();
-                    Rol nuevoRol = new Rol(Convert.ToInt32(lectorRolesUsuario["IdRol"]), lectorRoles["Nombre"].ToString(), (bool)lectorRoles["Estado"]);
+                    Rol nuevoRol = new Rol(Convert.ToInt32(lectorRolesUsuario["rol_id"]), lectorRoles["nombre"].ToString(), (bool)lectorRoles["usuario_activo"]);
                     nuevoRol.obtenerFuncionalidades(conexion);
                     this.Roles.Add(nuevoRol);
                 }
@@ -274,17 +274,17 @@ namespace PalcoNet.Model
         }
        
 
-        public static bool controlarRol(int idUsuario)
+        public static bool controlarRol(int usuario_id)
         {
             bool resultado = false;
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            listaParametros.Add(new SqlParameter("@idUsuario", idUsuario));
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdRol FROM PalcoNet.Rol_Usuario WHERE IdUsuario = @idUsuario", listaParametros, SqlConnector.iniciarConexion());
+            listaParametros.Add(new SqlParameter("@usuario_id", usuario_id));
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT rol_id FROM VADIUM.ROL_POR_USUARIO WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             if (lector.HasRows)
             {
                 lector.Read();
-                int rol = Convert.ToInt32(lector["IdRol"]);
+                int rol = Convert.ToInt32(lector["rol_id"]);
                 if (rol == 0)
                 {
                     resultado = true;
@@ -297,48 +297,48 @@ namespace PalcoNet.Model
 
         public static DataTable obtenerUsuarios()
         {
-            string str = "SELECT IdUsuario, NombreUsuario from PalcoNet.Usuario";
+            string str = "SELECT usuario_id, usuario_username from VADIUM.USUARIO";
 
             DataTable DataTable = SqlConnector.obtenerDataTable(str, "T");
 
             return DataTable;
         }
 
-        public static string obtenerUsername(int idUsuario)
+        public static string obtenerUsername(int usuario_id)
         {
             string username = "";
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", idUsuario);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", usuario_id);
             SqlConnection conexion = SqlConnector.iniciarConexion();
 
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT NombreUsuario FROM PalcoNet.Usuario WHERE IdUsuario = @idUsuario", listaParametros, conexion);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_username FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id", listaParametros, conexion);
             lector.Read();
 
-            username = Convert.ToString(lector["NombreUsuario"]);
+            username = Convert.ToString(lector["usuario_username"]);
 
             SqlConnector.cerrarConexion();
             return username;
         }        
 
-        public static int obteneridUsuario(string username)
+        public static int obtenerusuario_id(string username)
         {
-            int idUsuario;
+            int usuario_id;
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
 
-            SqlConnector.agregarParametro(listaParametros, "@nombreUsuario", username);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_username", username);
 
-            string commandText = "SELECT IdUsuario FROM PalcoNet.Usuario WHERE Username = @nombreUsuario";
+            string commandText = "SELECT usuario_id FROM VADIUM.USUARIO WHERE usario_username = @usuario_username";
 
             SqlDataReader lector = SqlConnector.ObtenerDataReader(commandText, "T", listaParametros);
 
             if (lector.HasRows)
             {
                 lector.Read();
-                idUsuario = Convert.ToInt32(lector["IdUsuario"]);
+                usuario_id = Convert.ToInt32(lector["usuario_id"]);
                 SqlConnector.cerrarConexion();
-                return idUsuario;
+                return usuario_id;
             }
             else
                 return -1;

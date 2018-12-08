@@ -10,13 +10,13 @@ namespace PalcoNet.Model
         {
             List<Funcionalidad> listaFuncionalidades = new List<Funcionalidad>();
 
-            SqlDataReader lectorFuncionalidades = SqlConnector.ejecutarReader("SELECT IdFuncionalidad, Descripcion FROM PalcoNet.Funcionalidades", conexion);
+            SqlDataReader lectorFuncionalidades = SqlConnector.ejecutarReader("SELECT funcionalidad_id, Descripcion FROM PalcoNet.Funcionalidades", conexion);
 
             if (lectorFuncionalidades.HasRows)
             {
                 while (lectorFuncionalidades.Read())
                 {
-                    Funcionalidad unaFuncionalidad = new Funcionalidad((int)(decimal)lectorFuncionalidades["IdFuncionalidad"], (string)lectorFuncionalidades["Descripcion"]);
+                    Funcionalidad unaFuncionalidad = new Funcionalidad((int)(decimal)lectorFuncionalidades["funcionalidad_id"], (string)lectorFuncionalidades["Descripcion"]);
                     listaFuncionalidades.Add(unaFuncionalidad);
                 }
             }
@@ -24,19 +24,19 @@ namespace PalcoNet.Model
             return listaFuncionalidades;
         }
 
-        public static List<Funcionalidad> obtenerFuncionalidades(SqlConnection conexion, int idRol)
+        public static List<Funcionalidad> obtenerFuncionalidades(SqlConnection conexion, int rol_id)
         {
             List<Funcionalidad> listaFuncionalidades = new List<Funcionalidad>();
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@IdRol", idRol);
-            SqlDataReader lectorFuncionalidades = SqlConnector.ejecutarReader("SELECT f.IdFuncionalidad, f.Nombre FROM PalcoNet.Funcionalidades f, PalcoNet.Funcionalidad_Rol fr WHERE fr.IdRol = @IdRol AND fr.IdFuncionalidad = f.IdFuncionalidad", listaParametros, conexion);
+            SqlConnector.agregarParametro(listaParametros, "@rol_id", rol_id);
+            SqlDataReader lectorFuncionalidades = SqlConnector.ejecutarReader("SELECT f.funcionalidad_id, f.nombre FROM PalcoNet.Funcionalidades f, VADIUM.ROL_POR_FUNCIONALIDAD fr WHERE fr.rol_id = @rol_id AND fr.funcionalidad_id = f.funcionalidad_id", listaParametros, conexion);
 
             if (lectorFuncionalidades.HasRows)
             {
                 while (lectorFuncionalidades.Read())
                 {
-                    Funcionalidad unaFuncionalidad = new Funcionalidad((int)(decimal)lectorFuncionalidades["IdFuncionalidad"], (string)lectorFuncionalidades["Descripcion"]);
+                    Funcionalidad unaFuncionalidad = new Funcionalidad((int)(decimal)lectorFuncionalidades["funcionalidad_id"], (string)lectorFuncionalidades["Descripcion"]);
                     listaFuncionalidades.Add(unaFuncionalidad);
                 }
             }

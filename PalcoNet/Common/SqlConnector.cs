@@ -355,13 +355,13 @@ namespace PalcoNet.Common
 
         //telefono
 
-        public static Boolean existeTelefono(int numero)
+        public static Boolean existetelefono(int numero)
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             agregarParametro(listaParametros, "@valor", numero);
 
             //tabla cliente
-            SqlDataReader lector = ejecutarReader("SELECT * FROM PalcoNet.Cliente WHERE Telefono = @valor", listaParametros, iniciarConexion());
+            SqlDataReader lector = ejecutarReader("SELECT * FROM VADIUM.CLIENTE WHERE telefono = @valor", listaParametros, iniciarConexion());
             Boolean res = lector.HasRows;
             if (res)
             {
@@ -374,7 +374,7 @@ namespace PalcoNet.Common
                 cerrarConexion();
                 List<SqlParameter> listaParametros2 = new List<SqlParameter>();
                 agregarParametro(listaParametros2, "@valor", numero);
-                SqlDataReader lector2 = ejecutarReader("SELECT * FROM PalcoNet.Empresa WHERE Telefono = @valor", listaParametros2, iniciarConexion());
+                SqlDataReader lector2 = ejecutarReader("SELECT * FROM VADIUM.EMPRESA WHERE telefono = @valor", listaParametros2, iniciarConexion());
                 res = lector2.HasRows;
                 if (res)
                 {

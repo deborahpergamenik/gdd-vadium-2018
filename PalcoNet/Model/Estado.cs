@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace PalcoNet.Model
 {
-    public class Estado
+    public class usuario_activo
     {
         public int codigo { get; set; }
         public string descripcion { get; set; }
 
-        public Estado(int cod, string desc)
+        public usuario_activo(int cod, string desc)
         {
             this.codigo = cod;
             this.descripcion = desc;

@@ -20,15 +20,15 @@ namespace PalcoNet.Abm_Cliente
 
         public class ResultadoClientes
         {
-            public int IdUsuario { get; set; }
-            public string Nombre { get; set; }
-            public string Apellido { get; set; }
+            public int usuario_id { get; set; }
+            public string nombre { get; set; }
+            public string apellido { get; set; }
 
-            public ResultadoClientes(int idUsuario, string nombre, string apellido)
+            public ResultadoClientes(int usuario_id, string nombre, string apellido)
             {
-                IdUsuario = idUsuario;
-                Nombre = nombre;
-                Apellido = apellido;
+                usuario_id = usuario_id;
+                nombre = nombre;
+                apellido = apellido;
             }
         }
 
@@ -51,11 +51,11 @@ namespace PalcoNet.Abm_Cliente
 
             switch (filtro)
             {
-                case 'N': // Nombre
-                    resultado = buscarNombre();
+                case 'N': // nombre
+                    resultado = buscarnombre();
                     break;
-                case 'A': // Apellido
-                    resultado = buscarApellido();
+                case 'A': // apellido
+                    resultado = buscarapellido();
                     break;
                 case 'T': // Tipo de documento
                     resultado = buscarTipoDeDocumento();
@@ -64,18 +64,18 @@ namespace PalcoNet.Abm_Cliente
                     resultado = buscarNumeroDeDocumento();
                     break;
                 case 'E': // E-mail
-                    resultado = buscarEmail();
+                    resultado = buscarmail();
                     break;
             }
 
             return resultado;
         }
 
-        public int buscarNombre()
+        public int buscarnombre()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@nombre", this.valor);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario, Nombre, Apellido FROM PalcoNet.Cliente WHERE Nombre = @nombre", listaParametros, SqlConnector.iniciarConexion());
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id, nombre, apellido FROM VADIUM.CLIENTE WHERE nombre = @nombre", listaParametros, SqlConnector.iniciarConexion());
 
             int cantRes = 0;
 
@@ -83,11 +83,11 @@ namespace PalcoNet.Abm_Cliente
             {
                 while (lector.Read())
                 {
-                    int IdUsuario = Convert.ToInt32(lector["IdUsuario"]);
-                    string Nombre = Convert.ToString(lector["Nombre"]);
-                    string Apellido = Convert.ToString(lector["Apellido"]);
+                    int usuario_id = Convert.ToInt32(lector["usuario_id"]);
+                    string nombre = Convert.ToString(lector["nombre"]);
+                    string apellido = Convert.ToString(lector["apellido"]);
 
-                    ResultadoClientes resultado = new ResultadoClientes(IdUsuario, Nombre, Apellido);
+                    ResultadoClientes resultado = new ResultadoClientes(usuario_id, nombre, apellido);
                     resultados.Add(resultado);
                 }
             }
@@ -96,11 +96,11 @@ namespace PalcoNet.Abm_Cliente
             return cantRes;
         }
 
-        public int buscarApellido()
+        public int buscarapellido()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@apellido", this.valor);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario, Nombre, Apellido FROM PalcoNet.Cliente WHERE Apellido = @apellido", listaParametros, SqlConnector.iniciarConexion());
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id, nombre, apellido FROM VADIUM.CLIENTE WHERE apellido = @apellido", listaParametros, SqlConnector.iniciarConexion());
 
             int cantRes = 0;
 
@@ -108,11 +108,11 @@ namespace PalcoNet.Abm_Cliente
             {
                 while (lector.Read())
                 {
-                    int IdUsuario = Convert.ToInt32(lector["IdUsuario"]);
-                    string Nombre = Convert.ToString(lector["Nombre"]);
-                    string Apellido = Convert.ToString(lector["Apellido"]);
+                    int usuario_id = Convert.ToInt32(lector["usuario_id"]);
+                    string nombre = Convert.ToString(lector["nombre"]);
+                    string apellido = Convert.ToString(lector["apellido"]);
 
-                    ResultadoClientes resultado = new ResultadoClientes(IdUsuario, Nombre, Apellido);
+                    ResultadoClientes resultado = new ResultadoClientes(usuario_id, nombre, apellido);
                     resultados.Add(resultado);
                 }
             }
@@ -124,8 +124,8 @@ namespace PalcoNet.Abm_Cliente
         public int buscarTipoDeDocumento()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@numDoc", this.valor);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario, Nombre, Apellido FROM PalcoNet.Cliente WHERE NumDoc = @numDoc", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@numeroDocumento", this.valor);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id, nombre, apellido FROM VADIUM.CLIENTE WHERE numeroDocumento = @numeroDocumento", listaParametros, SqlConnector.iniciarConexion());
 
             int cantRes = 0;
 
@@ -133,11 +133,11 @@ namespace PalcoNet.Abm_Cliente
             {
                 while (lector.Read())
                 {
-                    int IdUsuario = Convert.ToInt32(lector["IdUsuario"]);
-                    string Nombre = Convert.ToString(lector["Nombre"]);
-                    string Apellido = Convert.ToString(lector["Apellido"]);
+                    int usuario_id = Convert.ToInt32(lector["usuario_id"]);
+                    string nombre = Convert.ToString(lector["nombre"]);
+                    string apellido = Convert.ToString(lector["apellido"]);
 
-                    ResultadoClientes resultado = new ResultadoClientes(IdUsuario, Nombre, Apellido);
+                    ResultadoClientes resultado = new ResultadoClientes(usuario_id, nombre, apellido);
                     resultados.Add(resultado);
                 }
             }
@@ -149,8 +149,8 @@ namespace PalcoNet.Abm_Cliente
         public int buscarNumeroDeDocumento()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@numDoc", this.valor);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario, Nombre, Apellido FROM PalcoNet.Cliente WHERE NumDoc = @numDoc", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@numeroDocumento", this.valor);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id, nombre, apellido FROM VADIUM.CLIENTE WHERE numeroDocumento = @numeroDocumento", listaParametros, SqlConnector.iniciarConexion());
 
             int cantRes = 0;
 
@@ -158,11 +158,11 @@ namespace PalcoNet.Abm_Cliente
             {
                 while (lector.Read())
                 {
-                    int IdUsuario = Convert.ToInt32(lector["IdUsuario"]);
-                    string Nombre = Convert.ToString(lector["Nombre"]);
-                    string Apellido = Convert.ToString(lector["Apellido"]);
+                    int usuario_id = Convert.ToInt32(lector["usuario_id"]);
+                    string nombre = Convert.ToString(lector["nombre"]);
+                    string apellido = Convert.ToString(lector["apellido"]);
 
-                    ResultadoClientes resultado = new ResultadoClientes(IdUsuario, Nombre, Apellido);
+                    ResultadoClientes resultado = new ResultadoClientes(usuario_id, nombre, apellido);
                     resultados.Add(resultado);
                 }
             }
@@ -171,11 +171,11 @@ namespace PalcoNet.Abm_Cliente
             return cantRes;
         }
 
-        public int buscarEmail()
+        public int buscarmail()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@email", this.valor);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario, Nombre, Apellido FROM PalcoNet.Cliente WHERE Email = @email", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@mail", this.valor);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id, nombre, apellido FROM VADIUM.CLIENTE WHERE mail = @mail", listaParametros, SqlConnector.iniciarConexion());
 
             int cantRes = 0;
 
@@ -183,11 +183,11 @@ namespace PalcoNet.Abm_Cliente
             {
                 while (lector.Read())
                 {
-                    int IdUsuario = Convert.ToInt32(lector["IdUsuario"]);
-                    string Nombre = Convert.ToString(lector["Nombre"]);
-                    string Apellido = Convert.ToString(lector["Apellido"]);
+                    int usuario_id = Convert.ToInt32(lector["usuario_id"]);
+                    string nombre = Convert.ToString(lector["nombre"]);
+                    string apellido = Convert.ToString(lector["apellido"]);
 
-                    ResultadoClientes resultado = new ResultadoClientes(IdUsuario, Nombre, Apellido);
+                    ResultadoClientes resultado = new ResultadoClientes(usuario_id, nombre, apellido);
                     resultados.Add(resultado);
                 }
             }
@@ -198,26 +198,26 @@ namespace PalcoNet.Abm_Cliente
 
         public void formatearDataGrid()
         {
-            int widthNombre = 100;
-            int widthApellido = 120;
+            int widthnombre = 100;
+            int widthapellido = 120;
             int widthBotones = 80;
 
             dgResultados.DataSource = resultados;
             dgResultados.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgResultados.RowHeadersVisible = false;
 
-            DataGridViewColumn col_idUsuario = dgResultados.Columns[0];
-            col_idUsuario.Visible = false;
+            DataGridViewColumn col_usuario_id = dgResultados.Columns[0];
+            col_usuario_id.Visible = false;
 
             DataGridViewColumn col_nombre = dgResultados.Columns[1];
             col_nombre.Resizable = DataGridViewTriState.False;
             col_nombre.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col_nombre.Width = widthNombre;
+            col_nombre.Width = widthnombre;
 
             DataGridViewColumn col_apellido = dgResultados.Columns[2];
             col_apellido.Resizable = DataGridViewTriState.False;
             col_apellido.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col_apellido.Width = widthApellido;
+            col_apellido.Width = widthapellido;
 
             DataGridViewButtonColumn botonesModificar = new DataGridViewButtonColumn();
             botonesModificar.HeaderText = "";
@@ -242,8 +242,8 @@ namespace PalcoNet.Abm_Cliente
         public void eliminarCliente(int id)
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", id);
-            SqlConnector.ejecutarQuery("UPDATE PalcoNet.Usuario SET Estado = 0 WHERE IdUsuario = @idUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", id);
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_activo = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
             MessageBox.Show("Usuario inhabilitado.");
         }

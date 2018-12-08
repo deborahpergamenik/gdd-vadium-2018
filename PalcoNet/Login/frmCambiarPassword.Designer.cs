@@ -1,6 +1,6 @@
 ﻿namespace PalcoNet.Login
 {
-    partial class frmCambiarPassword
+    partial class frmCambiarpassword
     {
         /// <summary>
         /// Required designer variable.
@@ -111,7 +111,7 @@
             this.button1.Text = "Aceptar";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // frmCambiarPassword
+            // frmCambiarpassword
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -120,8 +120,8 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button1);
-            this.Name = "frmCambiarPassword";
-            this.Text = "frmCambiarPassword";
+            this.Name = "frmCambiarpassword";
+            this.Text = "frmCambiarpassword";
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);

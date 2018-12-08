@@ -31,7 +31,7 @@
             this.btnAceptar = new System.Windows.Forms.Button();
             this.tGB = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.txtPassword = new System.Windows.Forms.TextBox();
+            this.txtpassword = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtUsuario = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -53,7 +53,7 @@
             // tGB
             // 
             this.tGB.Controls.Add(this.label3);
-            this.tGB.Controls.Add(this.txtPassword);
+            this.tGB.Controls.Add(this.txtpassword);
             this.tGB.Controls.Add(this.label4);
             this.tGB.Controls.Add(this.txtUsuario);
             this.tGB.Location = new System.Drawing.Point(13, 76);
@@ -73,17 +73,17 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(135, 17);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Nombre de Usuario:";
+            this.label3.Text = "nombre de Usuario:";
             // 
-            // txtPassword
+            // txtpassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(151, 58);
-            this.txtPassword.Margin = new System.Windows.Forms.Padding(4);
-            this.txtPassword.Multiline = true;
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.ReadOnly = true;
-            this.txtPassword.Size = new System.Drawing.Size(199, 24);
-            this.txtPassword.TabIndex = 1;
+            this.txtpassword.Location = new System.Drawing.Point(151, 58);
+            this.txtpassword.Margin = new System.Windows.Forms.Padding(4);
+            this.txtpassword.Multiline = true;
+            this.txtpassword.Name = "txtpassword";
+            this.txtpassword.ReadOnly = true;
+            this.txtpassword.Size = new System.Drawing.Size(199, 24);
+            this.txtpassword.TabIndex = 1;
             // 
             // label4
             // 
@@ -148,7 +148,7 @@
         private System.Windows.Forms.Button btnAceptar;
         private System.Windows.Forms.GroupBox tGB;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.TextBox txtpassword;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtUsuario;
         private System.Windows.Forms.Label label2;

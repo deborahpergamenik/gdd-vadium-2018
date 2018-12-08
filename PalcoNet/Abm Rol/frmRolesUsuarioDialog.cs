@@ -13,35 +13,35 @@ namespace PalcoNet.Abm_Rol
 {
     public partial class frmRolesUsuarioDialog : Form
     {
-        int idUsuario;
-        string usuarioNombre;
+        int usuario_id;
+        string usuarionombre;
         List<Rol> todosLosRoles;
         List<Rol> rolesUsuario;
 
-        public frmRolesUsuarioDialog(int _idUsuario, string _usuarioNombre)
+        public frmRolesUsuarioDialog(int _usuario_id, string _usuarionombre)
         {
             InitializeComponent();
-            idUsuario = _idUsuario;
-            usuarioNombre = _usuarioNombre;
+            usuario_id = _usuario_id;
+            usuarionombre = _usuarionombre;
 
             cblRoles.DisplayMember = "rol_nombre";
             cblRoles.ValueMember = "rol_id";
 
             todosLosRoles = Roles.obtenerRoles();
-            rolesUsuario = Roles.obtenerRolesUsuario(idUsuario);
+            rolesUsuario = Roles.obtenerRolesUsuario(usuario_id);
 
             cargarCheckboxList();
             cargarRolesUsuario();
 
-            txtIdUsuario.Text = Convert.ToString(idUsuario);
-            txtUsuarioNombre.Text = usuarioNombre;
+            txtusuario_id.Text = Convert.ToString(usuario_id);
+            txtUsuarionombre.Text = usuarionombre;
         }
 
         private void cargarCheckboxList()
         {
             for (int i = 0; i < todosLosRoles.Count(); i++)
             {
-                cblRoles.Items.Add(new Rol(todosLosRoles[i].Id, todosLosRoles[i].Nombre, todosLosRoles[i].Estado));
+                cblRoles.Items.Add(new Rol(todosLosRoles[i].Id, todosLosRoles[i].nombre, todosLosRoles[i].usuario_activo));
             }
         }
 
@@ -117,7 +117,7 @@ namespace PalcoNet.Abm_Rol
 
                 if (!encontro)
                     //delete
-                    Roles.BorrarRolEnUsuario(idUsuario, rolesUsuario[i].Id);
+                    Roles.BorrarRolEnUsuario(usuario_id, rolesUsuario[i].Id);
             }
 
             for (int i = 0; i < rolesSeleccionados.Count; i++)
@@ -134,7 +134,7 @@ namespace PalcoNet.Abm_Rol
                 }
                 if (!encontro)
                     //agregar
-                    Roles.AgregarRolEnUsuario(idUsuario, rolesSeleccionados[i].Id);
+                    Roles.AgregarRolEnUsuario(usuario_id, rolesSeleccionados[i].Id);
             }
         }
 
@@ -142,7 +142,7 @@ namespace PalcoNet.Abm_Rol
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             List<Rol> rolesSeleccionados = filtrarSeleccionadas();
-            rolesUsuario = Roles.obtenerRolesUsuario(idUsuario);
+            rolesUsuario = Roles.obtenerRolesUsuario(usuario_id);
 
             if (sonIguales(rolesSeleccionados))
             {

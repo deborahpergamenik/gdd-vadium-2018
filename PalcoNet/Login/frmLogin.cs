@@ -16,7 +16,7 @@ namespace PalcoNet
 {
     public partial class frmLogin : Form
     {
-        public const int CANTIDAD_MAXIMA_INTENTOS = 3;
+        public const int CANTIDAD_MAXIMA_usuario_intentosLogin = 3;
         public frmLogin()
         {
             InitializeComponent();
@@ -25,24 +25,24 @@ namespace PalcoNet
 
         private void btnIngresar_Click(object sender, EventArgs e)
         {
-            if (!txtUsuario.Text.Equals("") && !txtPassword.Text.Equals(""))
+            if (!txtUsuario.Text.Equals("") && !txtpassword.Text.Equals(""))
             {
                 string username = txtUsuario.Text;
                 UTF8Encoding encoderHash = new UTF8Encoding();
                 SHA256Managed hasher = new SHA256Managed();
-                byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(txtPassword.Text));
+                byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(txtpassword.Text));
                 string password = bytesDeHasheoToString(bytesDeHasheo);
                 Usuario usuarioLogin = new Usuario(0, username, password);
                 if (usuarioLogin.obtenerPK())
                 {
                     if (usuarioLogin.habilitado())
                     {
-                        int pVez = usuarioLogin.primeraVez();
+                        int pVez = usuarioLogin.primera_vez();
                         if (pVez == 0)
                         {
                             if (usuarioLogin.verificarContrasenia())
                             {
-                                usuarioLogin.ResetearIntentosFallidos();
+                                usuarioLogin.Resetearusuario_intentosLoginFallidos();
                                 if (usuarioLogin.obtenerRoles())
                                 {
                                     if (usuarioLogin.Roles.Count() == 1)
@@ -67,14 +67,14 @@ namespace PalcoNet
                             else
                             {
                                 usuarioLogin.sumarIntentoFallido();
-                                if (usuarioLogin.cantidadIntentosFallidos() == CANTIDAD_MAXIMA_INTENTOS)
+                                if (usuarioLogin.cantidadusuario_intentosLoginFallidos() == CANTIDAD_MAXIMA_usuario_intentosLogin)
                                 {
                                     usuarioLogin.inhabilitarUsuario();
                                     MessageBox.Show("Usuario inhabilitado.", "Error");
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Usuario o contraseña incorrecta, le quedan " + (CANTIDAD_MAXIMA_INTENTOS - usuarioLogin.intentosFallidos()).ToString() + " intentos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    MessageBox.Show("Usuario o contraseña incorrecta, le quedan " + (CANTIDAD_MAXIMA_usuario_intentosLogin - usuarioLogin.usuario_intentosLoginFallidos()).ToString() + " usuario_intentosLogin", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 }
                             }
                         }
@@ -82,29 +82,29 @@ namespace PalcoNet
                         {
                             if (pVez == 2)
                             {
-                                if (usuarioLogin.verificarContraseniaSinHash(txtPassword.Text))
+                                if (usuarioLogin.verificarContraseniaSinHash(txtpassword.Text))
                                 {
-                                    frmCambiarPassword frmPassword = new frmCambiarPassword(true);
-                                    frmPassword.Show();
+                                    frmCambiarpassword frmpassword = new frmCambiarpassword(true);
+                                    frmpassword.Show();
                                 }
                                 else
                                 {
                                     usuarioLogin.sumarIntentoFallido();
-                                    if (usuarioLogin.cantidadIntentosFallidos() == CANTIDAD_MAXIMA_INTENTOS)
+                                    if (usuarioLogin.cantidadusuario_intentosLoginFallidos() == CANTIDAD_MAXIMA_usuario_intentosLogin)
                                     {
                                         usuarioLogin.inhabilitarUsuario();
                                         MessageBox.Show("Usuario inhabilitado.", "Error");
                                     }
                                     else
                                     {
-                                        MessageBox.Show("Usuario o contraseña incorrecta, le quedan " + (CANTIDAD_MAXIMA_INTENTOS - usuarioLogin.intentosFallidos()).ToString() + " intentos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        MessageBox.Show("Usuario o contraseña incorrecta, le quedan " + (CANTIDAD_MAXIMA_usuario_intentosLogin - usuarioLogin.usuario_intentosLoginFallidos()).ToString() + " usuario_intentosLogin", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     }
                                 }
                             }
                             if (pVez == 1)
                             {
-                                frmCambiarPassword frmPassword = new frmCambiarPassword(false);
-                                frmPassword.Show();
+                                frmCambiarpassword frmpassword = new frmCambiarpassword(false);
+                                frmpassword.Show();
                             }
                         }
                     }

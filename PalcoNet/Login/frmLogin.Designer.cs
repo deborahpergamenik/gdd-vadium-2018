@@ -33,7 +33,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.txtPassword = new System.Windows.Forms.TextBox();
+            this.txtpassword = new System.Windows.Forms.TextBox();
             this.txtUsuario = new System.Windows.Forms.TextBox();
             this.btnRegistrarse = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -99,16 +99,16 @@
             this.label1.TabIndex = 22;
             this.label1.Text = "Bienvenido Al Sistema PalcoNet-FRBA";
             // 
-            // txtPassword
+            // txtpassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(201, 191);
-            this.txtPassword.Margin = new System.Windows.Forms.Padding(4);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(195, 22);
-            this.txtPassword.TabIndex = 21;
-            this.txtPassword.Tag = "Ingresar";
-            this.txtPassword.UseSystemPasswordChar = true;
+            this.txtpassword.Location = new System.Drawing.Point(201, 191);
+            this.txtpassword.Margin = new System.Windows.Forms.Padding(4);
+            this.txtpassword.Name = "txtpassword";
+            this.txtpassword.passwordChar = '*';
+            this.txtpassword.Size = new System.Drawing.Size(195, 22);
+            this.txtpassword.TabIndex = 21;
+            this.txtpassword.Tag = "Ingresar";
+            this.txtpassword.UseSystempasswordChar = true;
             // 
             // txtUsuario
             // 
@@ -142,7 +142,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.txtPassword);
+            this.Controls.Add(this.txtpassword);
             this.Controls.Add(this.txtUsuario);
             this.Name = "frmLogin";
             this.Text = "frmLogin";
@@ -158,7 +158,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.TextBox txtpassword;
         private System.Windows.Forms.TextBox txtUsuario;
         private System.Windows.Forms.Button btnRegistrarse;
     }

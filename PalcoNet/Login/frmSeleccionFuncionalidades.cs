@@ -32,12 +32,12 @@ namespace PalcoNet.Login
         public class itemComboBox
         {
             public string Descripcion { get; set; }
-            public int IdFuncionalidad { get; set; }
+            public int funcionalidad_id { get; set; }
 
             public itemComboBox(string descripcion, int id)
             {
                 Descripcion = descripcion;
-                IdFuncionalidad = id;
+                funcionalidad_id = id;
             }
             public override string ToString()
             {
@@ -45,12 +45,12 @@ namespace PalcoNet.Login
             }
         }
 
-        public frmSeleccionFuncionalidades(Usuario usuario, int idRol, Boolean bypass)
+        public frmSeleccionFuncionalidades(Usuario usuario, int rol_id, Boolean bypass)
         {
-            //Genera el diccionario de tipoPublicacion, estadoPublicacion, tipoOperacion y Visibilidades
+            //Genera el diccionario de tipoPublicacion, usuario_activoPublicacion, tipoOperacion y Visibilidades
             //Interfaz.generarDiccionarios();
             this.usuario = usuario;
-            var rolQuery = from rol in this.usuario.Roles where rol.Id == idRol select rol;
+            var rolQuery = from rol in this.usuario.Roles where rol.Id == rol_id select rol;
             foreach (var item in rolQuery)
             {
                 this.rolActual = item;
@@ -58,7 +58,7 @@ namespace PalcoNet.Login
 
             InitializeComponent();
             cmbFuncionalidades.DisplayMember = "Descripcion";
-            cmbFuncionalidades.ValueMember = "IdFuncionalidad";
+            cmbFuncionalidades.ValueMember = "funcionalidad_id";
             listarFuncionalidades();
 
             if (!bypass)
@@ -151,10 +151,10 @@ namespace PalcoNet.Login
             else
             {
                 itemComboBox seleccion = cmbFuncionalidades.SelectedItem as itemComboBox;
-                switch (seleccion.IdFuncionalidad)
+                switch (seleccion.funcionalidad_id)
                 {
                     case -2:
-                        frmCambiarPassword formPass = new frmCambiarPassword(false);
+                        frmCambiarpassword formPass = new frmCambiarpassword(false);
                         formPass.Show();
                         break;
                     case 1:
@@ -185,7 +185,7 @@ namespace PalcoNet.Login
                         this.Show();
                         break;
                     case 6:
-                        frmCanjePuntos form6 = new frmCanjePuntos(this.usuario.IdUsuario, this);
+                        frmCanjePuntos form6 = new frmCanjePuntos(this.usuario.usuario_id, this);
                         this.Hide();
                         form6.ShowDialog();
                         this.Show();

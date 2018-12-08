@@ -11,27 +11,27 @@ namespace PalcoNet.Model
     public class Rol
     {
         public int Id { get; set; }
-        public string Nombre { get; set; }
-        public bool Estado { get; set; }
+        public string nombre { get; set; }
+        public bool usuario_activo { get; set; }
         public List<Funcionalidad> Funcionalidades = new List<Funcionalidad>();
 
-        public Rol(int id, string nombre, bool estado)
+        public Rol(int id, string nombre, bool usuario_activo)
         {
             this.Id = id;
-            this.Nombre = nombre;
-            this.Estado = estado;
+            this.nombre = nombre;
+            this.usuario_activo = usuario_activo;
         }
 
         public void obtenerFuncionalidades(SqlConnection conexion)
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idRol", this.Id);
-            SqlDataReader lectorFuncionalidades = SqlConnector.ejecutarReader("SELECT IdFuncionalidad FROM PalcoNet.Funcionalidad_Rol WHERE ID_Rol = @idRol", listaParametros, conexion);
+            SqlConnector.agregarParametro(listaParametros, "@rol_id", this.Id);
+            SqlDataReader lectorFuncionalidades = SqlConnector.ejecutarReader("SELECT funcionalidad_id FROM VADIUM.ROL_POR_FUNCIONALIDAD WHERE rol_id = @rol_id", listaParametros, conexion);
             if (lectorFuncionalidades.HasRows)
             {
                 while (lectorFuncionalidades.Read())
                 {
-                    Funcionalidad funcionalidad = new Funcionalidad(Convert.ToInt32(lectorFuncionalidades["IdFuncionalidad"]));
+                    Funcionalidad funcionalidad = new Funcionalidad(Convert.ToInt32(lectorFuncionalidades["funcionalidad_id"]));
                     this.Funcionalidades.Add(funcionalidad);
                 }
             }
@@ -39,28 +39,28 @@ namespace PalcoNet.Model
 
         public static int obtenerID(string nombreRol)
         {
-            int idRol;
+            int rol_id;
             List<SqlParameter> listaParametros = new List<SqlParameter>();
 
             listaParametros.Clear();
 
             SqlConnector.agregarParametro(listaParametros, "@nombre", "Cliente");
 
-            string commandText = "SELECT IdRol FROM PalcoNet.Rol WHERE Nombre = @nombre";
+            string commandText = "SELECT rol_id FROM VADIUM.ROL WHERE nombre = @nombre";
 
             SqlDataReader lector = SqlConnector.ObtenerDataReader(commandText, "T", listaParametros);
 
             if (lector.HasRows)
             {
                 lector.Read();
-                idRol = Convert.ToInt32(lector["IdRol"]);
+                rol_id = Convert.ToInt32(lector["rol_id"]);
 
             }
             else
-                idRol = -1;
+                rol_id = -1;
 
             SqlConnector.cerrarConexion();
-            return idRol;
+            return rol_id;
         }
     }
 }

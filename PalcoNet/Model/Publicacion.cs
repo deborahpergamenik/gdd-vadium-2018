@@ -14,12 +14,12 @@ namespace PalcoNet.Model
         public DateTime FechaPublicacion { get; set; } 
         public DateTime FechaEspectaculo { get; set; }  
         public Rubro Rubro { get; set; }
-        public string DireccionEspectaculo { get; set; }
+        public string direccionEspectaculo { get; set; }
         public Grado GradoPublicacion { get; set; }
         //public int userId { get; set; }
         public int empresaId { get; set; }//la publicacion tiene asociada una empresa
-        //public int EstadoPublicacion { get; set; } el estado es una entidad y te va a convenir traete el id con la descripcion
-        public Estado estado { get; set; }
+        //public int usuario_activoPublicacion { get; set; } el usuario_activo es una entidad y te va a convenir traete el id con la descripcion
+        public usuario_activo usuario_activo { get; set; }
 
         internal void save()
         {

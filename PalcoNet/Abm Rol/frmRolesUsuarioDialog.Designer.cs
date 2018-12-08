@@ -32,9 +32,9 @@
             this.btnGuardar = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblUsername = new System.Windows.Forms.Label();
-            this.txtUsuarioNombre = new System.Windows.Forms.TextBox();
+            this.txtUsuarionombre = new System.Windows.Forms.TextBox();
             this.lblIdUser = new System.Windows.Forms.Label();
-            this.txtIdUsuario = new System.Windows.Forms.TextBox();
+            this.txtusuario_id = new System.Windows.Forms.TextBox();
             this.cblRoles = new System.Windows.Forms.CheckedListBox();
             this.lblRoles = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
@@ -66,9 +66,9 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.lblUsername);
-            this.groupBox1.Controls.Add(this.txtUsuarioNombre);
+            this.groupBox1.Controls.Add(this.txtUsuarionombre);
             this.groupBox1.Controls.Add(this.lblIdUser);
-            this.groupBox1.Controls.Add(this.txtIdUsuario);
+            this.groupBox1.Controls.Add(this.txtusuario_id);
             this.groupBox1.Controls.Add(this.cblRoles);
             this.groupBox1.Controls.Add(this.lblRoles);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
@@ -89,16 +89,16 @@
             this.lblUsername.Name = "lblUsername";
             this.lblUsername.Size = new System.Drawing.Size(115, 17);
             this.lblUsername.TabIndex = 8;
-            this.lblUsername.Text = "Nombre Usuario:";
+            this.lblUsername.Text = "nombre Usuario:";
             // 
-            // txtUsuarioNombre
+            // txtUsuarionombre
             // 
-            this.txtUsuarioNombre.Location = new System.Drawing.Point(131, 43);
-            this.txtUsuarioNombre.Margin = new System.Windows.Forms.Padding(4);
-            this.txtUsuarioNombre.Name = "txtUsuarioNombre";
-            this.txtUsuarioNombre.ReadOnly = true;
-            this.txtUsuarioNombre.Size = new System.Drawing.Size(203, 22);
-            this.txtUsuarioNombre.TabIndex = 9;
+            this.txtUsuarionombre.Location = new System.Drawing.Point(131, 43);
+            this.txtUsuarionombre.Margin = new System.Windows.Forms.Padding(4);
+            this.txtUsuarionombre.Name = "txtUsuarionombre";
+            this.txtUsuarionombre.ReadOnly = true;
+            this.txtUsuarionombre.Size = new System.Drawing.Size(203, 22);
+            this.txtUsuarionombre.TabIndex = 9;
             // 
             // lblIdUser
             // 
@@ -111,14 +111,14 @@
             this.lblIdUser.TabIndex = 4;
             this.lblIdUser.Text = "ID Usuario:";
             // 
-            // txtIdUsuario
+            // txtusuario_id
             // 
-            this.txtIdUsuario.Location = new System.Drawing.Point(93, 79);
-            this.txtIdUsuario.Margin = new System.Windows.Forms.Padding(4);
-            this.txtIdUsuario.Name = "txtIdUsuario";
-            this.txtIdUsuario.ReadOnly = true;
-            this.txtIdUsuario.Size = new System.Drawing.Size(241, 22);
-            this.txtIdUsuario.TabIndex = 5;
+            this.txtusuario_id.Location = new System.Drawing.Point(93, 79);
+            this.txtusuario_id.Margin = new System.Windows.Forms.Padding(4);
+            this.txtusuario_id.Name = "txtusuario_id";
+            this.txtusuario_id.ReadOnly = true;
+            this.txtusuario_id.Size = new System.Drawing.Size(241, 22);
+            this.txtusuario_id.TabIndex = 5;
             // 
             // cblRoles
             // 
@@ -162,8 +162,8 @@
         private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lblUsername;
-        private System.Windows.Forms.TextBox txtUsuarioNombre;
-        private System.Windows.Forms.TextBox txtIdUsuario;
+        private System.Windows.Forms.TextBox txtUsuarionombre;
+        private System.Windows.Forms.TextBox txtusuario_id;
         private System.Windows.Forms.CheckedListBox cblRoles;
         private System.Windows.Forms.Label lblRoles;
         private System.Windows.Forms.Label lblIdUser;

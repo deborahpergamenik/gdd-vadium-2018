@@ -29,7 +29,7 @@ namespace PalcoNet.Registro_de_Usuario
             llenarCbDia();
             llenarCbMes();
             llenarCbAno();
-            llenarCbTipoDoc();
+            llenarCbtipoDocumento();
         }
 
         public void llenarCbDia()
@@ -59,14 +59,14 @@ namespace PalcoNet.Registro_de_Usuario
             }
         }
 
-        public void llenarCbTipoDoc()
+        public void llenarCbtipoDocumento()
         {
-            this.cbTipoDocumento.Items.Add("DU");
-            this.cbTipoDocumento.Items.Add("CI");
-            this.cbTipoDocumento.Items.Add("LC");
+            this.cbtipoDocumentoumento.Items.Add("DU");
+            this.cbtipoDocumentoumento.Items.Add("CI");
+            this.cbtipoDocumentoumento.Items.Add("LC");
         }
 
-        public Boolean registrarCliente(string username, string passwordNoHash, string tipoDocumento, string numeroDocumento, string cuil, string nombre, string apellido, string email, string telefono, string direccion, string codigoPostal, string nroPiso, string departamento, string localidad, DateTime fechaNacimiento)
+        public Boolean registrarCliente(string username, string passwordNoHash, string tipoDocumentoumento, string numeroDocumento, string CUIL, string nombre, string apellido, string mail, string telefono, string direccion, string cod_postal, string nroPiso, string departamento, string localidad, DateTime fechaNacimiento)
         {
             try
             {
@@ -76,62 +76,62 @@ namespace PalcoNet.Registro_de_Usuario
                 string password = bytesDeHasheoToString(bytesDeHasheo);
 
                 List<SqlParameter> listaParametros = new List<SqlParameter>();
-                SqlConnector.agregarParametro(listaParametros, "@NombreUsuario", username);
-                SqlConnector.agregarParametro(listaParametros, "@Password", password);
-                SqlConnector.agregarParametro(listaParametros, "@Intentos", 0);
-                SqlConnector.agregarParametro(listaParametros, "@PrimeraVez", 0);
+                SqlConnector.agregarParametro(listaParametros, "@usuario_username", username);
+                SqlConnector.agregarParametro(listaParametros, "@password", password);
+                SqlConnector.agregarParametro(listaParametros, "@usuario_intentosLogin", 0);
+                SqlConnector.agregarParametro(listaParametros, "@primera_vez", 0);
 
-                SqlConnector.agregarParametro(listaParametros, "@Email", email);                
-                SqlConnector.agregarParametro(listaParametros, "@Direccion", direccion);
+                SqlConnector.agregarParametro(listaParametros, "@mail", mail);                
+                SqlConnector.agregarParametro(listaParametros, "@direccion", direccion);
                 if (telefono.Equals(""))
                 {
-                    SqlConnector.agregarParametro(listaParametros, "@Telefono", DBNull.Value);
+                    SqlConnector.agregarParametro(listaParametros, "@telefono", DBNull.Value);
                 }
                 else
                 {
-                    SqlConnector.agregarParametro(listaParametros, "@Telefono", Convert.ToInt64(telefono));
+                    SqlConnector.agregarParametro(listaParametros, "@telefono", Convert.ToInt64(telefono));
                 }
 
                 SqlConnector.agregarParametro(listaParametros, "@NroPiso", nroPiso);
                 SqlConnector.agregarParametro(listaParametros, "@Departamento", departamento);
                 SqlConnector.agregarParametro(listaParametros, "@Localidad", localidad);
-                SqlConnector.agregarParametro(listaParametros, "@CodigoPostal", codigoPostal);
-                SqlConnector.agregarParametro(listaParametros, "@Estado", 1);
+                SqlConnector.agregarParametro(listaParametros, "@cod_postal", cod_postal);
+                SqlConnector.agregarParametro(listaParametros, "@usuario_activo", 1);
 
-                SqlConnector.ejecutarQuery("INSERT INTO PalcoNet.Usuario (NombreUsuario, Password, Intentos, PrimeraVez, Email, Direccion, Telefono, NroPiso, Departamento, Localidad, CodigoPostal, Estado) VALUES (@NombreUsuario, @Password, @Intentos, @Primera_Vez, @Email, @Direccion, @Telefono, @NroPiso, @Departamento, @Localidad, @CodigoPostal, @Estado)", listaParametros, SqlConnector.iniciarConexion());
+                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO (usuario_username, password, usuario_intentosLogin, primera_vez, mail, direccion, telefono, NroPiso, Departamento, Localidad, cod_postal, usuario_activo) VALUES (@usuario_username, @password, @usuario_intentosLogin, @primera_vez, @mail, @direccion, @telefono, @NroPiso, @Departamento, @Localidad, @cod_postal, @usuario_activo)", listaParametros, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros2 = new List<SqlParameter>();
-                SqlConnector.agregarParametro(listaParametros2, "@NombreUsuario", username);
-                SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario FROM PalcoNet.Usuario WHERE NombreUsuario = @NombreUsuario", listaParametros2, SqlConnector.iniciarConexion());
+                SqlConnector.agregarParametro(listaParametros2, "@usuario_username", username);
+                SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = @usuario_username", listaParametros2, SqlConnector.iniciarConexion());
                 lector.Read();
-                int idUser = Convert.ToInt32(lector["IdUsuario"]);
+                int idUser = Convert.ToInt32(lector["usuario_id"]);
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros3 = new List<SqlParameter>();
-                SqlConnector.agregarParametro(listaParametros3, "@IdUsuario", idUser);
-                SqlConnector.agregarParametro(listaParametros3, "@Nombre", nombre);
-                SqlConnector.agregarParametro(listaParametros3, "@Apellido", apellido);
-                SqlConnector.agregarParametro(listaParametros3, "@TipoDoc", tipoDocumento);
-                SqlConnector.agregarParametro(listaParametros3, "@NumDoc", numeroDocumento);
-                SqlConnector.agregarParametro(listaParametros3, "@Cuil", cuil);
+                SqlConnector.agregarParametro(listaParametros3, "@usuario_id", idUser);
+                SqlConnector.agregarParametro(listaParametros3, "@nombre", nombre);
+                SqlConnector.agregarParametro(listaParametros3, "@apellido", apellido);
+                SqlConnector.agregarParametro(listaParametros3, "@tipoDocumento", tipoDocumentoumento);
+                SqlConnector.agregarParametro(listaParametros3, "@numeroDocumento", numeroDocumento);
+                SqlConnector.agregarParametro(listaParametros3, "@CUIL", CUIL);
                 SqlConnector.agregarParametro(listaParametros3, "@FechaNacimiento", fechaNacimiento);
-                SqlConnector.agregarParametro(listaParametros3, "@FechaCreacion", DateTime.ParseExact(DateTime.Now.ToShortDateString(), "dd/MM/yyyy", null));
+                SqlConnector.agregarParametro(listaParametros3, "@fechaCreacion", DateTime.ParseExact(DateTime.Now.ToShortDateString(), "dd/MM/yyyy", null));
 
-                SqlConnector.ejecutarQuery("INSERT INTO PalcoNet.Cliente (IdUsuario,Nombre,Apellido,TipoDoc,NumDoc,Cuil,FechaNacimiento,FechaCreacion) VALUES(@IdUsuario, @Nombre, @Apellido, @TipoDoc, @NumDoc, @Cuil, @FechaNacimiento, @FechaCreacion)", listaParametros3, SqlConnector.iniciarConexion());
+                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.CLIENTE (usuario_id,nombre,apellido,tipoDocumento,numeroDocumento,CUIL,FechaNacimiento,fechaCreacion) VALUES(@usuario_id, @nombre, @apellido, @tipoDocumento, @numeroDocumento, @CUIL, @FechaNacimiento, @fechaCreacion)", listaParametros3, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros4 = new List<SqlParameter>();
-                SqlConnector.agregarParametro(listaParametros4, "@Nombre", "Cliente");
-                SqlDataReader lector1 = SqlConnector.ejecutarReader("SELECT IdRol FROM PalcoNet.Rol WHERE Nombre = @Nombre", listaParametros4, SqlConnector.iniciarConexion());
+                SqlConnector.agregarParametro(listaParametros4, "@nombre", "Cliente");
+                SqlDataReader lector1 = SqlConnector.ejecutarReader("SELECT rol_id FROM VADIUM.ROL WHERE nombre = @nombre", listaParametros4, SqlConnector.iniciarConexion());
                 lector1.Read();
-                int idRol = Convert.ToInt32(lector1["IdRol"]);
+                int rol_id = Convert.ToInt32(lector1["rol_id"]);
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros5 = new List<SqlParameter>();
-                SqlConnector.agregarParametro(listaParametros5, "@IdRol", idRol);
-                SqlConnector.agregarParametro(listaParametros5, "@IdUsuario", idUser);
-                SqlConnector.ejecutarQuery("INSERT INTO PalcoNet.Rol_Usuario VALUES(@IdUsuario, @IdRol)", listaParametros5, SqlConnector.iniciarConexion());
+                SqlConnector.agregarParametro(listaParametros5, "@rol_id", rol_id);
+                SqlConnector.agregarParametro(listaParametros5, "@usuario_id", idUser);
+                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.ROL_POR_USUARIO VALUES(@usuario_id, @rol_id)", listaParametros5, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 return true;
@@ -169,17 +169,17 @@ namespace PalcoNet.Registro_de_Usuario
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            if (cbTipoDocumento.SelectedIndex != -1 && !txtNumeroDocumento.Text.Equals("") && !txtCuil.Text.Equals("") && !txtNombre.Text.Equals("") && !txtApellido.Text.Equals("") && !txtEmail.Text.Equals("") && !txtDireccion.Text.Equals("") && !txtCodigoPostal.Text.Equals("") && cbDia.SelectedIndex != -1 && cbMes.SelectedIndex != -1 && cbAno.SelectedIndex != -1)
+            if (cbtipoDocumentoumento.SelectedIndex != -1 && !txtNumeroDocumento.Text.Equals("") && !txtCUIL.Text.Equals("") && !txtnombre.Text.Equals("") && !txtapellido.Text.Equals("") && !txtmail.Text.Equals("") && !txtdireccion.Text.Equals("") && !txtcod_postal.Text.Equals("") && cbDia.SelectedIndex != -1 && cbMes.SelectedIndex != -1 && cbAno.SelectedIndex != -1)
             {
                 if (Interfaz.esNumerico(txtNumeroDocumento.Text, System.Globalization.NumberStyles.Integer))
                 {
-                    if (!SqlConnector.existenSimultaneamente(txtNumeroDocumento.Text, cbTipoDocumento.SelectedItem.ToString(), "PalcoNet.Clientes", "Num_Doc", "Tipo_Doc"))
+                    if (!SqlConnector.existenSimultaneamente(txtNumeroDocumento.Text, cbtipoDocumentoumento.SelectedItem.ToString(), "VADIUM.CLIENTEs", numeroDocumento, "Tipo_Doc"))
                     {
-                        if (Interfaz.esNumerico(txtTelefono.Text, System.Globalization.NumberStyles.Integer) || txtTelefono.Text.Equals(""))
+                        if (Interfaz.esNumerico(txttelefono.Text, System.Globalization.NumberStyles.Integer) || txttelefono.Text.Equals(""))
                         {
-                            if (!SqlConnector.existeTelefono(Convert.ToInt32(txtTelefono.Text)))
+                            if (!SqlConnector.existetelefono(Convert.ToInt32(txttelefono.Text)))
                             {
-                                registrarCliente(username, password, cbTipoDocumento.SelectedItem.ToString(), txtNumeroDocumento.Text, txtCuil.Text, txtNombre.Text, txtApellido.Text, txtEmail.Text, txtTelefono.Text, txtDireccion.Text, txtCodigoPostal.Text, txtNroPiso.Text, txtDepartamento.Text, txtLocalidad.Text, fechaNacimiento(cbDia.SelectedItem.ToString(), cbMes.SelectedItem.ToString(), cbAno.SelectedItem.ToString()));
+                                registrarCliente(username, password, cbtipoDocumentoumento.SelectedItem.ToString(), txtNumeroDocumento.Text, txtCUIL.Text, txtnombre.Text, txtapellido.Text, txtmail.Text, txttelefono.Text, txtdireccion.Text, txtcod_postal.Text, txtNroPiso.Text, txtDepartamento.Text, txtLocalidad.Text, fechaNacimiento(cbDia.SelectedItem.ToString(), cbMes.SelectedItem.ToString(), cbAno.SelectedItem.ToString()));
                                 MessageBox.Show("Alta finalizada. Puede ingresar al sistema.", "Registro exitoso");
                                 frmLogin frmLogin = new frmLogin();
                                 this.Hide();

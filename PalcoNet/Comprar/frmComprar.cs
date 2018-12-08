@@ -114,7 +114,7 @@ namespace PalcoNet.Comprar
             Publicaciones_Datagrid.Columns["descripcion"].Visible = false;
             Publicaciones_Datagrid.Columns["fecha"].Visible = false;
             Publicaciones_Datagrid.Columns["fechaVencimiento"].Visible = false;
-            Publicaciones_Datagrid.Columns["estado_id"].Visible = false;
+            Publicaciones_Datagrid.Columns["usuario_activo_id"].Visible = false;
             Publicaciones_Datagrid.Columns["direccion"].Visible = false;
             Publicaciones_Datagrid.Columns["rubro_id"].Visible = false;
             Publicaciones_Datagrid.Columns["grado_id"].Visible = false;
@@ -152,7 +152,7 @@ namespace PalcoNet.Comprar
         private void contarPublicaciones()
         {
             string commandtext = "SELECT COUNT (*) AS cant from VADIUM.PUBLICACION AS p " +
-                                 "JOIN VADIUM.ESTADO ep ON e.codigo = p.estado_id ";
+                                 "JOIN VADIUM.usuario_activo ep ON e.codigo = p.usuario_activo_id ";
             if (filtroRubros)
                 commandtext += "JOIN VADIUM.RUBRO_PUBLICACION rp ON p.codigoEspectaculo = rp.codigoEspectaculo ";
 

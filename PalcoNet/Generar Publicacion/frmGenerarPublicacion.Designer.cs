@@ -35,7 +35,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtPrecio = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtDireccion = new System.Windows.Forms.TextBox();
+            this.txtdireccion = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.cmbRubro = new System.Windows.Forms.ComboBox();
@@ -43,7 +43,7 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.cmbEstado = new System.Windows.Forms.ComboBox();
+            this.cmbusuario_activo = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.lblPublicacion = new System.Windows.Forms.Label();
             this.lblEspectaculo = new System.Windows.Forms.Label();
@@ -114,12 +114,12 @@
             this.label4.TabIndex = 5;
             this.label4.Text = "Precio";
             // 
-            // txtDireccion
+            // txtdireccion
             // 
-            this.txtDireccion.Location = new System.Drawing.Point(1586, 227);
-            this.txtDireccion.Name = "txtDireccion";
-            this.txtDireccion.Size = new System.Drawing.Size(181, 26);
-            this.txtDireccion.TabIndex = 12;
+            this.txtdireccion.Location = new System.Drawing.Point(1586, 227);
+            this.txtdireccion.Name = "txtdireccion";
+            this.txtdireccion.Size = new System.Drawing.Size(181, 26);
+            this.txtdireccion.TabIndex = 12;
             // 
             // label5
             // 
@@ -128,7 +128,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(75, 20);
             this.label5.TabIndex = 11;
-            this.label5.Text = "Direccion";
+            this.label5.Text = "direccion";
             // 
             // label6
             // 
@@ -180,13 +180,13 @@
             this.label8.TabIndex = 14;
             this.label8.Text = "Grado";
             // 
-            // cmbEstado
+            // cmbusuario_activo
             // 
-            this.cmbEstado.FormattingEnabled = true;
-            this.cmbEstado.Location = new System.Drawing.Point(1237, 299);
-            this.cmbEstado.Name = "cmbEstado";
-            this.cmbEstado.Size = new System.Drawing.Size(181, 28);
-            this.cmbEstado.TabIndex = 19;
+            this.cmbusuario_activo.FormattingEnabled = true;
+            this.cmbusuario_activo.Location = new System.Drawing.Point(1237, 299);
+            this.cmbusuario_activo.Name = "cmbusuario_activo";
+            this.cmbusuario_activo.Size = new System.Drawing.Size(181, 28);
+            this.cmbusuario_activo.TabIndex = 19;
             // 
             // label9
             // 
@@ -195,7 +195,7 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(60, 20);
             this.label9.TabIndex = 18;
-            this.label9.Text = "Estado";
+            this.label9.Text = "usuario_activo";
             // 
             // lblPublicacion
             // 
@@ -289,14 +289,14 @@
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.lblEspectaculo);
             this.Controls.Add(this.lblPublicacion);
-            this.Controls.Add(this.cmbEstado);
+            this.Controls.Add(this.cmbusuario_activo);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.cmbGrado);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.cmbRubro);
-            this.Controls.Add(this.txtDireccion);
+            this.Controls.Add(this.txtdireccion);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.txtPrecio);
@@ -324,7 +324,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtPrecio;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtDireccion;
+        private System.Windows.Forms.TextBox txtdireccion;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox cmbRubro;
@@ -332,7 +332,7 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ComboBox cmbEstado;
+        private System.Windows.Forms.ComboBox cmbusuario_activo;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lblPublicacion;
         private System.Windows.Forms.Label lblEspectaculo;

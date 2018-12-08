@@ -17,17 +17,17 @@ namespace PalcoNet.Login
 
         public class itemComboBox
         {
-            public string Nombre { get; set; }
-            public int IdRol { get; set; }
+            public string nombre { get; set; }
+            public int rol_id { get; set; }
 
             public itemComboBox(string nombre, int id)
             {
-                Nombre = nombre;
-                IdRol = id;
+                nombre = nombre;
+                rol_id = id;
             }
             public override string ToString()
             {
-                return Nombre;
+                return nombre;
             }
         }
 
@@ -36,8 +36,8 @@ namespace PalcoNet.Login
             this.usuario = usuarioLogin;
             InitializeComponent();
 
-            cmbRoles.DisplayMember = "Nombre";
-            cmbRoles.ValueMember = "IdRol";
+            cmbRoles.DisplayMember = "nombre";
+            cmbRoles.ValueMember = "rol_id";
             completarCombo();
         }
 
@@ -45,9 +45,9 @@ namespace PalcoNet.Login
         {
             for (int i = 0; i < usuario.Roles.Count(); i++)
             {
-                if (usuario.Roles[i].Estado != false) // TOMANDO EN CUENTA QUE 1 ES HABILITADO
+                if (usuario.Roles[i].usuario_activo != false) // TOMANDO EN CUENTA QUE 1 ES HABILITADO
                 {
-                    cmbRoles.Items.Add(new itemComboBox(usuario.Roles[i].Nombre, usuario.Roles[i].Id));
+                    cmbRoles.Items.Add(new itemComboBox(usuario.Roles[i].nombre, usuario.Roles[i].Id));
                 }
             }
         }
@@ -64,8 +64,8 @@ namespace PalcoNet.Login
                 if (this.usuario.Roles[cmbRoles.SelectedIndex].Funcionalidades.Count != 0)
                 {
                     itemComboBox seleccion = cmbRoles.SelectedItem as itemComboBox;
-                    UserInstance.getUserInstance().loadInformation(usuario, usuario.Roles.Where(x => x.Id == seleccion.IdRol).FirstOrDefault());
-                    frmSeleccionFuncionalidades formFuncionalidades = new frmSeleccionFuncionalidades(usuario, seleccion.IdRol, false);
+                    UserInstance.getUserInstance().loadInformation(usuario, usuario.Roles.Where(x => x.Id == seleccion.rol_id).FirstOrDefault());
+                    frmSeleccionFuncionalidades formFuncionalidades = new frmSeleccionFuncionalidades(usuario, seleccion.rol_id, false);
                     this.Hide();
                     formFuncionalidades.Show();
                 }

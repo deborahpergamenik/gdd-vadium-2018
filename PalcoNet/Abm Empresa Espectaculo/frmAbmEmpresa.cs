@@ -16,19 +16,19 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 {
     public partial class frmAbmEmpresa : Form
     {
-        public string NombreUsuario { get; set; }
+        public string usuario_username { get; set; }
         public string password { get; set; }
-        public int intentos { get; set; }
-        public int estado { get; set; }
-        public int primeraVez { get; set; }
+        public int usuario_intentosLogin { get; set; }
+        public int usuario_activo { get; set; }
+        public int primera_vez { get; set; }
 
         public string razonSocial { get; set; }
         public string cuit { get; set; }
         public int telefono { get; set; }
         public string direccion { get; set; }
-        public string codigoPostal { get; set; }
+        public string cod_postal { get; set; }
         public string ciudad { get; set; }
-        public string email { get; set; }
+        public string mail { get; set; }
         public string departamentro { get; set; }
         public string nroPiso { get; set; }
         public string localidad { get; set; }
@@ -47,8 +47,8 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         public void llenarCbFiltro()
         {
             this.cmbFiltro.Items.Add("Razón social");
-            this.cmbFiltro.Items.Add("CUIT");
-            this.cmbFiltro.Items.Add("Email");
+            this.cmbFiltro.Items.Add("cuit");
+            this.cmbFiltro.Items.Add("mail");
         }        
 
        
@@ -76,36 +76,36 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         public Boolean chequearCampos()
         {
-            if (!campoVacio(txtRazonSocial) && !campoVacio(txtEmail) && !campoVacio(txtDireccion) && !campoVacio(txtCodigoPostal) && !campoVacio(txtCuit))
+            if (!campoVacio(txtrazonSocial) && !campoVacio(txtmail) && !campoVacio(txtdireccion) && !campoVacio(txtcod_postal) && !campoVacio(txtcuit))
             {
-                if (campoVacio(txtTelefono) || (!campoVacio(txtTelefono) && campoNumerico(txtTelefono)))
+                if (campoVacio(txttelefono) || (!campoVacio(txttelefono) && campoNumerico(txttelefono)))
                 {
-                    if (!SqlConnector.existeString(txtRazonSocial.Text, "PalcoNet.Empresa", "RazonSocial") && !SqlConnector.existeString(txtCuit.Text, "PalcoNet.Empresa", "CUIT"))
+                    if (!SqlConnector.existeString(txtrazonSocial.Text, "VADIUM.EMPRESA", "razonSocial") && !SqlConnector.existeString(txtcuit.Text, "VADIUM.EMPRESA", "cuit"))
                     {
 
-                        if (!campoVacio(txtTelefono))
+                        if (!campoVacio(txttelefono))
                         {
-                            this.telefono = Convert.ToInt32(txtTelefono.Text);
+                            this.telefono = Convert.ToInt32(txttelefono.Text);
                         }
                         else
                         {
                             this.telefono = -1;
                         }
 
-                        if (!campoVacio(txtCiudad))
+                        if (!campoVacio(txtciudad))
                         {
-                            this.ciudad = txtCiudad.Text;
+                            this.ciudad = txtciudad.Text;
                         }
                         else
                         {
                             this.ciudad = "";
                         }
 
-                        this.razonSocial = txtRazonSocial.Text;
-                        this.cuit = txtCuit.Text;
-                        this.direccion = txtDireccion.Text;
-                        this.codigoPostal = txtCodigoPostal.Text;
-                        this.email = txtEmail.Text;
+                        this.razonSocial = txtrazonSocial.Text;
+                        this.cuit = txtcuit.Text;
+                        this.direccion = txtdireccion.Text;
+                        this.cod_postal = txtcod_postal.Text;
+                        this.mail = txtmail.Text;
                         this.localidad = txtLocalidad.Text;
                         this.nroPiso = txtNroPiso.Text;
                         this.departamentro = txtDepartamento.Text;                        
@@ -115,7 +115,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                     }
                     else
                     {
-                        MessageBox.Show("Razón social y/o CUIT ya existente/s.", "Error");
+                        MessageBox.Show("Razón social y/o cuit ya existente/s.", "Error");
                         return false;
                     }
                 }
@@ -145,7 +145,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         public string randomUser()
         {
             string random = "PalcoNet_" + randomString(10);
-            if (!SqlConnector.existeString(random, "PalcoNet.Usuario", "NombreUsuario"))
+            if (!SqlConnector.existeString(random, "VADIUM.USUARIO", "usuario_username"))
             {
                 return random;
             }
@@ -165,7 +165,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             return salida.ToString();
         }
 
-        public string randomPassword()
+        public string randompassword()
         {
             UTF8Encoding encoderHash = new UTF8Encoding();
             SHA256Managed hasher = new SHA256Managed();
@@ -177,79 +177,79 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         public void cargarUsuario()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@NombreUsuario", this.NombreUsuario);
-            SqlConnector.agregarParametro(listaParametros, "@Password", this.password);
-            SqlConnector.agregarParametro(listaParametros, "@Intentos", this.intentos);
-            SqlConnector.agregarParametro(listaParametros, "@Estado", this.estado);
-            SqlConnector.agregarParametro(listaParametros, "@Primeravez", this.primeraVez);
-            SqlConnector.ejecutarQuery("INSERT INTO PalcoNet.Usuario VALUES (@NombreUsuario, @Password, @Intentos, @Habilitado, @PrimeraVez, 0)", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario_username);
+            SqlConnector.agregarParametro(listaParametros, "@password", this.password);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_intentosLogin", this.usuario_intentosLogin);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_activo", this.usuario_activo);
+            SqlConnector.agregarParametro(listaParametros, "@primera_vez", this.primera_vez);
+            SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO VALUES (@usuario_username, @password, @usuario_intentosLogin, @Habilitado, @primera_vez, 0)", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
         }
 
         public void cargarEmpresa()
         {
             List<SqlParameter> listaParametros2 = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros2, "@NombreUsuario", this.NombreUsuario);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario FROM PalcoNet.Usuarios WHERE NombreUsuario = @NombreUsuario", listaParametros2, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros2, "@usuario_username", this.usuario_username);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = @usuario_username", listaParametros2, SqlConnector.iniciarConexion());
             lector.Read();
-            int idUser = Convert.ToInt32(lector["IdUsuario"]);
+            int idUser = Convert.ToInt32(lector["usuario_id"]);
             SqlConnector.cerrarConexion();
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@IdUsuario", idUser);
-            SqlConnector.agregarParametro(listaParametros, "@RazonSocial", this.razonSocial);
-            SqlConnector.agregarParametro(listaParametros, "@CUIT", this.cuit);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", idUser);
+            SqlConnector.agregarParametro(listaParametros, "@razonSocial", this.razonSocial);
+            SqlConnector.agregarParametro(listaParametros, "@cuit", this.cuit);
 
             if (this.telefono == -1)
             {
-                SqlConnector.agregarParametro(listaParametros, "@Telefono", DBNull.Value);
+                SqlConnector.agregarParametro(listaParametros, "@telefono", DBNull.Value);
             }
             else
             {
-                SqlConnector.agregarParametro(listaParametros, "@Telefono", this.telefono);
+                SqlConnector.agregarParametro(listaParametros, "@telefono", this.telefono);
             }
 
-            SqlConnector.agregarParametro(listaParametros, "@Direccion", this.direccion);
-            SqlConnector.agregarParametro(listaParametros, "@CodigoPostal", this.codigoPostal);
+            SqlConnector.agregarParametro(listaParametros, "@direccion", this.direccion);
+            SqlConnector.agregarParametro(listaParametros, "@cod_postal", this.cod_postal);
 
             if (this.ciudad.Equals(""))
             {
-                SqlConnector.agregarParametro(listaParametros, "@Ciudad", DBNull.Value);
+                SqlConnector.agregarParametro(listaParametros, "@ciudad", DBNull.Value);
             }
             else
             {
-                SqlConnector.agregarParametro(listaParametros, "@Ciudad", this.ciudad);
+                SqlConnector.agregarParametro(listaParametros, "@ciudad", this.ciudad);
             }
 
-            SqlConnector.agregarParametro(listaParametros, "@Email", this.email);    
-            SqlConnector.agregarParametro(listaParametros, "@FechaCreacion", this.fechaCreacion);
+            SqlConnector.agregarParametro(listaParametros, "@mail", this.mail);    
+            SqlConnector.agregarParametro(listaParametros, "@fechaCreacion", this.fechaCreacion);
 
             SqlConnector.agregarParametro(listaParametros, "@Localidad", this.localidad);
             SqlConnector.agregarParametro(listaParametros, "@NroPiso", this.nroPiso);
             SqlConnector.agregarParametro(listaParametros, "@departamento", this.departamentro);
 
-            SqlConnector.ejecutarQuery("INSERT INTO PalcoNet.Empresa VALUES (@IdUsuario, @RazonSocial, @CUIT, @Telefono, @Direccion, @Codigo_Postal, @Ciudad, @Email, @FechaCreacion, @Localidad, @NroPiso, @ Departamento)", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.ejecutarQuery("INSERT INTO VADIUM.EMPRESA VALUES (@usuario_id, @razonSocial, @cuit, @telefono, @direccion, @cod_postal, @ciudad, @mail, @fechaCreacion, @Localidad, @NroPiso, @ Departamento)", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
 
-            //Obteniendo la ID_Rol del cliente
-            int idRol = Rol.obtenerID("Empresa");
+            //Obteniendo la rol_id del cliente
+            int rol_id = Rol.obtenerID("Empresa");
 
-            Roles.AgregarRolEnUsuario(idUser, idRol);
+            Roles.AgregarRolEnUsuario(idUser, rol_id);
         }
 
         private void btnRegistrarse_Click(object sender, EventArgs e)
         {
-            this.NombreUsuario = randomUser();
-            this.password = randomPassword();
-            this.intentos = 0;
-            this.estado = 1;
-            this.primeraVez = 1;
+            this.usuario_username = randomUser();
+            this.password = randompassword();
+            this.usuario_intentosLogin = 0;
+            this.usuario_activo = 1;
+            this.primera_vez = 1;
 
             if (chequearCampos())
             {
                 cargarUsuario();
                 cargarEmpresa();
-                new Abm_Cliente.frmConfirmacionCliente(this.NombreUsuario, this.passwordNoHash).Show();
+                new Abm_Cliente.frmConfirmacionCliente(this.usuario_username, this.passwordNoHash).Show();
             }
         }
 
@@ -272,7 +272,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                         MessageBox.Show("Debe ingresar los campos solicitados.", "Error");
                     }
                     break;
-                case 1: // CUIT
+                case 1: // cuit
                     if (!tBusqueda.Text.Equals(""))
                     {
                         if (tBusqueda.Text.Length <= 50)
@@ -282,7 +282,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                         }
                         else
                         {
-                            MessageBox.Show("CUIT inválido.", "Error");
+                            MessageBox.Show("cuit inválido.", "Error");
                         }
                     }
                     else
@@ -290,7 +290,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                         MessageBox.Show("Debe ingresar los campos solicitados.", "Error");
                     }
                     break;
-                case 2: // EMAIL
+                case 2: // mail
                     if (!tBusqueda.Text.Equals(""))
                     {
                         frmBuscarEmpresa form2 = new frmBuscarEmpresa('E', tBusqueda.Text);
@@ -326,7 +326,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             }
         }
 
-        private void textboxCUIT_KeyPress(object sender, KeyPressEventArgs e)
+        private void textboxcuit_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
             {

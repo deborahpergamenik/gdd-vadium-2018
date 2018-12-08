@@ -55,7 +55,7 @@ namespace PalcoNet.Generar_Publicacion
             Publicacion publi = new Publicacion
             {
                 Descripcion = txtDescripcion.Text,
-                DireccionEspectaculo = txtDireccion.Text,
+                direccionEspectaculo = txtdireccion.Text,
                 FechaPublicacion = dtpPublicacion.Value,
 
 
@@ -93,8 +93,8 @@ namespace PalcoNet.Generar_Publicacion
         }
         public void loadData()
         {
-            List<ComboBoxItem> estados = Estados.obtenerEstados().Select(x => new ComboBoxItem { Text =x.descripcion, Value =x.codigo }).ToList();
-            estados.ForEach(x => cmbEstado.Items.Add(x));
+            List<ComboBoxItem> usuario_activos = usuario_activos.obtenerusuario_activos().Select(x => new ComboBoxItem { Text =x.descripcion, Value =x.codigo }).ToList();
+            usuario_activos.ForEach(x => cmbusuario_activo.Items.Add(x));
 
             List<ComboBoxItem> rubros = Rubros.obtenerRubros().Select(x => new ComboBoxItem { Text = x.Descripcion, Value = x.Id }).ToList();
             rubros.ForEach(x => cmbRubro.Items.Add(x));

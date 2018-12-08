@@ -32,19 +32,19 @@ namespace PalcoNet.Registro_de_Usuario
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(txtNombreUsuario.Text) && !string.IsNullOrEmpty(txtContrasenia.Text) && cmbRol.SelectedIndex != -1)
+            if (!string.IsNullOrEmpty(txtusuario_username.Text) && !string.IsNullOrEmpty(txtContrasenia.Text) && cmbRol.SelectedIndex != -1)
             {
-                if (!SqlConnector.existeString(txtNombreUsuario.Text, "PalcoNet.Usuario", "NombreUsuario"))
+                if (!SqlConnector.existeString(txtusuario_username.Text, "VADIUM.USUARIO", "usuario_username"))
                 {
                     if (cmbRol.SelectedIndex == 0)
                     {
-                        frmRegistroUsuarioCliente frmAltaCliente = new frmRegistroUsuarioCliente(txtNombreUsuario.Text, txtContrasenia.Text, cmbRol.SelectedIndex);
+                        frmRegistroUsuarioCliente frmAltaCliente = new frmRegistroUsuarioCliente(txtusuario_username.Text, txtContrasenia.Text, cmbRol.SelectedIndex);
                         this.Hide();
                         frmAltaCliente.Show();
                     }
                     else
                     {
-                        frmRegistroUsuarioEmpresa frmAltaEmpresa = new frmRegistroUsuarioEmpresa(txtNombreUsuario.Text, txtContrasenia.Text, cmbRol.SelectedIndex);
+                        frmRegistroUsuarioEmpresa frmAltaEmpresa = new frmRegistroUsuarioEmpresa(txtusuario_username.Text, txtContrasenia.Text, cmbRol.SelectedIndex);
                         this.Hide();
                         frmAltaEmpresa.Show();
                     }

@@ -19,22 +19,22 @@ namespace PalcoNet.Abm_Cliente
     {
         public string usuario { get; set; }
         public string password { get; set; }
-        public int intentos { get; set; }
-        public int estado { get; set; }
-        public int primeraVez { get; set; }
+        public int usuario_intentosLogin { get; set; }
+        public int usuario_activo { get; set; }
+        public int primera_vez { get; set; }
 
-        public string tipoDoc { get; set; }
-        public string numDoc { get; set; }
-        public string cuil { get; set; }
+        public string tipoDocumento { get; set; }
+        public string numeroDocumento { get; set; }
+        public string CUIL { get; set; }
         public string nombre { get; set; }
         public string apellido { get; set; }
-        public string email { get; set; }
+        public string mail { get; set; }
         public int telefono { get; set; }
         public string direccion { get; set; }
         public string nroPiso { get; set; }
         public string localidad { get; set; }
         public string departamento { get; set; }
-        public string codigoPostal { get; set; }
+        public string cod_postal { get; set; }
         public DateTime fechaNacimiento { get; set; }
 
         public string passwordNoHash { get; set; }
@@ -49,9 +49,9 @@ namespace PalcoNet.Abm_Cliente
             llenarCmbDia();
             llenarCmbMes();
             llenarCmbAno();
-            llenarCmbTipoDoc();
+            llenarCmbtipoDocumento();
             llenarCmbFiltro();
-            llenarCmbFiltroTipoDoc();
+            llenarCmbFiltrotipoDocumento();
         }
 
         public void llenarCmbDia()
@@ -81,27 +81,27 @@ namespace PalcoNet.Abm_Cliente
             }
         }
 
-        public void llenarCmbTipoDoc()
+        public void llenarCmbtipoDocumento()
         {
-            this.cmbTipoDocumento.Items.Add("DU");
-            this.cmbTipoDocumento.Items.Add("CI");
-            this.cmbTipoDocumento.Items.Add("LC");
+            this.cmbtipoDocumentoumento.Items.Add("DU");
+            this.cmbtipoDocumentoumento.Items.Add("CI");
+            this.cmbtipoDocumentoumento.Items.Add("LC");
         }
 
         public void llenarCmbFiltro()
         {
-            this.cmbFiltro.Items.Add("Nombre");
-            this.cmbFiltro.Items.Add("Apellido");
+            this.cmbFiltro.Items.Add("nombre");
+            this.cmbFiltro.Items.Add("apellido");
             this.cmbFiltro.Items.Add("Tipo de documento");
             this.cmbFiltro.Items.Add("Número de documento");
-            this.cmbFiltro.Items.Add("Email");
+            this.cmbFiltro.Items.Add("mail");
         }
 
-        public void llenarCmbFiltroTipoDoc()
+        public void llenarCmbFiltrotipoDocumento()
         {
-            this.cmbFiltroTipoDocumento.Items.Add("DU");
-            this.cmbFiltroTipoDocumento.Items.Add("CI");
-            this.cmbFiltroTipoDocumento.Items.Add("LC");
+            this.cmbFiltrotipoDocumentoumento.Items.Add("DU");
+            this.cmbFiltrotipoDocumentoumento.Items.Add("CI");
+            this.cmbFiltrotipoDocumentoumento.Items.Add("LC");
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
@@ -111,7 +111,7 @@ namespace PalcoNet.Abm_Cliente
                 case -1:
                     MessageBox.Show("Debe seleccionar un criterio de búsqueda.", "Error");
                     break;
-                case 0: // Nombre
+                case 0: // nombre
                     if (!tBusqueda.Text.Equals(""))
                     {
                         frmBuscarCliente frmBuscar = new frmBuscarCliente('N', tBusqueda.Text);
@@ -122,7 +122,7 @@ namespace PalcoNet.Abm_Cliente
                         MessageBox.Show("Debe ingresar los campos solicitados", "Error");
                     }
                     break;
-                case 1: // Apellido
+                case 1: // apellido
                     if (!tBusqueda.Text.Equals(""))
                     {
                         frmBuscarCliente frmBuscar = new frmBuscarCliente('A', tBusqueda.Text);
@@ -134,9 +134,9 @@ namespace PalcoNet.Abm_Cliente
                     }
                     break;
                 case 2: // Tipo de documento
-                    if (cmbFiltroTipoDocumento.SelectedIndex != -1)
+                    if (cmbFiltrotipoDocumentoumento.SelectedIndex != -1)
                     {
-                        frmBuscarCliente frmBuscar = new frmBuscarCliente('T', cmbFiltroTipoDocumento.SelectedItem.ToString());
+                        frmBuscarCliente frmBuscar = new frmBuscarCliente('T', cmbFiltrotipoDocumentoumento.SelectedItem.ToString());
                         frmBuscar.Show();
                     }
                     else
@@ -162,7 +162,7 @@ namespace PalcoNet.Abm_Cliente
                         MessageBox.Show("Debe ingresar los campos solicitados", "Error");
                     }
                     break;
-                case 4: // Email
+                case 4: // mail
                     if (!tBusqueda.Text.Equals(""))
                     {
                         frmBuscarCliente frmBuscar = new frmBuscarCliente('E', tBusqueda.Text);
@@ -182,12 +182,12 @@ namespace PalcoNet.Abm_Cliente
             ComboBox CB = (ComboBox)sender;
             if (CB.SelectedIndex == 2)
             {
-                cmbFiltroTipoDocumento.Visible = true;
+                cmbFiltrotipoDocumentoumento.Visible = true;
                 tBusqueda.Visible = false;
             }
             else
             {
-                cmbFiltroTipoDocumento.Visible = false;
+                cmbFiltrotipoDocumentoumento.Visible = false;
                 tBusqueda.Visible = true;
             }
         }
@@ -234,28 +234,28 @@ namespace PalcoNet.Abm_Cliente
 
         public Boolean chequearCampos()
         {
-            if (!campoVacio(txtNombre) && !campoVacio(txtApellido) && !campoVacio(txtNumeroDocumento) && !campoVacio(txtCuil) && !campoVacio(txtEmail) && !campoVacio(txtDireccion) && !campoVacio(txtCodigoPostal) && !cboxVacio(cmbTipoDocumento) && !cboxVacio(cmbDia) && !cboxVacio(cmbMes) && !cboxVacio(cmbAno))
+            if (!campoVacio(txtnombre) && !campoVacio(txtapellido) && !campoVacio(txtNumeroDocumento) && !campoVacio(txtCUIL) && !campoVacio(txtmail) && !campoVacio(txtdireccion) && !campoVacio(txtcod_postal) && !cboxVacio(cmbtipoDocumentoumento) && !cboxVacio(cmbDia) && !cboxVacio(cmbMes) && !cboxVacio(cmbAno))
             {
-                if (campoNumerico(txtNumeroDocumento) && (campoVacio(txtTelefono) || (!campoVacio(txtTelefono) && campoNumerico(txtTelefono))))
+                if (campoNumerico(txtNumeroDocumento) && (campoVacio(txttelefono) || (!campoVacio(txttelefono) && campoNumerico(txttelefono))))
                 {
-                    if (!SqlConnector.existenSimultaneamente(cmbTipoDocumento.SelectedItem.ToString(), txtNumeroDocumento.Text, "PalcoNet.Cliente", "TipoDoc", "NumDoc"))
+                    if (!SqlConnector.existenSimultaneamente(cmbtipoDocumentoumento.SelectedItem.ToString(), txtNumeroDocumento.Text, "VADIUM.CLIENTE", "tipoDocumentoumento", "numeroDocumento"))
                     {
-                        if (!campoVacio(txtTelefono))
+                        if (!campoVacio(txttelefono))
                         {
-                            this.telefono = Convert.ToInt32(txtTelefono.Text);
+                            this.telefono = Convert.ToInt32(txttelefono.Text);
                         }
                         else
                         {
                             this.telefono = -1;
                         }
-                        this.tipoDoc = cboxString(cmbTipoDocumento);
-                        this.numDoc = txtNumeroDocumento.Text;
-                        this.cuil = txtCuil.Text;
-                        this.nombre = txtNombre.Text;
-                        this.apellido = txtApellido.Text;
-                        this.email = txtEmail.Text;
-                        this.direccion = txtDireccion.Text;
-                        this.codigoPostal = txtCodigoPostal.Text;
+                        this.tipoDocumento = cboxString(cmbtipoDocumentoumento);
+                        this.numeroDocumento = txtNumeroDocumento.Text;
+                        this.CUIL = txtCUIL.Text;
+                        this.nombre = txtnombre.Text;
+                        this.apellido = txtapellido.Text;
+                        this.mail = txtmail.Text;
+                        this.direccion = txtdireccion.Text;
+                        this.cod_postal = txtcod_postal.Text;
                         this.localidad = txtLocalidad.Text;
                         this.nroPiso = txtNroPiso.Text;
                         this.departamento = txtDepartamento.Text;
@@ -285,10 +285,10 @@ namespace PalcoNet.Abm_Cliente
         private void btnRegistrarse_Click(object sender, EventArgs e)
         {
             this.nombre = randomUser();
-            this.password = randomPassword();
-            this.intentos = 0;
-            this.estado = 1;
-            this.primeraVez = 1;
+            this.password = randompassword();
+            this.usuario_intentosLogin = 0;
+            this.usuario_activo = 1;
+            this.primera_vez = 1;
 
             if (chequearCampos())
             {
@@ -311,7 +311,7 @@ namespace PalcoNet.Abm_Cliente
         public string randomUser()
         {
             string random = "PalcoNet_" + randomString(10);
-            if (!SqlConnector.existeString(random, "PalcoNet.Usuario", "Username"))
+            if (!SqlConnector.existeString(random, "VADIUM.USUARIO", "usuario_username"))
             {
                 return random;
             }
@@ -331,7 +331,7 @@ namespace PalcoNet.Abm_Cliente
             return salida.ToString();
         }
 
-        public string randomPassword()
+        public string randompassword()
         {
             UTF8Encoding encoderHash = new UTF8Encoding();
             SHA256Managed hasher = new SHA256Managed();
@@ -344,52 +344,52 @@ namespace PalcoNet.Abm_Cliente
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
 
-            SqlConnector.agregarParametro(listaParametros, "@NombreUsuario", this.usuario);
-            SqlConnector.agregarParametro(listaParametros, "@Password", this.password);
-            SqlConnector.agregarParametro(listaParametros, "@Intentos", this.intentos);
-            SqlConnector.agregarParametro(listaParametros, "@PrimeraVez", this.primeraVez);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario);
+            SqlConnector.agregarParametro(listaParametros, "@password", this.password);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_intentosLogin", this.usuario_intentosLogin);
+            SqlConnector.agregarParametro(listaParametros, "@primera_vez", this.primera_vez);
 
-            SqlConnector.agregarParametro(listaParametros, "@Email", this.email);
-            SqlConnector.agregarParametro(listaParametros, "@Direccion", this.direccion);
+            SqlConnector.agregarParametro(listaParametros, "@mail", this.mail);
+            SqlConnector.agregarParametro(listaParametros, "@direccion", this.direccion);
             if (telefono.Equals(""))
             {
-                SqlConnector.agregarParametro(listaParametros, "@Telefono", DBNull.Value);
+                SqlConnector.agregarParametro(listaParametros, "@telefono", DBNull.Value);
             }
             else
             {
-                SqlConnector.agregarParametro(listaParametros, "@Telefono", Convert.ToInt64(this.telefono));
+                SqlConnector.agregarParametro(listaParametros, "@telefono", Convert.ToInt64(this.telefono));
             }
 
             SqlConnector.agregarParametro(listaParametros, "@NroPiso", this.nroPiso);
             SqlConnector.agregarParametro(listaParametros, "@Departamento", this.departamento);
             SqlConnector.agregarParametro(listaParametros, "@Localidad", this.localidad);
-            SqlConnector.agregarParametro(listaParametros, "@CodigoPostal", this.codigoPostal);
-            SqlConnector.agregarParametro(listaParametros, "@Estado", this.estado);
+            SqlConnector.agregarParametro(listaParametros, "@cod_postal", this.cod_postal);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_activo", this.usuario_activo);
 
-            SqlConnector.ejecutarQuery("INSERT INTO PalcoNet.Usuario VALUES (NombreUsuario, Password, Intentos, Primera_Vez, Email, Direccion, Telefono, NroPiso, Departamento, Localidad, CodigoPostal, Estado) VALUES (@NombreUsuario, @Password, @Intentos, @PrimeraVez, @Email, @Direccion, @Telefono, @NroPiso, @Departamento, @Localidad, @CodigoPostal, @Estado)", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO VALUES (usuario_username, usuario_password, usario_usuario_intentosLoginLogin, primera_vez, calle, piso, depto, localidad, cod_postal, usuario_activo) VALUES (@usuario_username, @password, @usuario_intentosLogin, @primera_vez, @direccion, @NroPiso, @Departamento, @Localidad, @cod_postal, @usuario_activo)", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
         }
 
         public void cargarCliente()
         {
             List<SqlParameter> listaParametros2 = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros2, "@nombreUsuario", this.nombre);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario FROM PalcoNet.Usuario WHERE NombreUsuario = @nombreUsuario", listaParametros2, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros2, "@usuario_username", this.nombre);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = @usuario_username", listaParametros2, SqlConnector.iniciarConexion());
             lector.Read();
-            int idUsuario = Convert.ToInt32(lector["IdUsuario"]);
+            int usuario_id = Convert.ToInt32(lector["usuario_id"]);
             SqlConnector.cerrarConexion();
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@IdUsuario", idUsuario);
-            SqlConnector.agregarParametro(listaParametros, "@Nombre", this.nombre);
-            SqlConnector.agregarParametro(listaParametros, "@Apellido", this.apellido);
-            SqlConnector.agregarParametro(listaParametros, "@TipoDoc", this.tipoDoc);
-            SqlConnector.agregarParametro(listaParametros, "@NumDoc", this.numDoc);
-            SqlConnector.agregarParametro(listaParametros, "@Cuil", this.cuil);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", usuario_id);
+            SqlConnector.agregarParametro(listaParametros, "@nombre", this.nombre);
+            SqlConnector.agregarParametro(listaParametros, "@apellido", this.apellido);
+            SqlConnector.agregarParametro(listaParametros, "@tipoDocumento", this.tipoDocumento);
+            SqlConnector.agregarParametro(listaParametros, "@numeroDocumento", this.numeroDocumento);
+            SqlConnector.agregarParametro(listaParametros, "@CUIL", this.CUIL);
             SqlConnector.agregarParametro(listaParametros, "@FechaNacimiento", fechaNacimiento);
-            SqlConnector.agregarParametro(listaParametros, "@FechaCreacion", DateTime.ParseExact(DateTime.Now.ToShortDateString(), "dd/MM/yyyy", null));
+            SqlConnector.agregarParametro(listaParametros, "@fechaCreacion", DateTime.ParseExact(DateTime.Now.ToShortDateString(), "dd/MM/yyyy", null));
 
-            SqlConnector.ejecutarQuery("INSERT INTO PalcoNet.Cliente (IdUsuario,Nombre,Apellido,TipoDoc,NumDoc,Cuil,FechaNacimiento,FechaCreacion) VALUES(@IdUsuario, @Nombre, @Apellido, @TipoDoc, @NumDoc, @Cuil, @FechaNacimiento, @FechaCreacion)", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.ejecutarQuery("INSERT INTO VADIUM.CLIENTE (usuario_id,nombre,apellido,tipoDocumentoumento,numeroDocumento,CUIL,fechaNacimiento,fechaCreacion) VALUES(@usuario_id, @nombre, @apellido, @tipoDocumento, @numeroDocumento, @CUIL, @FechaNacimiento, @fechaCreacion)", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
         }
 
@@ -452,14 +452,14 @@ namespace PalcoNet.Abm_Cliente
         {
 
             List<SqlParameter> listaParametros2 = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros2, "@nombreUsuario", this.nombre);
+            SqlConnector.agregarParametro(listaParametros2, "@usuario_username", this.nombre);
 
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@NOMBRE", txtNameFilter.Text);
-            SqlConnector.agregarParametro(listaParametros, "@APELLIDO", txtLastNameFilter.Text);
+            SqlConnector.agregarParametro(listaParametros, "@nombre", txtNameFilter.Text);
+            SqlConnector.agregarParametro(listaParametros, "@apellido", txtLastNameFilter.Text);
             SqlConnector.agregarParametro(listaParametros, "@DNI", txtFilterDoc.Text);
-            SqlConnector.agregarParametro(listaParametros, "@mail", txtEmailFilter.Text);
+            SqlConnector.agregarParametro(listaParametros, "@mail", txtmailFilter.Text);
 
             //revisar query
             String commandtext = "VADIUM.LISTADO_SELECCION_CLIENTE";
@@ -485,21 +485,21 @@ namespace PalcoNet.Abm_Cliente
             {
                 try
                 {
-                    txtNombre.Text = row.Cells[0].Value.ToString();
-                    txtApellido.Text = row.Cells[0].Value.ToString();
-                    cmbTipoDocumento.SelectedText = row.Cells[0].Value.ToString();
+                    txtnombre.Text = row.Cells[0].Value.ToString();
+                    txtapellido.Text = row.Cells[0].Value.ToString();
+                    cmbtipoDocumentoumento.SelectedText = row.Cells[0].Value.ToString();
                     txtNumeroDocumento.Text = row.Cells[0].Value.ToString();
-                    txtCuil.Text = row.Cells[0].Value.ToString();
+                    txtCUIL.Text = row.Cells[0].Value.ToString();
                     //fecha nacimiento
                     //fecha creacion
                     //tarjetcredito
-                    txtEmail.Text = row.Cells[0].Value.ToString();
-                    txtTelefono.Text = row.Cells[0].Value.ToString();
-                    txtDireccion.Text = row.Cells[0].Value.ToString();
+                    txtmail.Text = row.Cells[0].Value.ToString();
+                    txttelefono.Text = row.Cells[0].Value.ToString();
+                    txtdireccion.Text = row.Cells[0].Value.ToString();
                     txtNroCalle.Text = row.Cells[0].Value.ToString();
                     txtNroPiso.Text = row.Cells[0].Value.ToString();
                     txtDepartamento.Text = row.Cells[0].Value.ToString();
-                    txtCodigoPostal.Text = row.Cells[0].Value.ToString();
+                    txtcod_postal.Text = row.Cells[0].Value.ToString();
                     txtLocalidad.Text = row.Cells[0].Value.ToString();
                     //Completar los siguientes campos para editar
 

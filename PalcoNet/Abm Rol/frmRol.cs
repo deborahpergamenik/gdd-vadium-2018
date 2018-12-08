@@ -51,14 +51,14 @@ namespace PalcoNet.Abm_Rol
             Rol unRol = dgvRoles.CurrentRow.DataBoundItem as Rol;
             string str;
 
-            if (!unRol.Estado)
+            if (!unRol.usuario_activo)
             {
-                str = string.Format("No se puede eliminar el rol {0}. Este ya esta deshabilitado. Puede volver a habilitarlo desde Modificar", unRol.Nombre);
+                str = string.Format("No se puede eliminar el rol {0}. Este ya esta deshabilitado. Puede volver a habilitarlo desde Modificar", unRol.nombre);
                 MessageBox.Show(str, "Alerta!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                str = string.Format("Esta seguro que desea eliminar el rol {0}? Esto implica la baja lógica del mismo", unRol.Nombre);
+                str = string.Format("Esta seguro que desea eliminar el rol {0}? Esto implica la baja lógica del mismo", unRol.nombre);
                 DialogResult result = MessageBox.Show(str, "Alerta!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (result == DialogResult.Yes)

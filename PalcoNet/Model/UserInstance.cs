@@ -33,11 +33,11 @@ namespace PalcoNet.Model
             this.usuario = user;
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", user.IdUsuario);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", user.usuario_id);
             SqlDataReader lector = SqlConnector.ejecutarReader("SELECT c.cliente_id " +
                                                                 "FROM VADIUM.CLIENTE c" +
                                                                 "JOIN VADIUM.USUARIO u ON u.usuario_id = c.usuario_id" +
-                                                                "WHERE c.usuario_id = @idUsuario AND u.usuario_activo = 1", listaParametros, SqlConnector.iniciarConexion());
+                                                                "WHERE c.usuario_id = @usuario_id AND u.usuario_activo = 1", listaParametros, SqlConnector.iniciarConexion());
 
             if (lector.HasRows)
             {
@@ -48,11 +48,11 @@ namespace PalcoNet.Model
             SqlConnector.cerrarConexion();
 
             List<SqlParameter> listaParametros2 = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", user.IdUsuario);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", user.usuario_id);
             SqlDataReader lector2 = SqlConnector.ejecutarReader("SELECT e.empresa_id " +
                                                                 "FROM VADIUM.EMPRESA e" +
                                                                 "JOIN VADIUM.USUARIO u ON u.usuario_id = e.usuario_id" +
-                                                                "WHERE e.usuario_id = @idUsuario AND u.usuario_activo = 1", listaParametros, SqlConnector.iniciarConexion());
+                                                                "WHERE e.usuario_id = @usuario_id AND u.usuario_activo = 1", listaParametros, SqlConnector.iniciarConexion());
 
             if (lector2.HasRows)
             {

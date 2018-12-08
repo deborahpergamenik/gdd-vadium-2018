@@ -33,7 +33,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtContrasenia = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtNombreUsuario = new System.Windows.Forms.TextBox();
+            this.txtusuario_username = new System.Windows.Forms.TextBox();
             this.btnAtras = new System.Windows.Forms.Button();
             this.btnAceptar = new System.Windows.Forms.Button();
             this.groupBox3.SuspendLayout();
@@ -85,7 +85,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.txtNombreUsuario);
+            this.groupBox1.Controls.Add(this.txtusuario_username);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
@@ -93,16 +93,16 @@
             this.groupBox1.Size = new System.Drawing.Size(288, 64);
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Nombre de usuario";
+            this.groupBox1.Text = "nombre de usuario";
             // 
-            // txtNombreUsuario
+            // txtusuario_username
             // 
-            this.txtNombreUsuario.Location = new System.Drawing.Point(13, 25);
-            this.txtNombreUsuario.Margin = new System.Windows.Forms.Padding(4);
-            this.txtNombreUsuario.MaxLength = 255;
-            this.txtNombreUsuario.Name = "txtNombreUsuario";
-            this.txtNombreUsuario.Size = new System.Drawing.Size(260, 22);
-            this.txtNombreUsuario.TabIndex = 0;
+            this.txtusuario_username.Location = new System.Drawing.Point(13, 25);
+            this.txtusuario_username.Margin = new System.Windows.Forms.Padding(4);
+            this.txtusuario_username.MaxLength = 255;
+            this.txtusuario_username.Name = "txtusuario_username";
+            this.txtusuario_username.Size = new System.Drawing.Size(260, 22);
+            this.txtusuario_username.TabIndex = 0;
             // 
             // btnAtras
             // 
@@ -154,7 +154,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox txtContrasenia;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox txtNombreUsuario;
+        private System.Windows.Forms.TextBox txtusuario_username;
         private System.Windows.Forms.Button btnAtras;
         private System.Windows.Forms.Button btnAceptar;
     }

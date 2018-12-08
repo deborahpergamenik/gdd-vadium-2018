@@ -50,12 +50,12 @@ namespace PalcoNet.Model
                     publi.Rubro = new Rubro(Convert.ToInt32(lector["rubro_id"]), lector["rubro_descripcion"].ToString());
              
 
-                    publi.DireccionEspectaculo = lector["direccionEspectaculo"].ToString();
+                    publi.direccionEspectaculo = lector["direccionEspectaculo"].ToString();
 
                     publi.GradoPublicacion = new Grado(lector["grado_descripcion"].ToString(),Convert.ToDecimal(lector["comision"]), Convert.ToInt32(lector["grado_id"]));
 
                     publi.empresaId = Convert.ToInt32(lector["empresa_id"]);
-                    publi.estado = new Estado(Convert.ToInt32(lector["estado_id"]),lector["estado_descripcion"].ToString());
+                    publi.usuario_activo = new usuario_activo(Convert.ToInt32(lector["usuario_activo_id"]),lector["usuario_activo_descripcion"].ToString());
                     publicaciones.Add(publi);
                 }
             }

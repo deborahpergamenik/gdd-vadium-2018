@@ -15,12 +15,12 @@ namespace PalcoNet.Model
         public static List<Rol> obtenerRoles()
         {
             List<Rol> roles = new List<Rol>();
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT * FROM PalcoNet.Rol", SqlConnector.iniciarConexion());
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT * FROM VADIUM.ROL", SqlConnector.iniciarConexion());
             if (lector.HasRows)
             {
                 while (lector.Read())
                 {
-                    Rol unRol = new Rol((int)(decimal)lector["IdRol"], (string)lector["Nombre"], (bool)lector["Estado"]);
+                    Rol unRol = new Rol((int)(decimal)lector["rol_id"], (string)lector["nombre"], (bool)lector["usuario_activo"]);
                     roles.Add(unRol);
                 }
             }
@@ -60,35 +60,35 @@ namespace PalcoNet.Model
             catch { return false; }
         }
 
-        public static void updatearRol(string nombre, List<Funcionalidad> listaNuevasFunc, bool estaChecked, int idRol)
+        public static void updatearRol(string nombre, List<Funcionalidad> listaNuevasFunc, bool estaChecked, int rol_id)
         {
             List<SqlParameter> ListaParametros = new List<SqlParameter>();
-            ListaParametros.Add(new SqlParameter("@idRol", idRol));
+            ListaParametros.Add(new SqlParameter("@rol_id", rol_id));
             ListaParametros.Add(new SqlParameter("@nombreRol", nombre));
-            ListaParametros.Add(new SqlParameter("@estado", estaChecked));
+            ListaParametros.Add(new SqlParameter("@usuario_activo", estaChecked));
 
-            int ret = SqlConnector.ejecutarQuery("UPDATE PalcoNet.Rol SET Nombre = @nombreRol, Estado = @estado WHERE IdRol = @idRol", ListaParametros, SqlConnector.iniciarConexion());
+            int ret = SqlConnector.ejecutarQuery("UPDATE VADIUM.ROL SET rol_nombre = @nombreRol, usuario_activo = @usuario_activo WHERE rol_id = @rol_id", ListaParametros, SqlConnector.iniciarConexion());
             if (ret == -1)
                 MessageBox.Show("Falló al actualizar el rol", "Fail!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             SqlConnector.cerrarConexion();
         }
 
-        public static void deshabilitarRol(int idRol)
+        public static void deshabilitarRol(int rol_id)
         {
             List<SqlParameter> parametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(parametros, "@idRol", idRol);
-            int resultado = SqlConnector.ejecutarQuery("UPDATE PalcoNet.Rol SET Estado = 0 WHERE IdRol = @idRol", parametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(parametros, "@rol_id", rol_id);
+            int resultado = SqlConnector.ejecutarQuery("UPDATE VADIUM.ROL SET usuario_activo = 0 WHERE rol_id = @rol_id", parametros, SqlConnector.iniciarConexion());
 
             if (resultado == -1)
                 MessageBox.Show("Falló al actualizar el rol", "Fail!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             SqlConnector.cerrarConexion();
         }
 
-        public static void eliminarUsuariosPorRol(int idRol)
+        public static void eliminarUsuariosPorRol(int rol_id)
         {
             List<SqlParameter> parametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(parametros, "@idRol", idRol);
-            int resultado = SqlConnector.ejecutarQuery("DELETE FROM PalcoNet.Rol_Usuario WHERE IdRol = @idRol", parametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(parametros, "@rol_id", rol_id);
+            int resultado = SqlConnector.ejecutarQuery("DELETE FROM VADIUM.ROL_POR_USUARIO WHERE rol_id = @rol_id", parametros, SqlConnector.iniciarConexion());
 
             if (resultado == -1)
                 MessageBox.Show("Falló al eliminar Usuarios por Rol", "Fail!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -99,20 +99,20 @@ namespace PalcoNet.Model
         {
             List<Rol> roles = new List<Rol>();
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@idUsuario", idUser);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", idUser);
 
-            SqlDataReader lectorRolesUsuario = SqlConnector.ejecutarReader("SELECT r.IdRol, Nombre, Estado " +
-                                                                    "FROM PalcoNet.Rol r " +
-                                                                    "JOIN PalcoNet.Rol_Usuario ru ON r.IdRol = ru.IdRol " +
-                                                                    "WHERE ru.IdUsuario = @idUsuario",
+            SqlDataReader lectorRolesUsuario = SqlConnector.ejecutarReader("SELECT r.rol_id, rol_nombre, usuario_activo " +
+                                                                    "FROM VADIUM.ROL r " +
+                                                                    "JOIN VADIUM.ROL_POR_USUARIO ru ON r.rol_id = ru.rol_id " +
+                                                                    "WHERE ru.usuario_id = @usuario_id",
                                                                     listaParametros, SqlConnector.iniciarConexion());
             if (lectorRolesUsuario.HasRows)
             {
                 while (lectorRolesUsuario.Read())
                 {
-                    Rol nuevoRol = new Rol(Convert.ToInt32(lectorRolesUsuario["IdRol"]),
-                                           Convert.ToString(lectorRolesUsuario["Nombre"]),
-                                           Convert.ToBoolean(lectorRolesUsuario["Estado"])
+                    Rol nuevoRol = new Rol(Convert.ToInt32(lectorRolesUsuario["rol_id"]),
+                                           Convert.ToString(lectorRolesUsuario["nombre"]),
+                                           Convert.ToBoolean(lectorRolesUsuario["usuario_activo"])
                                            );
                     roles.Add(nuevoRol);
                 }
@@ -122,26 +122,26 @@ namespace PalcoNet.Model
             return roles;
         }
 
-        public static void BorrarRolEnUsuario(int idUser, int idRol)
+        public static void BorrarRolEnUsuario(int idUser, int rol_id)
         {
             List<SqlParameter> parametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(parametros, "@idRol", idRol);
-            SqlConnector.agregarParametro(parametros, "@idUsuario", idUser);
+            SqlConnector.agregarParametro(parametros, "@rol_id", rol_id);
+            SqlConnector.agregarParametro(parametros, "@usuario_id", idUser);
 
-            int resultado = SqlConnector.ejecutarQuery("DELETE FROM PalcoNet.Rol_Usuario WHERE IdRol = @idRol AND IdUsuario = @idUsuario", parametros, SqlConnector.iniciarConexion());
+            int resultado = SqlConnector.ejecutarQuery("DELETE FROM VADIUM.ROL_POR_USUARIO WHERE rol_id = @rol_id AND usuario_id = @usuario_id", parametros, SqlConnector.iniciarConexion());
 
             if (resultado == -1)
                 MessageBox.Show("Falló al eliminar Usuarios por Rol", "Fail!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             SqlConnector.cerrarConexion();
         }
 
-        public static void AgregarRolEnUsuario(int idUser, int idRol)
+        public static void AgregarRolEnUsuario(int idUser, int rol_id)
         {
             List<SqlParameter> parametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(parametros, "@idRol", idRol);
-            SqlConnector.agregarParametro(parametros, "@idUsuario", idUser);
+            SqlConnector.agregarParametro(parametros, "@rol_id", rol_id);
+            SqlConnector.agregarParametro(parametros, "@usuario_id", idUser);
 
-            int resultado = SqlConnector.ejecutarQuery("INSERT INTO PalcoNet.Rol_Usuario (IdUsuario, IdRol) VALUES ( @idUsuario ,  @idRol )", parametros, SqlConnector.iniciarConexion());
+            int resultado = SqlConnector.ejecutarQuery("INSERT INTO VADIUM.ROL_POR_USUARIO (usuario_id, rol_id) VALUES ( @usuario_id ,  @rol_id )", parametros, SqlConnector.iniciarConexion());
 
             if (resultado == -1)
                 MessageBox.Show("Falló al insertar Usuarios por Rol", "Fail!", MessageBoxButtons.OK, MessageBoxIcon.Error);

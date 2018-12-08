@@ -20,13 +20,13 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         public class ResultadoEmpresa
         {
-            public int IdUsuario { get; set; }
-            public string RazonSocial { get; set; }
+            public int usuario_id { get; set; }
+            public string razonSocial { get; set; }
 
-            public ResultadoEmpresa(int _IdUsuario, string _RazonSocial)
+            public ResultadoEmpresa(int _usuario_id, string _razonSocial)
             {
-                IdUsuario = _IdUsuario;
-                RazonSocial = _RazonSocial;
+                usuario_id = _usuario_id;
+                razonSocial = _razonSocial;
             }
         }
 
@@ -50,24 +50,24 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             switch (filtro)
             {
                 case 'R': // Razón Social
-                    resultado = buscarRazonSocial();
+                    resultado = buscarrazonSocial();
                     break;
-                case 'C': // CUIT
-                    resultado = buscarCUIT();
+                case 'C': // cuit
+                    resultado = buscarcuit();
                     break;
-                case 'E': // Email
-                    resultado = buscarEmail();
+                case 'E': // mail
+                    resultado = buscarmail();
                     break;
             }
 
             return resultado;
         }
 
-        public int buscarRazonSocial()
+        public int buscarrazonSocial()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@RazonSocial", this.valor);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario FROM PalcoNet.Empresa WHERE RazonSocial = @RazonSocial", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@razonSocial", this.valor);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id FROM VADIUM.EMPRESA WHERE razonSocial = @razonSocial", listaParametros, SqlConnector.iniciarConexion());
 
             int cantRes = 0;
 
@@ -75,10 +75,10 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             {
                 while (lector.Read())
                 {
-                    int IdUsuario = Convert.ToInt32(lector["IdUsuario"]);
-                    string RazonSocial = this.valor;
+                    int usuario_id = Convert.ToInt32(lector["usuario_id"]);
+                    string razonSocial = this.valor;
 
-                    ResultadoEmpresa resultado = new ResultadoEmpresa(IdUsuario, RazonSocial);
+                    ResultadoEmpresa resultado = new ResultadoEmpresa(usuario_id, razonSocial);
                     resultados.Add(resultado);
                 }
             }
@@ -87,11 +87,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             return cantRes;
         }
 
-        public int buscarCUIT()
+        public int buscarcuit()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@CUIT", this.valor);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario, RazonSocial FROM PalcoNet.Empresa WHERE CUIT = @CUIT", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@cuit", this.valor);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id, razonSocial FROM VADIUM.EMPRESA WHERE cuit = @cuit", listaParametros, SqlConnector.iniciarConexion());
 
             int cantRes = 0;
 
@@ -99,10 +99,10 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             {
                 while (lector.Read())
                 {
-                    int IdUsuario = Convert.ToInt32(lector["IdUsuario"]);
-                    string RazonSocial = Convert.ToString(lector["RazonSocial"]);
+                    int usuario_id = Convert.ToInt32(lector["usuario_id"]);
+                    string razonSocial = Convert.ToString(lector["razonSocial"]);
 
-                    ResultadoEmpresa resultado = new ResultadoEmpresa(IdUsuario, RazonSocial);
+                    ResultadoEmpresa resultado = new ResultadoEmpresa(usuario_id, razonSocial);
                     resultados.Add(resultado);
                 }
             }
@@ -111,11 +111,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             return cantRes;
         }
 
-        public int buscarEmail()
+        public int buscarmail()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@Email", this.valor);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT IdUsuario, RazonSocial FROM PalcoNet.Empresa WHERE Email = @Email", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@mail", this.valor);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id, razonSocial FROM VADIUM.EMPRESA WHERE mail = @mail", listaParametros, SqlConnector.iniciarConexion());
 
             int cantRes = 0;
 
@@ -123,10 +123,10 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             {
                 while (lector.Read())
                 {
-                    int IdUsuario = Convert.ToInt32(lector["IdUsuario"]);
-                    string RazonSocial = Convert.ToString(lector["RazonSocial"]);
+                    int usuario_id = Convert.ToInt32(lector["usuario_id"]);
+                    string razonSocial = Convert.ToString(lector["razonSocial"]);
 
-                    ResultadoEmpresa resultado = new ResultadoEmpresa(IdUsuario, RazonSocial);
+                    ResultadoEmpresa resultado = new ResultadoEmpresa(usuario_id, razonSocial);
                     resultados.Add(resultado);
                 }
             }
@@ -137,7 +137,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         public void formatearDataGrid()
         {
-            int widthRazonSocial = 227;
+            int widthrazonSocial = 227;
             int widthBotones = 85;
 
             dgResultados.DataSource = resultados;
@@ -150,7 +150,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             DataGridViewColumn col_razonSocial = dgResultados.Columns[1];
             col_razonSocial.Resizable = DataGridViewTriState.False;
             col_razonSocial.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col_razonSocial.Width = widthRazonSocial;
+            col_razonSocial.Width = widthrazonSocial;
 
             DataGridViewButtonColumn botonesModificar = new DataGridViewButtonColumn();
             botonesModificar.HeaderText = "";
@@ -175,10 +175,10 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         public void eliminarEmpresa(int id)
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@IdUsuario", id);
-            SqlConnector.ejecutarQuery("UPDATE PalcoNet.Usuario SET Estado = 0 WHERE IdUsuario = @IdUsuario", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", id);
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_activo = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
-            MessageBox.Show("Usuario inEstado.");
+            MessageBox.Show("Usuario inusuario_activo.");
         }
 
         private void dgResultados_CellContentClick(object sender, DataGridViewCellEventArgs e)

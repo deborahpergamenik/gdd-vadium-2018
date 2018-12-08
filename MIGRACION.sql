@@ -30,6 +30,9 @@ GO
 IF OBJECT_ID('VADIUM.removeGrado') IS NOT NULL
 DROP PROCEDURE VADIUM.removeGrado;
 GO
+IF OBJECT_ID('VADIUM.HistorialCliente') IS NOT NULL
+DROP PROCEDURE VADIUM.HistorialCliente;
+GO
 IF OBJECT_ID('VADIUM.LISTADO_SELECCION_EMPRESA') IS NOT NULL
 DROP PROCEDURE VADIUM.LISTADO_SELECCION_EMPRESA;
 GO
@@ -595,6 +598,20 @@ END TRY
 BEGIN CATCH
   SELECT 'ERROR', ERROR_MESSAGE()
 END CATCH
+GO
+CREATE PROCEDURE [VADIUM].HistorialCliente @clienteId int
+AS
+BEGIN
+
+SELECT pub.descripcion as Espectaculo, item.monto as Precio, ubi.fila, ubi.asiento, tu.descripcion as TipoUbicacion, pub.fecha as FechaEspectaculo, fac.descripcion as medioPago
+FROM VADIUM.ITEMFACTURA item JOIN VADIUM.UBICACION ubi ON (item.ubicacion_id = ubi.ubicacion_id)
+							 JOIN VADIUM.TIPOUBICACION tu ON (ubi.codigoTipoUbicacion = tu.codigoTipoUbicacion)
+						     JOIN VADIUM.PUBLICACION pub ON (ubi.codigoEspectaculo = pub.codigoEspectaculo)
+							 JOIN VADIUM.FACTURA fac ON (item.factura_nro = fac.factura_nro)
+
+WHERE item.cliente_id = @clienteId
+
+END
 GO
 
 ---------------------------EMPRESA -----------------------------------

@@ -1,6 +1,7 @@
 ﻿using PalcoNet.Common;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -61,6 +62,25 @@ namespace PalcoNet.Model
             publicaciones = publicaciones.Skip(start).Take(finish).ToList();
             SqlConnector.cerrarConexion();
             return publicaciones;
+        }
+
+        public static DataTable obtenerPublicaiones(int start, int finish, string rubro, string desc, DateTime? desde, DateTime? hasta)
+        {
+            try{
+                List<Publicacion> publicaciones = new List<Publicacion>();
+
+                List<SqlParameter> listaParametros = new List<SqlParameter>();
+                SqlConnector.agregarParametro(listaParametros, "@desde", desde);
+                SqlConnector.agregarParametro(listaParametros, "@hasta", hasta);
+                SqlConnector.agregarParametro(listaParametros, "@rubro", hasta);
+                SqlConnector.agregarParametro(listaParametros, "@descripcion", hasta);
+                DataTable table = SqlConnector.obtenerDataTable("VADIUM.ObtenerPublicaciones", "SP", listaParametros);
+                return table;
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
         }
     }
 }

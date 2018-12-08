@@ -18,22 +18,7 @@ namespace PalcoNet.Model
             this.codigo = cod;
             this.descripcion = desc;
         }
-        public static List<Estado> obtenerEstados()
-        {
-            List<Estado> estados = new List<Estado>();
-
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT * FROM VADIUM.ESTADO", SqlConnector.iniciarConexion());
-            if (lector.HasRows)
-            {
-                while (lector.Read())
-                {
-                    estados.Add(new Estado(Convert.ToInt32(lector["codigo"]), lector["descripcion"].ToString()));
-                }
-            }
-            SqlConnector.cerrarConexion();
-
-            return estados;
-        }
+       
         
     }
 }

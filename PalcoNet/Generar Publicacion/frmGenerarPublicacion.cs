@@ -16,7 +16,9 @@ namespace PalcoNet.Generar_Publicacion
         public bool lotes =false;
         public frmGenerarPublicacion()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+            loadData();
+            dataGridView1.DataSource = Publicaciones.obtenerPublicaiones(0,20, null, null, null, null);
         }
 
         public frmGenerarPublicacion(string modo)
@@ -88,6 +90,20 @@ namespace PalcoNet.Generar_Publicacion
 
             dtpPublicacion.Format = DateTimePickerFormat.Custom;
             dtpPublicacion.CustomFormat = "MM/dd/yyyy hh:mm:ss"; 
+        }
+        public void loadData()
+        {
+            List<ComboBoxItem> estados = Estados.obtenerEstados().Select(x => new ComboBoxItem { Text =x.descripcion, Value =x.codigo }).ToList();
+            estados.ForEach(x => cmbEstado.Items.Add(x));
+
+            List<ComboBoxItem> rubros = Rubros.obtenerRubros().Select(x => new ComboBoxItem { Text = x.Descripcion, Value = x.Id }).ToList();
+            rubros.ForEach(x => cmbRubro.Items.Add(x));
+
+            List<ComboBoxItem> grados = Grados.ObtenerTodosLosGrados().Select(x => new ComboBoxItem { Text = x.TipoGrado, Value = x.id}).ToList();
+            grados.ForEach(x => cmbGrado.Items.Add(x));
+
+           
+
         }
     }
 }

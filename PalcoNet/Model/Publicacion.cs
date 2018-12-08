@@ -26,5 +26,10 @@ namespace PalcoNet.Model
             //Guardar publicacion en base
             //TODO
         }
+
+        internal void save(List<DateTime> espectaculos)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

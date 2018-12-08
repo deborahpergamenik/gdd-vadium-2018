@@ -587,8 +587,8 @@ GO
 CREATE	 PROCEDURE [VADIUM].LISTADO_SELECCION_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI numeric(18), @mail nvarchar(255)
 AS
 BEGIN TRY
-	SELECT *, cli.nombre + ' ' + cli.apellido NombreCompleto
-	FROM [VADIUM].CLIENTE cli 
+	SELECT *
+	FROM [VADIUM].CLIENTE cli JOIN DIRECCION dir 
 	WHERE
 	(@NOMBRE = '' OR @NOMBRE is null OR  lower(cli.nombre) LIKE '%' + lower(@NOMBRE) + '%') AND
 	(@APELLIDO = '' OR @APELLIDO is null OR lower(cli.apellido) LIKE '%' + lower(@APELLIDO) + '%') AND

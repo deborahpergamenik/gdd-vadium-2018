@@ -316,6 +316,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmComprar";
             this.Text = "frmComprar";
+            this.Load += new System.EventHandler(this.frmComprar_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Publicaciones_Datagrid)).EndInit();

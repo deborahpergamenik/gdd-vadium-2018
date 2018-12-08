@@ -29,6 +29,15 @@
         private void InitializeComponent()
         {
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnBusqueda = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtLastNameFilter = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtFilterDoc = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtNameFilter = new System.Windows.Forms.TextBox();
+            this.txtEmailFilter = new System.Windows.Forms.TextBox();
             this.cmbFiltroTipoDocumento = new System.Windows.Forms.ComboBox();
             this.btnBuscar = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
@@ -36,6 +45,8 @@
             this.tBusqueda = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtCuil = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
@@ -67,18 +78,9 @@
             this.txtTelefono = new System.Windows.Forms.TextBox();
             this.btnLimpiar = new System.Windows.Forms.Button();
             this.btnAtras = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtLastNameFilter = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtNameFilter = new System.Windows.Forms.TextBox();
-            this.txtEmailFilter = new System.Windows.Forms.TextBox();
-            this.txtFilterDoc = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.dgResultados = new System.Windows.Forms.DataGridView();
-            this.btnBusqueda = new System.Windows.Forms.Button();
+            this.txtNroCalle = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgResultados)).BeginInit();
@@ -108,6 +110,96 @@
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Baja o modificación de clientes";
+            // 
+            // btnBusqueda
+            // 
+            this.btnBusqueda.Location = new System.Drawing.Point(410, 162);
+            this.btnBusqueda.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnBusqueda.Name = "btnBusqueda";
+            this.btnBusqueda.Size = new System.Drawing.Size(186, 91);
+            this.btnBusqueda.TabIndex = 16;
+            this.btnBusqueda.Text = "Buscar";
+            this.btnBusqueda.UseVisualStyleBackColor = true;
+            this.btnBusqueda.Click += new System.EventHandler(this.btnBusqueda_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 275);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(53, 20);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "E-mail";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // txtLastNameFilter
+            // 
+            this.txtLastNameFilter.Location = new System.Drawing.Point(110, 224);
+            this.txtLastNameFilter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtLastNameFilter.MaxLength = 255;
+            this.txtLastNameFilter.Name = "txtLastNameFilter";
+            this.txtLastNameFilter.Size = new System.Drawing.Size(215, 26);
+            this.txtLastNameFilter.TabIndex = 15;
+            this.txtLastNameFilter.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(4, 141);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(98, 20);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "Número Doc";
+            this.label6.Click += new System.EventHandler(this.label6_Click);
+            // 
+            // txtFilterDoc
+            // 
+            this.txtFilterDoc.Location = new System.Drawing.Point(110, 138);
+            this.txtFilterDoc.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtFilterDoc.MaxLength = 18;
+            this.txtFilterDoc.Name = "txtFilterDoc";
+            this.txtFilterDoc.Size = new System.Drawing.Size(215, 26);
+            this.txtFilterDoc.TabIndex = 10;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(2, 187);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(65, 20);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "Nombre";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 226);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(65, 20);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Apellido";
+            // 
+            // txtNameFilter
+            // 
+            this.txtNameFilter.Location = new System.Drawing.Point(110, 182);
+            this.txtNameFilter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtNameFilter.MaxLength = 255;
+            this.txtNameFilter.Name = "txtNameFilter";
+            this.txtNameFilter.Size = new System.Drawing.Size(215, 26);
+            this.txtNameFilter.TabIndex = 8;
+            // 
+            // txtEmailFilter
+            // 
+            this.txtEmailFilter.Location = new System.Drawing.Point(110, 275);
+            this.txtEmailFilter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtEmailFilter.MaxLength = 255;
+            this.txtEmailFilter.Name = "txtEmailFilter";
+            this.txtEmailFilter.Size = new System.Drawing.Size(215, 26);
+            this.txtEmailFilter.TabIndex = 11;
             // 
             // cmbFiltroTipoDocumento
             // 
@@ -171,6 +263,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.label3);
+            this.groupBox3.Controls.Add(this.txtNroCalle);
             this.groupBox3.Controls.Add(this.button2);
             this.groupBox3.Controls.Add(this.button1);
             this.groupBox3.Controls.Add(this.label1);
@@ -211,6 +305,26 @@
             this.groupBox3.TabIndex = 36;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Nuevo Cliente";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(93, 453);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(202, 46);
+            this.button2.TabIndex = 41;
+            this.button2.Text = "Cancelar";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(344, 453);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(202, 46);
+            this.button1.TabIndex = 40;
+            this.button1.Text = "Eliminar";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -275,7 +389,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(9, 254);
+            this.label13.Location = new System.Drawing.Point(13, 305);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(77, 20);
@@ -294,7 +408,7 @@
             // 
             // txtLocalidad
             // 
-            this.txtLocalidad.Location = new System.Drawing.Point(117, 246);
+            this.txtLocalidad.Location = new System.Drawing.Point(121, 297);
             this.txtLocalidad.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtLocalidad.MaxLength = 18;
             this.txtLocalidad.Name = "txtLocalidad";
@@ -382,7 +496,7 @@
             // 
             this.cmbAno.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbAno.FormattingEnabled = true;
-            this.cmbAno.Location = new System.Drawing.Point(334, 298);
+            this.cmbAno.Location = new System.Drawing.Point(332, 337);
             this.cmbAno.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbAno.Name = "cmbAno";
             this.cmbAno.Size = new System.Drawing.Size(76, 28);
@@ -392,7 +506,7 @@
             // 
             this.cmbMes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbMes.FormattingEnabled = true;
-            this.cmbMes.Location = new System.Drawing.Point(266, 298);
+            this.cmbMes.Location = new System.Drawing.Point(264, 337);
             this.cmbMes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbMes.Name = "cmbMes";
             this.cmbMes.Size = new System.Drawing.Size(58, 28);
@@ -412,7 +526,7 @@
             // 
             this.cmbDia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDia.FormattingEnabled = true;
-            this.cmbDia.Location = new System.Drawing.Point(197, 298);
+            this.cmbDia.Location = new System.Drawing.Point(195, 337);
             this.cmbDia.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbDia.Name = "cmbDia";
             this.cmbDia.Size = new System.Drawing.Size(58, 28);
@@ -441,7 +555,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(9, 302);
+            this.label21.Location = new System.Drawing.Point(7, 341);
             this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(177, 20);
@@ -519,105 +633,6 @@
             this.btnAtras.UseVisualStyleBackColor = true;
             this.btnAtras.Click += new System.EventHandler(this.btnAtras_Click);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 275);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 20);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "E-mail";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
-            // 
-            // txtLastNameFilter
-            // 
-            this.txtLastNameFilter.Location = new System.Drawing.Point(110, 224);
-            this.txtLastNameFilter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtLastNameFilter.MaxLength = 255;
-            this.txtLastNameFilter.Name = "txtLastNameFilter";
-            this.txtLastNameFilter.Size = new System.Drawing.Size(215, 26);
-            this.txtLastNameFilter.TabIndex = 15;
-            this.txtLastNameFilter.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(2, 187);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(65, 20);
-            this.label4.TabIndex = 12;
-            this.label4.Text = "Nombre";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 226);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(65, 20);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "Apellido";
-            // 
-            // txtNameFilter
-            // 
-            this.txtNameFilter.Location = new System.Drawing.Point(110, 182);
-            this.txtNameFilter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtNameFilter.MaxLength = 255;
-            this.txtNameFilter.Name = "txtNameFilter";
-            this.txtNameFilter.Size = new System.Drawing.Size(215, 26);
-            this.txtNameFilter.TabIndex = 8;
-            // 
-            // txtEmailFilter
-            // 
-            this.txtEmailFilter.Location = new System.Drawing.Point(110, 275);
-            this.txtEmailFilter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtEmailFilter.MaxLength = 255;
-            this.txtEmailFilter.Name = "txtEmailFilter";
-            this.txtEmailFilter.Size = new System.Drawing.Size(215, 26);
-            this.txtEmailFilter.TabIndex = 11;
-            // 
-            // txtFilterDoc
-            // 
-            this.txtFilterDoc.Location = new System.Drawing.Point(110, 138);
-            this.txtFilterDoc.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtFilterDoc.MaxLength = 18;
-            this.txtFilterDoc.Name = "txtFilterDoc";
-            this.txtFilterDoc.Size = new System.Drawing.Size(215, 26);
-            this.txtFilterDoc.TabIndex = 10;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(4, 141);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(98, 20);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "Número Doc";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(344, 453);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(202, 46);
-            this.button1.TabIndex = 40;
-            this.button1.Text = "Eliminar";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(93, 453);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(202, 46);
-            this.button2.TabIndex = 41;
-            this.button2.Text = "Cancelar";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
             // dgResultados
             // 
             this.dgResultados.BackgroundColor = System.Drawing.SystemColors.Menu;
@@ -630,16 +645,24 @@
             this.dgResultados.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgResultados_CellContentClick);
             this.dgResultados.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgResultados_RowHeaderMouseDoubleClick);
             // 
-            // btnBusqueda
+            // txtNroCalle
             // 
-            this.btnBusqueda.Location = new System.Drawing.Point(410, 162);
-            this.btnBusqueda.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnBusqueda.Name = "btnBusqueda";
-            this.btnBusqueda.Size = new System.Drawing.Size(186, 91);
-            this.btnBusqueda.TabIndex = 16;
-            this.btnBusqueda.Text = "Buscar";
-            this.btnBusqueda.UseVisualStyleBackColor = true;
-            this.btnBusqueda.Click += new System.EventHandler(this.btnBusqueda_Click);
+            this.txtNroCalle.Location = new System.Drawing.Point(121, 246);
+            this.txtNroCalle.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtNroCalle.MaxLength = 255;
+            this.txtNroCalle.Name = "txtNroCalle";
+            this.txtNroCalle.Size = new System.Drawing.Size(294, 26);
+            this.txtNroCalle.TabIndex = 42;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 254);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(73, 20);
+            this.label3.TabIndex = 43;
+            this.label3.Text = "Nro callle";
             // 
             // frmAbmCliente
             // 
@@ -717,5 +740,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.DataGridView dgResultados;
         private System.Windows.Forms.Button btnBusqueda;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtNroCalle;
     }
 }

@@ -485,7 +485,22 @@ namespace PalcoNet.Abm_Cliente
             {
                 try
                 {
+                    txtNombre.Text = row.Cells[0].Value.ToString();
                     txtApellido.Text = row.Cells[0].Value.ToString();
+                    cmbTipoDocumento.SelectedText = row.Cells[0].Value.ToString();
+                    txtNumeroDocumento.Text = row.Cells[0].Value.ToString();
+                    txtCuil.Text = row.Cells[0].Value.ToString();
+                    //fecha nacimiento
+                    //fecha creacion
+                    //tarjetcredito
+                    txtEmail.Text = row.Cells[0].Value.ToString();
+                    txtTelefono.Text = row.Cells[0].Value.ToString();
+                    txtDireccion.Text = row.Cells[0].Value.ToString();
+                    txtNroCalle.Text = row.Cells[0].Value.ToString();
+                    txtNroPiso.Text = row.Cells[0].Value.ToString();
+                    txtDepartamento.Text = row.Cells[0].Value.ToString();
+                    txtCodigoPostal.Text = row.Cells[0].Value.ToString();
+                    txtLocalidad.Text = row.Cells[0].Value.ToString();
                     //Completar los siguientes campos para editar
 
                 }

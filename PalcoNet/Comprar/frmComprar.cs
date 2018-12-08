@@ -324,5 +324,10 @@ namespace PalcoNet.Comprar
         {
 
         }
+
+        private void frmComprar_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

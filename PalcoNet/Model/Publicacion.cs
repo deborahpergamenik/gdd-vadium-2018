@@ -20,5 +20,11 @@ namespace PalcoNet.Model
         public int empresaId { get; set; }//la publicacion tiene asociada una empresa
         //public int EstadoPublicacion { get; set; } el estado es una entidad y te va a convenir traete el id con la descripcion
         public Estado estado { get; set; }
+
+        internal void save()
+        {
+            //Guardar publicacion en base
+            //TODO
+        }
     }
 }

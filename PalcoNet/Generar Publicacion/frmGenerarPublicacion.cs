@@ -93,7 +93,7 @@ namespace PalcoNet.Generar_Publicacion
         }
         public void loadData()
         {
-            List<ComboBoxItem> usuario_activos = usuario_activos.obtenerusuario_activos().Select(x => new ComboBoxItem { Text =x.descripcion, Value =x.codigo }).ToList();
+            List<ComboBoxItem> usuario_activos = Estados.obtenerEstados().Select(x => new ComboBoxItem { Text =x.descripcion, Value =x.codigo }).ToList();
             usuario_activos.ForEach(x => cmbusuario_activo.Items.Add(x));
 
             List<ComboBoxItem> rubros = Rubros.obtenerRubros().Select(x => new ComboBoxItem { Text = x.Descripcion, Value = x.Id }).ToList();

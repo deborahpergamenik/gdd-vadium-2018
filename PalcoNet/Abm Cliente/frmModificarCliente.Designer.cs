@@ -114,10 +114,10 @@
             // 
             this.cmbusuario_activo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbusuario_activo.FormattingEnabled = true;
-            this.cmbusuario_activo.Location = new System.Drawing.Point(650, 29);
+            this.cmbusuario_activo.Location = new System.Drawing.Point(696, 29);
             this.cmbusuario_activo.Margin = new System.Windows.Forms.Padding(4);
             this.cmbusuario_activo.Name = "cmbusuario_activo";
-            this.cmbusuario_activo.Size = new System.Drawing.Size(160, 24);
+            this.cmbusuario_activo.Size = new System.Drawing.Size(114, 24);
             this.cmbusuario_activo.TabIndex = 2;
             // 
             // txtpassword
@@ -141,10 +141,10 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(590, 34);
+            this.label4.Location = new System.Drawing.Point(588, 32);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(52, 17);
+            this.label4.Size = new System.Drawing.Size(100, 17);
             this.label4.TabIndex = 3;
             this.label4.Text = "usuario_activo";
             // 
@@ -164,7 +164,7 @@
             this.label1.Location = new System.Drawing.Point(8, 35);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(129, 17);
+            this.label1.Size = new System.Drawing.Size(127, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "nombre de usuario";
             // 
@@ -215,7 +215,7 @@
             this.label3.Location = new System.Drawing.Point(520, 44);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(50, 17);
+            this.label3.Size = new System.Drawing.Size(57, 17);
             this.label3.TabIndex = 38;
             this.label3.Text = "CUIL (*)";
             // 
@@ -361,7 +361,7 @@
             this.label15.Location = new System.Drawing.Point(8, 83);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(77, 17);
+            this.label15.Size = new System.Drawing.Size(75, 17);
             this.label15.TabIndex = 2;
             this.label15.Text = "nombre (*)";
             // 
@@ -371,7 +371,7 @@
             this.label16.Location = new System.Drawing.Point(425, 82);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(77, 17);
+            this.label16.Size = new System.Drawing.Size(76, 17);
             this.label16.TabIndex = 3;
             this.label16.Text = "apellido (*)";
             // 

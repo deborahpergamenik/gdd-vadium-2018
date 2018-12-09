@@ -50,8 +50,6 @@ namespace PalcoNet.Abm_Cliente
             llenarCmbMes();
             llenarCmbAno();
             llenarCmbtipoDocumento();
-            llenarCmbFiltro();
-            llenarCmbFiltrotipoDocumento();
         }
 
         public void llenarCmbDia()
@@ -88,109 +86,7 @@ namespace PalcoNet.Abm_Cliente
             this.cmbtipoDocumentoumento.Items.Add("LC");
         }
 
-        public void llenarCmbFiltro()
-        {
-            this.cmbFiltro.Items.Add("nombre");
-            this.cmbFiltro.Items.Add("apellido");
-            this.cmbFiltro.Items.Add("Tipo de documento");
-            this.cmbFiltro.Items.Add("Número de documento");
-            this.cmbFiltro.Items.Add("mail");
-        }
-
-        public void llenarCmbFiltrotipoDocumento()
-        {
-            this.cmbFiltrotipoDocumentoumento.Items.Add("DU");
-            this.cmbFiltrotipoDocumentoumento.Items.Add("CI");
-            this.cmbFiltrotipoDocumentoumento.Items.Add("LC");
-        }
-
-        private void btnBuscar_Click(object sender, EventArgs e)
-        {
-            switch (cmbFiltro.SelectedIndex)
-            {
-                case -1:
-                    MessageBox.Show("Debe seleccionar un criterio de búsqueda.", "Error");
-                    break;
-                case 0: // nombre
-                    if (!tBusqueda.Text.Equals(""))
-                    {
-                        frmBuscarCliente frmBuscar = new frmBuscarCliente('N', tBusqueda.Text);
-                        frmBuscar.Show();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Debe ingresar los campos solicitados", "Error");
-                    }
-                    break;
-                case 1: // apellido
-                    if (!tBusqueda.Text.Equals(""))
-                    {
-                        frmBuscarCliente frmBuscar = new frmBuscarCliente('A', tBusqueda.Text);
-                        frmBuscar.Show();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Debe ingresar los campos solicitados", "Error");
-                    }
-                    break;
-                case 2: // Tipo de documento
-                    if (cmbFiltrotipoDocumentoumento.SelectedIndex != -1)
-                    {
-                        frmBuscarCliente frmBuscar = new frmBuscarCliente('T', cmbFiltrotipoDocumentoumento.SelectedItem.ToString());
-                        frmBuscar.Show();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Debe ingresar los campos solicitados", "Error");
-                    }
-                    break;
-                case 3: // Número de documento
-                    if (!tBusqueda.Text.Equals(""))
-                    {
-                        if (Interfaz.esNumerico(tBusqueda.Text, System.Globalization.NumberStyles.Integer))
-                        {
-                            frmBuscarCliente frmBuscar = new frmBuscarCliente('D', tBusqueda.Text);
-                            frmBuscar.Show();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Número de documento inválido.", "Error");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Debe ingresar los campos solicitados", "Error");
-                    }
-                    break;
-                case 4: // mail
-                    if (!tBusqueda.Text.Equals(""))
-                    {
-                        frmBuscarCliente frmBuscar = new frmBuscarCliente('E', tBusqueda.Text);
-                        frmBuscar.Show();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Debe ingresar los campos solicitados", "Error");
-                    }
-                    break;
-            }
-        }
-
-
-        private void cmbFiltro_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBox CB = (ComboBox)sender;
-            if (CB.SelectedIndex == 2)
-            {
-                cmbFiltrotipoDocumentoumento.Visible = true;
-                tBusqueda.Visible = false;
-            }
-            else
-            {
-                cmbFiltrotipoDocumentoumento.Visible = false;
-                tBusqueda.Visible = true;
-            }
-        }
+        
 
         public Boolean campoVacio(TextBox textbox)
         {

@@ -173,6 +173,12 @@
     <Compile Include="Generar Publicacion\frmGenerarPublicacion.Designer.cs">
       <DependentUpon>frmGenerarPublicacion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generar Publicacion\frmPublicaiconesPorLotes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Generar Publicacion\frmPublicaiconesPorLotes.Designer.cs">
+      <DependentUpon>frmPublicaiconesPorLotes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Generar Rendicion Comisiones\frmGenerarRendicionesComisiones.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -215,13 +221,16 @@
     <Compile Include="Login\frmSeleccionRoles.Designer.cs">
       <DependentUpon>frmSeleccionRoles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\ComboBoxItem.cs" />
     <Compile Include="Model\Configuration.cs" />
     <Compile Include="Model\Encriptacion.cs" />
     <Compile Include="Model\Estado.cs" />
+    <Compile Include="Model\Estados.cs" />
     <Compile Include="Model\Funcionalidad.cs" />
     <Compile Include="Model\Funcionalidades.cs" />
     <Compile Include="Model\Globals.cs" />
     <Compile Include="Model\Grado.cs" />
+    <Compile Include="Model\Grados.cs" />
     <Compile Include="Model\ListadoEstadistico.cs" />
     <Compile Include="Model\ListadoLocNoVendidas.cs" />
     <Compile Include="Model\ListadoMayorCantCompras.cs" />
@@ -231,6 +240,7 @@
     <Compile Include="Model\Rol.cs" />
     <Compile Include="Model\Roles.cs" />
     <Compile Include="Model\Rubro.cs" />
+    <Compile Include="Model\Rubros.cs" />
     <Compile Include="Model\Tarjeta.cs" />
     <Compile Include="Model\Ubicacion.cs" />
     <Compile Include="Model\UserInstance.cs" />
@@ -311,6 +321,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Comprar\frmDetallePublicacion.resx">
       <DependentUpon>frmDetallePublicacion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Generar Publicacion\frmPublicaiconesPorLotes.resx">
+      <DependentUpon>frmPublicaiconesPorLotes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Listado Estadistico\frmListadoEstadistico.resx">
       <DependentUpon>frmListadoEstadistico.cs</DependentUpon>

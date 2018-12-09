@@ -55,7 +55,7 @@ namespace PalcoNet.Model
                     publi.GradoPublicacion = new Grado(lector["grado_descripcion"].ToString(),Convert.ToDecimal(lector["comision"]), Convert.ToInt32(lector["grado_id"]));
 
                     publi.empresaId = Convert.ToInt32(lector["empresa_id"]);
-                    publi.usuario_activo = new usuario_activo(Convert.ToInt32(lector["usuario_activo_id"]),lector["usuario_activo_descripcion"].ToString());
+                    publi.usuario_activo = new Estado(Convert.ToInt32(lector["usuario_activo_id"]),lector["usuario_activo_descripcion"].ToString());
                     publicaciones.Add(publi);
                 }
             }

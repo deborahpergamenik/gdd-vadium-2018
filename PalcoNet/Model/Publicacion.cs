@@ -19,7 +19,7 @@ namespace PalcoNet.Model
         //public int userId { get; set; }
         public int empresaId { get; set; }//la publicacion tiene asociada una empresa
         //public int usuario_activoPublicacion { get; set; } el usuario_activo es una entidad y te va a convenir traete el id con la descripcion
-        public usuario_activo usuario_activo { get; set; }
+        public Estado usuario_activo { get; set; }
 
         internal void save()
         {

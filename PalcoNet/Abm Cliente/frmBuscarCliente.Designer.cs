@@ -66,7 +66,6 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmBuscarCliente";
             this.Text = "frmBuscarCliente";
-            this.Load += new System.EventHandler(this.frmBuscarCliente_Load);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgResultados)).EndInit();
             this.ResumeLayout(false);

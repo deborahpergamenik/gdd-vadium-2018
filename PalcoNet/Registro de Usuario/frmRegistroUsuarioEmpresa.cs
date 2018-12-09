@@ -1,4 +1,5 @@
 ﻿using PalcoNet.Common;
+using PalcoNet.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -139,7 +140,7 @@ namespace PalcoNet.Registro_de_Usuario
                         {
                             if (!SqlConnector.existetelefono(Convert.ToInt32(txttelefono.Text)))
                             {
-                                registrarEmpresa(username, password, txtrazonSocial.Text, txtcuit.Text, txttelefono.Text, txtdireccion.Text, txtcod_postal.Text, txtciudad.Text, txtmail.Text, txtLocalidad.Text,txtNroPiso.Text, txtDepartamento.Text, DateTime.ParseExact(DateTime.Now.ToShortDateString(), "dd/MM/yyyy", null));
+                                registrarEmpresa(username, password, txtrazonSocial.Text, txtcuit.Text, txttelefono.Text, txtdireccion.Text, txtcod_postal.Text, txtciudad.Text, txtmail.Text, txtLocalidad.Text,txtNroPiso.Text, txtDepartamento.Text, Configuration.getActualDate());
                                 MessageBox.Show("Alta finalizada. Puede ingresar al sistema.", "Registro exitoso");
                                 frmLogin frmLogin = new frmLogin();
                                 this.Hide();

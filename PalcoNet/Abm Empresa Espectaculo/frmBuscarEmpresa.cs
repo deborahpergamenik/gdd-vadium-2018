@@ -186,7 +186,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             switch (e.ColumnIndex)
             {
                 case 0:
-                    frmModificarEmpresa form1 = new frmModificarEmpresa(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value), this);
+                    frmModificarEmpresa form1 = new frmModificarEmpresa(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value));
                     this.Hide();
                     form1.Show();
                     break;

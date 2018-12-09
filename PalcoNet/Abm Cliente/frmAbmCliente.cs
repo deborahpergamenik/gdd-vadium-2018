@@ -17,7 +17,7 @@ namespace PalcoNet.Abm_Cliente
 {
     public partial class frmAbmCliente : Form
     {
-        public string usuario { get; set; }
+        public string usuario_username { get; set; }
         public string password { get; set; }
         public int usuario_intentosLogin { get; set; }
         public int usuario_activo { get; set; }
@@ -50,7 +50,25 @@ namespace PalcoNet.Abm_Cliente
             llenarCmbMes();
             llenarCmbAno();
             llenarCmbtipoDocumento();
+            formatearDataGrid();
         }
+
+
+        public class ResultadoClientes
+        {
+            public int usuario_id { get; set; }
+            public string nombre { get; set; }
+            public string apellido { get; set; }
+
+            public ResultadoClientes(int usuario_id, string nombre, string apellido)
+            {
+                usuario_id = usuario_id;
+                nombre = nombre;
+                apellido = apellido;
+            }
+        }
+
+        public List<ResultadoClientes> resultados = new List<ResultadoClientes>();
 
         public void llenarCmbDia()
         {
@@ -81,9 +99,9 @@ namespace PalcoNet.Abm_Cliente
 
         public void llenarCmbtipoDocumento()
         {
-            this.cmbtipoDocumentoumento.Items.Add("DU");
-            this.cmbtipoDocumentoumento.Items.Add("CI");
-            this.cmbtipoDocumentoumento.Items.Add("LC");
+            this.cmbTipoDocumentoumento.Items.Add("DU");
+            this.cmbTipoDocumentoumento.Items.Add("CI");
+            this.cmbTipoDocumentoumento.Items.Add("LC");
         }
 
         
@@ -130,33 +148,41 @@ namespace PalcoNet.Abm_Cliente
 
         public Boolean chequearCampos()
         {
-            if (!campoVacio(txtnombre) && !campoVacio(txtapellido) && !campoVacio(txtNumeroDocumento) && !campoVacio(txtCUIL) && !campoVacio(txtmail) && !campoVacio(txtdireccion) && !campoVacio(txtcod_postal) && !cboxVacio(cmbtipoDocumentoumento) && !cboxVacio(cmbDia) && !cboxVacio(cmbMes) && !cboxVacio(cmbAno))
+            if (!campoVacio(txtNombre) && !campoVacio(txtApellido) && !campoVacio(txtNumeroDocumento) && !campoVacio(txtCUIL) && !campoVacio(txtMail) && !campoVacio(txtDireccion) && !campoVacio(txtCodPostal) && !cboxVacio(cmbTipoDocumentoumento) && !cboxVacio(cmbDia) && !cboxVacio(cmbMes) && !cboxVacio(cmbAno))
             {
-                if (campoNumerico(txtNumeroDocumento) && (campoVacio(txttelefono) || (!campoVacio(txttelefono) && campoNumerico(txttelefono))))
+                if (campoNumerico(txtNumeroDocumento) && (campoVacio(txtTelefono) || (!campoVacio(txtTelefono) && campoNumerico(txtTelefono))))
                 {
-                    if (!SqlConnector.existenSimultaneamente(cmbtipoDocumentoumento.SelectedItem.ToString(), txtNumeroDocumento.Text, "VADIUM.CLIENTE", "tipoDocumentoumento", "numeroDocumento"))
+                    if (!SqlConnector.existenSimultaneamente(cmbTipoDocumentoumento.SelectedItem.ToString(), txtNumeroDocumento.Text, "VADIUM.CLIENTE", "tipoDocumentoumento", "numeroDocumento"))
                     {
-                        if (!campoVacio(txttelefono))
+                        if (!SqlConnector.existeString(txtCUIL.Text, "VADIUM.CLIENTE", "CUIL"))
                         {
-                            this.telefono = Convert.ToInt32(txttelefono.Text);
+                            if (!campoVacio(txtTelefono))
+                            {
+                                this.telefono = Convert.ToInt32(txtTelefono.Text);
+                            }
+                            else
+                            {
+                                this.telefono = -1;
+                            }
+                            this.tipoDocumento = cboxString(cmbTipoDocumentoumento);
+                            this.numeroDocumento = txtNumeroDocumento.Text;
+                            this.CUIL = txtCUIL.Text;
+                            this.nombre = txtNombre.Text;
+                            this.apellido = txtApellido.Text;
+                            this.mail = txtMail.Text;
+                            this.direccion = txtDireccion.Text;
+                            this.cod_postal = txtCodPostal.Text;
+                            this.localidad = txtLocalidad.Text;
+                            this.nroPiso = txtNroPiso.Text;
+                            this.departamento = txtDepartamento.Text;
+                            this.fechaNacimiento = fecha(cboxString(cmbDia), cboxString(cmbMes), cboxString(cmbAno));
+                            return true;
                         }
                         else
                         {
-                            this.telefono = -1;
+                            MessageBox.Show("Cuil ya existente.", "Error");
+                            return false;
                         }
-                        this.tipoDocumento = cboxString(cmbtipoDocumentoumento);
-                        this.numeroDocumento = txtNumeroDocumento.Text;
-                        this.CUIL = txtCUIL.Text;
-                        this.nombre = txtnombre.Text;
-                        this.apellido = txtapellido.Text;
-                        this.mail = txtmail.Text;
-                        this.direccion = txtdireccion.Text;
-                        this.cod_postal = txtcod_postal.Text;
-                        this.localidad = txtLocalidad.Text;
-                        this.nroPiso = txtNroPiso.Text;
-                        this.departamento = txtDepartamento.Text;
-                        this.fechaNacimiento = fecha(cboxString(cmbDia), cboxString(cmbMes), cboxString(cmbAno));
-                        return true;
                     }
                     else
                     {
@@ -190,7 +216,7 @@ namespace PalcoNet.Abm_Cliente
             {
                 cargarUsuario();
                 cargarCliente();
-                new frmConfirmacionCliente(this.usuario, this.passwordNoHash).Show();
+                new frmConfirmacionCliente(this.usuario_username, this.passwordNoHash).Show();
             }
         }
 
@@ -240,7 +266,7 @@ namespace PalcoNet.Abm_Cliente
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
 
-            SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario_username);
             SqlConnector.agregarParametro(listaParametros, "@password", this.password);
             SqlConnector.agregarParametro(listaParametros, "@usuario_intentosLogin", this.usuario_intentosLogin);
             SqlConnector.agregarParametro(listaParametros, "@primera_vez", this.primera_vez);
@@ -283,7 +309,7 @@ namespace PalcoNet.Abm_Cliente
             SqlConnector.agregarParametro(listaParametros, "@numeroDocumento", this.numeroDocumento);
             SqlConnector.agregarParametro(listaParametros, "@CUIL", this.CUIL);
             SqlConnector.agregarParametro(listaParametros, "@FechaNacimiento", fechaNacimiento);
-            SqlConnector.agregarParametro(listaParametros, "@fechaCreacion", DateTime.ParseExact(DateTime.Now.ToShortDateString(), "dd/MM/yyyy", null));
+            SqlConnector.agregarParametro(listaParametros, "@fechaCreacion", Configuration.getActualDate());
 
             SqlConnector.ejecutarQuery("INSERT INTO VADIUM.CLIENTE (usuario_id,nombre,apellido,tipoDocumentoumento,numeroDocumento,CUIL,fechaNacimiento,fechaCreacion) VALUES(@usuario_id, @nombre, @apellido, @tipoDocumento, @numeroDocumento, @CUIL, @FechaNacimiento, @fechaCreacion)", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
@@ -324,34 +350,12 @@ namespace PalcoNet.Abm_Cliente
             Interfaz.limpiarInterfaz(this);
         }
 
-        private void frmAbmCliente_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void btnBusqueda_Click(object sender, EventArgs e)
         {
-
-            List<SqlParameter> listaParametros2 = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros2, "@usuario_username", this.nombre);
-
-
             List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario_username);
+
             SqlConnector.agregarParametro(listaParametros, "@nombre", txtNameFilter.Text);
             SqlConnector.agregarParametro(listaParametros, "@apellido", txtLastNameFilter.Text);
             SqlConnector.agregarParametro(listaParametros, "@DNI", txtFilterDoc.Text);
@@ -370,42 +374,74 @@ namespace PalcoNet.Abm_Cliente
             }
         }
 
-        private void dgResultados_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        public void formatearDataGrid()
         {
+            int widthnombre = 100;
+            int widthapellido = 120;
+            int widthBotones = 80;
 
+            dgResultados.DataSource = resultados;
+            dgResultados.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dgResultados.RowHeadersVisible = false;
+
+            DataGridViewColumn col_usuario_id = dgResultados.Columns[0];
+            col_usuario_id.Visible = false;
+
+            DataGridViewColumn col_nombre = dgResultados.Columns[1];
+            col_nombre.Resizable = DataGridViewTriState.False;
+            col_nombre.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            col_nombre.Width = widthnombre;
+
+            DataGridViewColumn col_apellido = dgResultados.Columns[2];
+            col_apellido.Resizable = DataGridViewTriState.False;
+            col_apellido.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            col_apellido.Width = widthapellido;
+
+            DataGridViewButtonColumn botonesModificar = new DataGridViewButtonColumn();
+            botonesModificar.HeaderText = "";
+            botonesModificar.Text = "Modificar";
+            botonesModificar.Name = "bMod";
+            botonesModificar.Width = widthBotones;
+            botonesModificar.UseColumnTextForButtonValue = true;
+            botonesModificar.Resizable = DataGridViewTriState.False;
+
+            DataGridViewButtonColumn botonesEliminar = new DataGridViewButtonColumn();
+            botonesEliminar.HeaderText = "";
+            botonesEliminar.Text = "Eliminar";
+            botonesEliminar.Name = "bElim";
+            botonesEliminar.Width = widthBotones;
+            botonesEliminar.UseColumnTextForButtonValue = true;
+            botonesEliminar.Resizable = DataGridViewTriState.False;
+
+            dgResultados.Columns.Add(botonesModificar);
+            dgResultados.Columns.Add(botonesEliminar);
         }
 
-        private void dgResultados_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        public void eliminarCliente(int id)
         {
-            foreach (DataGridViewRow row in dgResultados.SelectedRows)
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", id);
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_activo = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.cerrarConexion();
+            MessageBox.Show("Usuario inhabilitado.");
+        }
+
+        private void dgResultados_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            switch (e.ColumnIndex)
             {
-                try
-                {
-                    txtnombre.Text = row.Cells[0].Value.ToString();
-                    txtapellido.Text = row.Cells[0].Value.ToString();
-                    cmbtipoDocumentoumento.SelectedText = row.Cells[0].Value.ToString();
-                    txtNumeroDocumento.Text = row.Cells[0].Value.ToString();
-                    txtCUIL.Text = row.Cells[0].Value.ToString();
-                    //fecha nacimiento
-                    //fecha creacion
-                    //tarjetcredito
-                    txtmail.Text = row.Cells[0].Value.ToString();
-                    txttelefono.Text = row.Cells[0].Value.ToString();
-                    txtdireccion.Text = row.Cells[0].Value.ToString();
-                    txtNroCalle.Text = row.Cells[0].Value.ToString();
-                    txtNroPiso.Text = row.Cells[0].Value.ToString();
-                    txtDepartamento.Text = row.Cells[0].Value.ToString();
-                    txtcod_postal.Text = row.Cells[0].Value.ToString();
-                    txtLocalidad.Text = row.Cells[0].Value.ToString();
-                    //Completar los siguientes campos para editar
-
-                }
-                catch (Exception ex)
-                {
-                    // NOTHING TODO
-                }
+                case 0:
+                    frmModificarCliente frmCliente = new frmModificarCliente(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value));
+                    frmCliente.Show();
+                    break;
+                case 1:
+                    DialogResult result = MessageBox.Show("Se inhabilitará al cliente " + Convert.ToString(dgResultados.Rows[e.RowIndex].Cells[3].Value) + ", " + Convert.ToString(dgResultados.Rows[e.RowIndex].Cells[4].Value) + ".\n\n¿Está seguro?", "Confirmación", MessageBoxButtons.YesNoCancel);
+                    if (result == DialogResult.Yes)
+                    {
+                        eliminarCliente(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value));
+                    }
+                    break;
             }
-
         }
     }
 }

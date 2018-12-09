@@ -41,17 +41,23 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         {
             this.frmSeleccionFuncionalidades = _frmSeleccionFuncionalidades;
             InitializeComponent();
-            llenarCbFiltro();
+            formatearDataGrid();
         }
 
-        public void llenarCbFiltro()
+        public class ResultadoEmpresa
         {
-            this.cmbFiltro.Items.Add("Razón social");
-            this.cmbFiltro.Items.Add("cuit");
-            this.cmbFiltro.Items.Add("mail");
-        }        
+            public int usuario_id { get; set; }
+            public string razonSocial { get; set; }
 
-       
+            public ResultadoEmpresa(int _usuario_id, string _razonSocial)
+            {
+                usuario_id = _usuario_id;
+                razonSocial = _razonSocial;
+            }
+        }
+
+        public List<ResultadoEmpresa> resultados = new List<ResultadoEmpresa>();
+
         public Boolean campoVacio(TextBox textbox)
         {
             return textbox.Text.Equals("");
@@ -76,46 +82,54 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         public Boolean chequearCampos()
         {
-            if (!campoVacio(txtrazonSocial) && !campoVacio(txtmail) && !campoVacio(txtdireccion) && !campoVacio(txtcod_postal) && !campoVacio(txtcuit))
+            if (!campoVacio(txtRazonSocial) && !campoVacio(txtMail) && !campoVacio(txtDireccion) && !campoVacio(txtCodPostal) && !campoVacio(txtCuit))
             {
-                if (campoVacio(txttelefono) || (!campoVacio(txttelefono) && campoNumerico(txttelefono)))
+                if (campoVacio(txtTelefono) || (!campoVacio(txtTelefono) && campoNumerico(txtTelefono)))
                 {
-                    if (!SqlConnector.existeString(txtrazonSocial.Text, "VADIUM.EMPRESA", "razonSocial") && !SqlConnector.existeString(txtcuit.Text, "VADIUM.EMPRESA", "cuit"))
+                    if (!SqlConnector.existeString(txtRazonSocial.Text, "VADIUM.EMPRESA", "razonSocial"))
                     {
-
-                        if (!campoVacio(txttelefono))
+                        if (!SqlConnector.existeString(txtCuit.Text, "VADIUM.EMPRESA", "cuit"))
                         {
-                            this.telefono = Convert.ToInt32(txttelefono.Text);
+
+                            if (!campoVacio(txtTelefono))
+                            {
+                                this.telefono = Convert.ToInt32(txtTelefono.Text);
+                            }
+                            else
+                            {
+                                this.telefono = -1;
+                            }
+
+                            if (!campoVacio(txtCiudad))
+                            {
+                                this.ciudad = txtCiudad.Text;
+                            }
+                            else
+                            {
+                                this.ciudad = "";
+                            }
+
+                            this.razonSocial = txtRazonSocial.Text;
+                            this.cuit = txtCuit.Text;
+                            this.direccion = txtDireccion.Text;
+                            this.cod_postal = txtCodPostal.Text;
+                            this.mail = txtMail.Text;
+                            this.localidad = txtLocalidad.Text;
+                            this.nroPiso = txtNroPiso.Text;
+                            this.departamentro = txtDepartamento.Text;
+                            this.fechaCreacion = Configuration.getActualDate();
+
+                            return true;
                         }
                         else
                         {
-                            this.telefono = -1;
+                            MessageBox.Show("Cuit ya existente.", "Error");
+                            return false;
                         }
-
-                        if (!campoVacio(txtciudad))
-                        {
-                            this.ciudad = txtciudad.Text;
-                        }
-                        else
-                        {
-                            this.ciudad = "";
-                        }
-
-                        this.razonSocial = txtrazonSocial.Text;
-                        this.cuit = txtcuit.Text;
-                        this.direccion = txtdireccion.Text;
-                        this.cod_postal = txtcod_postal.Text;
-                        this.mail = txtmail.Text;
-                        this.localidad = txtLocalidad.Text;
-                        this.nroPiso = txtNroPiso.Text;
-                        this.departamentro = txtDepartamento.Text;                        
-                        this.fechaCreacion = Interfaz.obtenerFecha();
-
-                        return true;
                     }
                     else
                     {
-                        MessageBox.Show("Razón social y/o cuit ya existente/s.", "Error");
+                        MessageBox.Show("Razón social ya existente.", "Error");
                         return false;
                     }
                 }
@@ -252,57 +266,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 new Abm_Cliente.frmConfirmacionCliente(this.usuario_username, this.passwordNoHash).Show();
             }
         }
-
-
-        private void btnBuscar_Click(object sender, EventArgs e)
-        {
-            switch (cmbFiltro.SelectedIndex)
-            {
-                case -1:
-                    MessageBox.Show("Debe seleccionar un criterio de búsqueda.", "Error");
-                    break;
-                case 0: // Razón Social
-                    if (!tBusqueda.Text.Equals(""))
-                    {
-                        frmBuscarEmpresa form0 = new frmBuscarEmpresa('R', tBusqueda.Text);
-                        form0.Show();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Debe ingresar los campos solicitados.", "Error");
-                    }
-                    break;
-                case 1: // cuit
-                    if (!tBusqueda.Text.Equals(""))
-                    {
-                        if (tBusqueda.Text.Length <= 50)
-                        {
-                            frmBuscarEmpresa form1 = new frmBuscarEmpresa('C', tBusqueda.Text);
-                            form1.Show();
-                        }
-                        else
-                        {
-                            MessageBox.Show("cuit inválido.", "Error");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Debe ingresar los campos solicitados.", "Error");
-                    }
-                    break;
-                case 2: // mail
-                    if (!tBusqueda.Text.Equals(""))
-                    {
-                        frmBuscarEmpresa form2 = new frmBuscarEmpresa('E', tBusqueda.Text);
-                        form2.Show();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Debe ingresar los campos solicitados.", "Error");
-                    }
-                    break;
-            }
-        }
+        
 
         private void textboxNumerico_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -345,5 +309,94 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         {
             Interfaz.limpiarInterfaz(this);
         }
+
+        private void btnBusqueda_Click(object sender, EventArgs e)
+        {
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario_username);
+
+            SqlConnector.agregarParametro(listaParametros, "@razonSocial", txtFilterRazonSocial.Text);
+            SqlConnector.agregarParametro(listaParametros, "@telefono", txtFilterTelefono.Text);
+            SqlConnector.agregarParametro(listaParametros, "@mail", txtFilterEmail.Text);
+
+            //revisar query
+            String commandtext = "VADIUM.LISTADO_SELECCION_EMPRESA";
+            DataTable table = SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
+            if (table.Rows.Count > 0 && table.Rows[0].ItemArray[0].ToString() == "ERROR")
+            {
+                MessageBox.Show(table.Rows[0].ItemArray[1].ToString());
+            }
+            else
+            {
+                dgResultados.DataSource = table;
+            }
+        }
+
+
+        public void formatearDataGrid()
+        {
+            int widthrazonSocial = 227;
+            int widthBotones = 85;
+
+            dgResultados.DataSource = dgResultados;
+            dgResultados.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dgResultados.RowHeadersVisible = false;
+
+            DataGridViewColumn col_idUser = dgResultados.Columns[0];
+            col_idUser.Visible = false;
+
+            DataGridViewColumn col_razonSocial = dgResultados.Columns[1];
+            col_razonSocial.Resizable = DataGridViewTriState.False;
+            col_razonSocial.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            col_razonSocial.Width = widthrazonSocial;
+
+            DataGridViewButtonColumn botonesModificar = new DataGridViewButtonColumn();
+            botonesModificar.HeaderText = "";
+            botonesModificar.Text = "Modificar";
+            botonesModificar.Name = "btnModificar";
+            botonesModificar.Width = widthBotones;
+            botonesModificar.UseColumnTextForButtonValue = true;
+            botonesModificar.Resizable = DataGridViewTriState.False;
+
+            DataGridViewButtonColumn botonesEliminar = new DataGridViewButtonColumn();
+            botonesEliminar.HeaderText = "";
+            botonesEliminar.Text = "Eliminar";
+            botonesEliminar.Name = "btnEliminar";
+            botonesEliminar.Width = widthBotones;
+            botonesEliminar.UseColumnTextForButtonValue = true;
+            botonesEliminar.Resizable = DataGridViewTriState.False;
+
+            dgResultados.Columns.Add(botonesModificar);
+            dgResultados.Columns.Add(botonesEliminar);
+        }
+
+        public void eliminarEmpresa(int id)
+        {
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", id);
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_activo = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.cerrarConexion();
+            MessageBox.Show("Usuario inusuario_activo.");
+        }
+
+        private void dgResultados_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            switch (e.ColumnIndex)
+            {
+                case 0:
+                    frmModificarEmpresa frmEmpresa = new frmModificarEmpresa(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value));
+                    frmEmpresa.Show();
+                    break;
+                case 1:
+                    DialogResult result = MessageBox.Show("Se inhabilitará a la empresa " + Convert.ToString(dgResultados.Rows[e.RowIndex].Cells[3].Value) + ".\n\n¿Está seguro?", "Confirmación", MessageBoxButtons.YesNoCancel);
+                    if (result == DialogResult.Yes)
+                    {
+                        eliminarEmpresa(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value));
+                    }
+                    break;
+            }
+        }
+
+
     }
 }

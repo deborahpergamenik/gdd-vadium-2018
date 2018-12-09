@@ -39,10 +39,9 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         public int Ano { get; set; }
 
 
-        public frmModificarEmpresa(int _usuario_id, frmBuscarEmpresa _frmBuscarEmpresa)
+        public frmModificarEmpresa(int _usuario_id)
         {
             this.usuario_id = _usuario_id;
-            this.frmBuscarEmpresa = _frmBuscarEmpresa;
 
             InitializeComponent();
             setearComboBoxes();
@@ -542,7 +541,6 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         private void btnAtras_Click(object sender, EventArgs e)
         {
             this.Hide();
-            this.frmBuscarEmpresa.Show();
         }
     }
 }

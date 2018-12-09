@@ -40,10 +40,9 @@ namespace PalcoNet.Abm_Cliente
         public int Mes { get; set; }
         public int Ano { get; set; }
 
-        public frmModificarCliente(int _usuario_id, frmBuscarCliente _frmBuscarCliente)
+        public frmModificarCliente(int _usuario_id)
         {
             this.usuario_id = _usuario_id;
-            this.frmBuscarCliente = _frmBuscarCliente;
 
             InitializeComponent();
 
@@ -241,6 +240,22 @@ namespace PalcoNet.Abm_Cliente
                 modificacion = true;
             }
 
+
+            if (cambioString(this.CUIL, txtCUIL.Text))
+            {
+                if (!txtCUIL.Text.Equals("") && !SqlConnector.existeString(txtCUIL.Text, "VADIUM.CLIENTE", "cuil") && txtCUIL.Text.Length <= 50)
+                {
+                    cambiarStringClientes("cuil", txtCUIL.Text);
+                    resumenModificaciones = resumenModificaciones + "\ncuil";
+                    modificacion = true;
+                }
+                else
+                {
+                    //MessageBox.Show("cuil inválido.", "Error");
+                    resumenErrores = resumenErrores + "\ncuil (no ingresado o ya existente)";
+                    error = true;
+                }
+            }
 
 
             if (cambioInt(this.tipoDocumentoumento, cmbtipoDocumentoumento.SelectedIndex))
@@ -600,7 +615,6 @@ namespace PalcoNet.Abm_Cliente
         private void btnAtras_Click(object sender, EventArgs e)
         {
             this.Hide();
-            this.frmBuscarCliente.Show();
         }
     }
 }

@@ -253,7 +253,7 @@ namespace PalcoNet.Abm_Cliente
             switch (e.ColumnIndex)
             {
                 case 0:
-                    frmModificarCliente frmCliente = new frmModificarCliente(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value), this);
+                    frmModificarCliente frmCliente = new frmModificarCliente(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value));
                     this.Hide();
                     frmCliente.Show();
                     break;

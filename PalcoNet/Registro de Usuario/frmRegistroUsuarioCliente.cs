@@ -1,4 +1,5 @@
 ﻿using PalcoNet.Common;
+using PalcoNet.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -116,7 +117,7 @@ namespace PalcoNet.Registro_de_Usuario
                 SqlConnector.agregarParametro(listaParametros3, "@numeroDocumento", numeroDocumento);
                 SqlConnector.agregarParametro(listaParametros3, "@CUIL", CUIL);
                 SqlConnector.agregarParametro(listaParametros3, "@FechaNacimiento", fechaNacimiento);
-                SqlConnector.agregarParametro(listaParametros3, "@fechaCreacion", DateTime.ParseExact(DateTime.Now.ToShortDateString(), "dd/MM/yyyy", null));
+                SqlConnector.agregarParametro(listaParametros3, "@fechaCreacion", Configuration.getActualDate());
 
                 SqlConnector.ejecutarQuery("INSERT INTO VADIUM.CLIENTE (usuario_id,nombre,apellido,tipoDocumento,numeroDocumento,CUIL,FechaNacimiento,fechaCreacion) VALUES(@usuario_id, @nombre, @apellido, @tipoDocumento, @numeroDocumento, @CUIL, @FechaNacimiento, @fechaCreacion)", listaParametros3, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();

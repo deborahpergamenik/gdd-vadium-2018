@@ -54,7 +54,7 @@ namespace PalcoNet.Abm_Grado
 
         private List<Grado> generarGradosBD(DataGridView dgv)
         {
-            List<Grado> listaGrados = Grado.ObtenerTodosLosGrados();
+            List<Grado> listaGrados = Grados.ObtenerTodosLosGrados();
             return listaGrados;
         }
 

@@ -104,11 +104,11 @@
             this.txtpassword.Location = new System.Drawing.Point(201, 191);
             this.txtpassword.Margin = new System.Windows.Forms.Padding(4);
             this.txtpassword.Name = "txtpassword";
-            this.txtpassword.passwordChar = '*';
+            this.txtpassword.PasswordChar = '*';
             this.txtpassword.Size = new System.Drawing.Size(195, 22);
             this.txtpassword.TabIndex = 21;
             this.txtpassword.Tag = "Ingresar";
-            this.txtpassword.UseSystempasswordChar = true;
+            this.txtpassword.UseSystemPasswordChar = true;
             // 
             // txtUsuario
             // 

@@ -21,7 +21,7 @@ namespace PalcoNet.Comprar
         {
             InitializeComponent();
             rubrosSeleccionados = rubrosFiltro;
-            rubros = Rubro.obtenerRubros();
+            rubros = Rubros.obtenerRubros();
 
             cblRubros.DisplayMember = "descripcion";
             cblRubros.ValueMember = "rubro_id";

@@ -28,17 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.pass2 = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.pass1 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.passViejoNH = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(175, 251);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(126, 31);
+            this.button1.TabIndex = 12;
+            this.button1.Text = "Aceptar";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
@@ -59,6 +69,7 @@
             this.pass2.Name = "pass2";
             this.pass2.Size = new System.Drawing.Size(260, 22);
             this.pass2.TabIndex = 0;
+            this.pass2.TextChanged += new System.EventHandler(this.pass2_TextChanged);
             // 
             // groupBox2
             // 
@@ -79,6 +90,7 @@
             this.pass1.Name = "pass1";
             this.pass1.Size = new System.Drawing.Size(260, 22);
             this.pass1.TabIndex = 0;
+            this.pass1.TextChanged += new System.EventHandler(this.pass1_TextChanged);
             // 
             // groupBox1
             // 
@@ -100,16 +112,7 @@
             this.passViejoNH.Name = "passViejoNH";
             this.passViejoNH.Size = new System.Drawing.Size(260, 24);
             this.passViejoNH.TabIndex = 0;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(175, 251);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(126, 31);
-            this.button1.TabIndex = 12;
-            this.button1.Text = "Aceptar";
-            this.button1.UseVisualStyleBackColor = true;
+            this.passViejoNH.TextChanged += new System.EventHandler(this.passViejo_TextChanged);
             // 
             // frmCambiarpassword
             // 
@@ -133,13 +136,12 @@
         }
 
         #endregion
-
+        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox pass2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox pass1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox passViejoNH;
-        private System.Windows.Forms.Button button1;
     }
 }

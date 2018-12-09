@@ -27,7 +27,7 @@ namespace PalcoNet.Abm_Grado
 
         private void cargarVisibilidades()
         {
-            this.dgvGrados.DataSource = Grado.ObtenerTodosLosGrados();
+            this.dgvGrados.DataSource = Grados.ObtenerTodosLosGrados();
             this.dgvGrados.Refresh();
         }
 

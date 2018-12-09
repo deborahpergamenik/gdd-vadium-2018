@@ -484,7 +484,7 @@ namespace PalcoNet.Abm_Cliente
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@Valor", valor);
             SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
-            SqlConnector.ejecutarQuery("UPDATE VADIUM.CLIENTEs SET " + columna + " = @Valor WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.CLIENTE SET " + columna + " = @Valor WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
         }
 

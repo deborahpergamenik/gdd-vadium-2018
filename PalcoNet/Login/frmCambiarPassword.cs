@@ -30,17 +30,17 @@ namespace PalcoNet.Login
 
         private void pass2_TextChanged(object sender, EventArgs e)
         {
-            pass2.passwordChar = '*';
+            pass2.PasswordChar = '*';
         }
 
         private void pass1_TextChanged(object sender, EventArgs e)
         {
-            pass1.passwordChar = '*';
+            pass1.PasswordChar = '*';
         }
 
         private void passViejo_TextChanged(object sender, EventArgs e)
         {
-            passViejoNH.passwordChar = '*';
+            passViejoNH.PasswordChar = '*';
         }
 
         public Boolean chequearpassword(string password)

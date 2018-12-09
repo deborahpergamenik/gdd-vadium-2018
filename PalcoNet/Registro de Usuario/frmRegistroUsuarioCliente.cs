@@ -173,7 +173,7 @@ namespace PalcoNet.Registro_de_Usuario
             {
                 if (Interfaz.esNumerico(txtNumeroDocumento.Text, System.Globalization.NumberStyles.Integer))
                 {
-                    if (!SqlConnector.existenSimultaneamente(txtNumeroDocumento.Text, cbtipoDocumentoumento.SelectedItem.ToString(), "VADIUM.CLIENTEs", "numeroDocumento", "Tipo_Doc"))
+                    if (!SqlConnector.existenSimultaneamente(txtNumeroDocumento.Text, cbtipoDocumentoumento.SelectedItem.ToString(), "VADIUM.CLIENTE", "numeroDocumento", "Tipo_Doc"))
                     {
                         if (Interfaz.esNumerico(txttelefono.Text, System.Globalization.NumberStyles.Integer) || txttelefono.Text.Equals(""))
                         {

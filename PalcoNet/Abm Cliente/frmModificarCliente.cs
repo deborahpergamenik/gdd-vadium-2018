@@ -359,7 +359,7 @@ namespace PalcoNet.Abm_Cliente
                     }
                     else
                     {
-                        if (!SqlConnector.existeString(txttelefono.Text, "VADIUM.CLIENTEs", "telefono"))
+                        if (!SqlConnector.existeString(txttelefono.Text, "VADIUM.CLIENTE", "telefono"))
                         {
                             cambiarLongIntClientes("telefono", Convert.ToInt64(txttelefono.Text));
                             resumenModificaciones = resumenModificaciones + "\nTeléfono";

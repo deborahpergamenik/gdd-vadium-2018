@@ -131,9 +131,9 @@ namespace PalcoNet.Registro_de_Usuario
         {
             if (!txtrazonSocial.Text.Equals("") && !txtcuit.Text.Equals("") && !txtdireccion.Text.Equals("") && !txtcod_postal.Text.Equals("") && !txtmail.Text.Equals(""))
             {
-                if (!SqlConnector.existeString(txtrazonSocial.Text, "VADIUM.EMPRESAs", "Razon_Social"))
+                if (!SqlConnector.existeString(txtrazonSocial.Text, "VADIUM.EMPRESA", "Razon_Social"))
                 {
-                    if (!SqlConnector.existeString(txtcuit.Text, "VADIUM.EMPRESAs", "cuit"))
+                    if (!SqlConnector.existeString(txtcuit.Text, "VADIUM.EMPRESA", "cuit"))
                     {
                         if (Interfaz.esNumerico(txttelefono.Text, System.Globalization.NumberStyles.Integer) || txttelefono.Text.Equals(""))
                         {

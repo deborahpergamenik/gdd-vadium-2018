@@ -110,8 +110,7 @@
             this.dgResultados.Margin = new System.Windows.Forms.Padding(4);
             this.dgResultados.Name = "dgResultados";
             this.dgResultados.Size = new System.Drawing.Size(692, 404);
-            this.dgResultados.TabIndex = 39;
-            this.dgResultados.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgResultados_CellContentDoubleClick);
+            this.dgResultados.TabIndex = 39;            
             // 
             // btnBusqueda
             // 

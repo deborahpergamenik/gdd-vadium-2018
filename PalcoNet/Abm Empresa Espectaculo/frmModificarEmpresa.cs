@@ -15,10 +15,8 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 {
     public partial class frmModificarEmpresa : Form
     {
-        public frmBuscarEmpresa frmBuscarEmpresa { get; set; }
 
         public int usuario_id { get; set; }
-
         public string usuario_username { get; set; }
         public string password { get; set; }
         public int usuario_activo { get; set; }
@@ -495,7 +493,6 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             if (modificacion || error)
             {
                 this.Close();
-                frmBuscarEmpresa.Show();
             }
         }
 

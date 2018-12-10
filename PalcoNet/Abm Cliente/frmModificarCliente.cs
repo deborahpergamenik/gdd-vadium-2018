@@ -15,8 +15,6 @@ namespace PalcoNet.Abm_Cliente
 {
     public partial class frmModificarCliente : Form
     {
-        public frmBuscarCliente frmBuscarCliente { get; set; }
-
         public int usuario_id { get; set; }
 
         public string Usuario { get; set; }
@@ -454,7 +452,6 @@ namespace PalcoNet.Abm_Cliente
             if (modificacion || error)
             {
                 this.Close();
-                frmBuscarCliente.Show();
             }
         }
 

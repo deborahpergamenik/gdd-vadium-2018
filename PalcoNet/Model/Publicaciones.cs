@@ -12,7 +12,7 @@ namespace PalcoNet.Model
     class Publicaciones
     {
 
-        public static List<Publicacion> obtenerPublicacionesPaginadas(int start, int finish, string rubro, string  desc, DateTime desde, DateTime hasta)
+        public static List<Publicacion> obtenerPublicacionesPaginadas(int start, int finish, string rubro, string  desc, DateTime? desde, DateTime? hasta)
         {
             List<Publicacion> publicaciones = new List<Publicacion>();
 

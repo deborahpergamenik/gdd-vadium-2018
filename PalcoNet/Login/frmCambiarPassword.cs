@@ -46,10 +46,15 @@ namespace PalcoNet.Login
         public Boolean chequearpassword(string password)
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@usuario_id", Interfaz.usuario.usuario_id);
-            SqlConnector.agregarParametro(listaParametros, "@password", password);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT password FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id AND password = @password", listaParametros, SqlConnector.iniciarConexion());
-            Boolean res = lector.HasRows;
+            SqlConnector.agregarParametro(listaParametros, "@user", Interfaz.usuario.usuario_username);
+            SqlConnector.agregarParametro(listaParametros, "@pass", password);
+            SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.VERIFICAR_USUARIO_PASSWORD", "SP", listaParametros);
+            //SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_password FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id AND usuario_password = @password", listaParametros, SqlConnector.iniciarConexion());
+            bool res = false;
+            if (lector.HasRows)
+            {
+                 res = Convert.ToBoolean(lector["PasswordMatched"].ToString());
+            }
             SqlConnector.cerrarConexion();
             return res;
         }
@@ -60,10 +65,15 @@ namespace PalcoNet.Login
             {
                 if (primera_vez == false)
                 {
-                    UTF8Encoding encoderHash = new UTF8Encoding();
-                    SHA256Managed hasher = new SHA256Managed();
-                    byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passViejoNH.Text));
-                    string passViejo = bytesDeHasheoToString(bytesDeHasheo);
+                    
+                    string passViejo = passViejoNH.Text;
+
+
+                    //UTF8Encoding encoderHash = new UTF8Encoding();
+                    //SHA256Managed hasher = new SHA256Managed();
+                    //byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passViejoNH.Text));
+                    //string passViejo = bytesDeHasheoToString(bytesDeHasheo);
+
 
                     if (chequearpassword(passViejo))
                     {

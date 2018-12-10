@@ -141,9 +141,9 @@ namespace PalcoNet.Model
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT password FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_password FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
-            if (password == Convert.ToString(lector["password"]))
+            if (password == Convert.ToString(lector["usuario_password"]))
             {
                 SqlConnector.cerrarConexion();
                 return true;
@@ -161,7 +161,7 @@ namespace PalcoNet.Model
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@Username", this.usuario_username);
             SqlConnector.agregarParametro(listaParametros, "@password", this.password);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_username, password FROM VADIUM.USUARIO WHERE Username = @Username AND password = @password", listaParametros, SqlConnector.iniciarConexion());
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_username, usuario_password FROM VADIUM.USUARIO WHERE Username = @Username AND usuario_password = @password", listaParametros, SqlConnector.iniciarConexion());
             Boolean res = lector.HasRows;
             SqlConnector.cerrarConexion();
             return res;
@@ -231,7 +231,7 @@ namespace PalcoNet.Model
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
             SqlConnector.agregarParametro(listaParametros, "@password", password);
-            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET password = @password, primera_vez = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_password = @password, primera_vez = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
         }
 

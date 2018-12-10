@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using Code4Bugs.SimpleDataGridViewPaging;
 namespace PalcoNet.Comprar
 {
     public partial class frmComprar : Form
@@ -20,8 +20,10 @@ namespace PalcoNet.Comprar
         int cantPublicacionesPorPagina = 18; 
         int cantPublicacionesTotal;
         int ultimaPagina;
-        string filtro;
-        bool filtroRubros;
+        string descripcion;
+        DateTime? start = null;
+        DateTime? finish = null;
+        string rubro;
         static List<Rubro> rubros = new List<Rubro>();
         public frmSeleccionFuncionalidades frmSeleccionFuncionalidades { get; set; }
 
@@ -30,10 +32,10 @@ namespace PalcoNet.Comprar
             InitializeComponent();
             this.frmSeleccionFuncionalidades = _frmSeleccionFuncionalidades;
             paginaActual = 0;
-            filtro = "";
-            filtroRubros = false;
-            contarPublicaciones();
+          
+            //contarPublicaciones();
             cargarPublicaciones();
+            cargarRubros();
 
 
             if (!chkDesde.Checked)
@@ -56,6 +58,11 @@ namespace PalcoNet.Comprar
                 dateTimePickerHasta.CustomFormat = null;
                 dateTimePickerHasta.Format = DateTimePickerFormat.Long;
             }
+        }
+
+        private void cargarRubros()
+        {
+            throw new NotImplementedException();
         }
 
         public void cargarPublicaciones()
@@ -105,20 +112,22 @@ namespace PalcoNet.Comprar
                 btnPrimerPag.Enabled = true;
             }
 
-            List<Publicacion> listaPublicaciones = Publicaciones.obtenerPublicacionesPaginadas(desde, hasta, filtro, filtroRubros);
-            Publicaciones_Datagrid.DataSource = listaPublicaciones;
+            Publicaciones_Datagrid.DataSource = Publicaciones.obtenerPublicacionesPaginadas(desde, hasta, rubro, descripcion, start, finish);
+            Publicaciones_Datagrid.MaxRecords = 10;
+            //List<Publicacion> listaPublicaciones = Publicaciones.obtenerPublicacionesPaginadas(desde, hasta,rubro,descripcion,start,finish );
+            //Publicaciones_Datagrid1.DataSource = listaPublicaciones;
             
             
-            //AGREGAR COLUMNAS QUE SE CONSIDEREN NECESARIAS MOSTRAR / QUITAR LAS QUE NO IRÍAN
-            Publicaciones_Datagrid.Columns["codigoEspectaculo"].Visible = false;
-            Publicaciones_Datagrid.Columns["descripcion"].Visible = false;
-            Publicaciones_Datagrid.Columns["fecha"].Visible = false;
-            Publicaciones_Datagrid.Columns["fechaVencimiento"].Visible = false;
-            Publicaciones_Datagrid.Columns["usuario_activo_id"].Visible = false;
-            Publicaciones_Datagrid.Columns["direccion"].Visible = false;
-            Publicaciones_Datagrid.Columns["rubro_id"].Visible = false;
-            Publicaciones_Datagrid.Columns["grado_id"].Visible = false;
-            Publicaciones_Datagrid.Columns["empresa_id"].Visible = false;
+            ////AGREGAR COLUMNAS QUE SE CONSIDEREN NECESARIAS MOSTRAR / QUITAR LAS QUE NO IRÍAN
+            //Publicaciones_Datagrid1.Columns["codigoEspectaculo"].Visible = false;
+            //Publicaciones_Datagrid1.Columns["descripcion"].Visible = false;
+            //Publicaciones_Datagrid1.Columns["fecha"].Visible = false;
+            //Publicaciones_Datagrid1.Columns["fechaVencimiento"].Visible = false;
+            //Publicaciones_Datagrid1.Columns["usuario_activo_id"].Visible = false;
+            //Publicaciones_Datagrid1.Columns["direccion"].Visible = false;
+            //Publicaciones_Datagrid1.Columns["rubro_id"].Visible = false;
+            //Publicaciones_Datagrid1.Columns["grado_id"].Visible = false;
+            //Publicaciones_Datagrid1.Columns["empresa_id"].Visible = false;
 
         }
 
@@ -149,40 +158,40 @@ namespace PalcoNet.Comprar
         }
 
 
-        private void contarPublicaciones()
-        {
-            string commandtext = "SELECT COUNT (*) AS cant from VADIUM.PUBLICACION AS p " +
-                                 "JOIN VADIUM.usuario_activo ep ON e.codigo = p.usuario_activo_id ";
-            if (filtroRubros)
-                commandtext += "JOIN VADIUM.RUBRO_PUBLICACION rp ON p.codigoEspectaculo = rp.codigoEspectaculo ";
+        //private void contarPublicaciones()
+        //{
+        //    string commandtext = "SELECT COUNT (*) AS cant from VADIUM.PUBLICACION AS p " +
+        //                         "JOIN VADIUM.usuario_activo ep ON e.codigo = p.usuario_activo_id ";
+        //    if (filtroRubros)
+        //        commandtext += "JOIN VADIUM.RUBRO_PUBLICACION rp ON p.codigoEspectaculo = rp.codigoEspectaculo ";
 
-            commandtext += "WHERE e.Descripcion != 'Finalizada' ";
+        //    commandtext += "WHERE e.Descripcion != 'Finalizada' ";
 
-            if (filtro != "")
-                commandtext += " AND " + filtro;
+        //    if (filtro != "")
+        //        commandtext += " AND " + filtro;
 
-            SqlDataReader reader = SqlConnector.ejecutarReader(commandtext, SqlConnector.iniciarConexion());
+        //    SqlDataReader reader = SqlConnector.ejecutarReader(commandtext, SqlConnector.iniciarConexion());
 
-            if (reader.HasRows)
-            {
-                reader.Read();
-                cantPublicacionesTotal = Convert.ToInt32(reader["cant"]);
-                ultimaPagina = cantPublicacionesTotal / cantPublicacionesPorPagina;
+        //    if (reader.HasRows)
+        //    {
+        //        reader.Read();
+        //        cantPublicacionesTotal = Convert.ToInt32(reader["cant"]);
+        //        ultimaPagina = cantPublicacionesTotal / cantPublicacionesPorPagina;
 
-                if (ultimaPagina < 1)
-                    ultimaPagina = 0;
-            }
+        //        if (ultimaPagina < 1)
+        //            ultimaPagina = 0;
+        //    }
 
-            SqlConnector.cerrarConexion();
-        }
+        //    SqlConnector.cerrarConexion();
+        //}
 
         private void btnAbrirPublicacion_Click(object sender, EventArgs e)
         {
-            if (Publicaciones_Datagrid.SelectedRows.Count == 0)
+            if (Publicaciones_Datagrid1.SelectedRows.Count == 0)
                 return;
             else
             {
-                Publicacion unaPublicacion = Publicaciones_Datagrid.CurrentRow.DataBoundItem as Publicacion;
+                Publicacion unaPublicacion = Publicaciones_Datagrid1.CurrentRow.DataBoundItem as Publicacion;
                 frmDetallePublicacion detalleForm = new frmDetallePublicacion(unaPublicacion);
                 detalleForm.ShowDialog();
                 cargarPublicaciones();
@@ -192,119 +201,124 @@ namespace PalcoNet.Comprar
 
         private void btnAgregarRubros_Click(object sender, EventArgs e)
         {
-            frmAgregarRubro agregarRubros = new frmAgregarRubro(rubros);
-            agregarRubros.ShowDialog();
+            //frmAgregarRubro agregarRubros = new frmAgregarRubro(rubros);
+            //agregarRubros.ShowDialog();
 
-            cargarTxtRubros();
+            //cargarTxtRubros();
 
         }
 
-        private void cargarTxtRubros()
-        {
-            string str = "";
+        //private void cargarTxtRubros()
+        //{
+        //    string str = "";
 
-            for (int i = 0; i < rubros.Count; i++)
-            {
-                if (i == 0)
-                    str += rubros[i].Descripcion;
-                else
-                    str += ", " + rubros[i].Descripcion;
-            }
+        //    for (int i = 0; i < rubros.Count; i++)
+        //    {
+        //        if (i == 0)
+        //            str += rubros[i].Descripcion;
+        //        else
+        //            str += ", " + rubros[i].Descripcion;
+        //    }
 
-            txtRubros.Text = str;
-        }
+        //    txtRubros.Text = str;
+        //}
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
             paginaActual = 0;
-            armarFiltro();
-            contarPublicaciones();
+
+            if (chkDesde.Checked)
+               start = dateTimePickerDesde.Value;
+            if (chkHasta.Checked)
+                finish = dateTimePickerHasta.Value;
+            descripcion = txtDescripcion.Text;
+            rubro = cmbRubros.SelectedValue.ToString();
             cargarPublicaciones();
         }
 
 
-        private void armarFiltro()
-        {
-            filtro = "";
-            filtroRubros = false;
+        //private void armarFiltro()
+        //{
+        //    filtro = "";
+        //    filtroRubros = false;
 
-            if (rubros != null)
-            {
-                for (int i = 0; i < rubros.Count; i++)
-                {
-                    filtroRubros = true;
+        //    if (rubros != null)
+        //    {
+        //        for (int i = 0; i < rubros.Count; i++)
+        //        {
+        //            filtroRubros = true;
 
-                    if (i == 0)
-                        filtro += " (";
-                    else filtro += " or ";
+        //            if (i == 0)
+        //                filtro += " (";
+        //            else filtro += " or ";
 
-                    filtro = filtro + "r.rubro_id = " + rubros[i].Id;
+        //            filtro = filtro + "r.rubro_id = " + rubros[i].Id;
 
-                    if (i == rubros.Count - 1)
-                        filtro += " ) ";
-                }
-            }
+        //            if (i == rubros.Count - 1)
+        //                filtro += " ) ";
+        //        }
+        //    }
 
-            if (txtDescripcion.Text != "")
-            {
-                if (filtro != "")
-                    filtro += "AND ";
-                filtro += " p.descripcion LIKE  '%" + txtDescripcion.Text + "%' ";
-            }
-
-
-            DateTime fechaDesde;
-            bool fechaDesdeNula;
-            if (dateTimePickerDesde.Text == " ")
-            {
-                fechaDesdeNula = true;
-                fechaDesde = Convert.ToDateTime(null);
-            }
-            else
-            {
-                fechaDesdeNula = false;
-                fechaDesde = Convert.ToDateTime(dateTimePickerDesde.Text);
-            }
+        //    if (txtDescripcion.Text != "")
+        //    {
+        //        if (filtro != "")
+        //            filtro += "AND ";
+        //        filtro += " p.descripcion LIKE  '%" + txtDescripcion.Text + "%' ";
+        //    }
 
 
-            if (!fechaDesdeNula)
-            {
-                if (filtro != "")
-                    filtro += "AND ";
-                filtro += " p.fecha >= " + fechaDesde;
-            }
+        //    DateTime fechaDesde;
+        //    bool fechaDesdeNula;
+        //    if (dateTimePickerDesde.Text == " ")
+        //    {
+        //        fechaDesdeNula = true;
+        //        fechaDesde = Convert.ToDateTime(null);
+        //    }
+        //    else
+        //    {
+        //        fechaDesdeNula = false;
+        //        fechaDesde = Convert.ToDateTime(dateTimePickerDesde.Text);
+        //    }
 
 
-            DateTime fechaHasta;
-            bool fechaHastaNula;
-            if (dateTimePickerHasta.Text == " ")
-            {
-                fechaHastaNula = true;
-                fechaHasta = Convert.ToDateTime(null);
-            }
-            else
-            {
-                fechaHastaNula = false;
-                fechaHasta = Convert.ToDateTime(dateTimePickerHasta.Text);
-            }
+        //    if (!fechaDesdeNula)
+        //    {
+        //        if (filtro != "")
+        //            filtro += "AND ";
+        //        filtro += " p.fecha >= " + fechaDesde;
+        //    }
 
-            if (!fechaHastaNula)
-            {
-                if (filtro != "")
-                    filtro += "AND ";
-                filtro += " p.fecha <= " + fechaHasta;
-            }
-        }
+
+        //    DateTime fechaHasta;
+        //    bool fechaHastaNula;
+        //    if (dateTimePickerHasta.Text == " ")
+        //    {
+        //        fechaHastaNula = true;
+        //        fechaHasta = Convert.ToDateTime(null);
+        //    }
+        //    else
+        //    {
+        //        fechaHastaNula = false;
+        //        fechaHasta = Convert.ToDateTime(dateTimePickerHasta.Text);
+        //    }
+
+        //    if (!fechaHastaNula)
+        //    {
+        //        if (filtro != "")
+        //            filtro += "AND ";
+        //        filtro += " p.fecha <= " + fechaHasta;
+        //    }
+        //}
 
         private void btnReset_Click(object sender, EventArgs e)
         {
             txtDescripcion.Text = "";
-            txtRubros.Text = "";
+            cmbRubros.SelectedValue = null;
             rubros.Clear();
 
             paginaActual = 0;
-            filtro = "";
-            contarPublicaciones();
+            
+            //contarPublicaciones();
             cargarPublicaciones();
 
         }

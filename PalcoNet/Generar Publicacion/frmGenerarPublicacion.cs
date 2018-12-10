@@ -79,17 +79,16 @@ namespace PalcoNet.Generar_Publicacion
                 }
                 publi.save(espectaculos);
             }
-
         }
 
         private void frmGenerarPublicacion_Load(object sender, EventArgs e)
         {
 
             dtpEspectaculo.Format = DateTimePickerFormat.Custom;
-            dtpEspectaculo.CustomFormat = "MM/dd/yyyy hh:mm:ss";
+            dtpEspectaculo.CustomFormat = "dd/MM/yyyy hh:mm:ss";
 
             dtpPublicacion.Format = DateTimePickerFormat.Custom;
-            dtpPublicacion.CustomFormat = "MM/dd/yyyy hh:mm:ss"; 
+            dtpPublicacion.CustomFormat = "dd/MM/yyyy hh:mm:ss";
         }
         public void loadData()
         {

@@ -12,8 +12,8 @@ namespace PalcoNet.Model
     {
         public static UserInstance userInstance = null;
         public Usuario usuario = null;
-        public int? clienteId;
-        public int? empresaId;
+        public int? clienteId = null;
+        public int? empresaId = null;
         public Rol rol;
         public static void createUserInstance()
         {

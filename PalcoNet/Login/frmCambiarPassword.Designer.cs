@@ -127,6 +127,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmCambiarpassword";
             this.Text = "frmCambiarpassword";
+            this.Load += new System.EventHandler(this.frmCambiarpassword_Load);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);

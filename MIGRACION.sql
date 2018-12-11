@@ -589,6 +589,7 @@ FROM VADIUM.CLIENTE cli  JOIN VADIUM.ITEMFACTURA item on (cli.cliente_id = item.
 
 END
 GO
+--------------------------ROLES-----------------------------------
 
 ---------------------------LOGIN------------------------------------
 CREATE	 PROCEDURE [VADIUM].VERIFICAR_USUARIO_PASSWORD @user nvarchar(255),@pass NVARCHAR(255)
@@ -596,15 +597,54 @@ AS
 BEGIN TRY
 		IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @user ))
 	BEGIN
-		UPDATE USUARIO SET usuario_intentosLogin = usuario_intentosLogin + 1 WHERE usuario_username = @user;
+		UPDATE USUARIO SET usuario_intentosLogin = usuario_intentosLogin + 1WHERE usuario_username = @user;
 
 		SELECT	U.usuario_password Password, 
 				U.usuario_username Username, 
 				U.usuario_activo Activo, 
 				U.usuario_id Id, 
-				U.usuario_intentosLogin Intentos,  
+				U.usuario_intentosLogin Intentos, 
+				U.primera_vez primeraVez, 
+				 
 				(CASE WHEN U.usuario_password = HashBytes('SHA2_256', @pass) THEN 1 ELSE 0 END) PasswordMatched
 		FROM [VADIUM].USUARIO U WHERE usuario_username = @user;
+	END
+END TRY
+BEGIN CATCH
+  SELECT 'ERROR', ERROR_MESSAGE()
+END CATCH
+GO
+CREATE PROCEDURE [VADIUM].USUARIO_LOGUEADO @user NVARCHAR(255)
+AS
+BEGIN TRY
+	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @user))
+	BEGIN
+		UPDATE USUARIO SET usuario_intentosLogin = 0, usuario_activo = 1, primera_vez = 0 WHERE usuario_username = @user;
+	END
+END TRY
+BEGIN CATCH
+  SELECT 'ERROR', ERROR_MESSAGE()
+END CATCH
+GO
+
+CREATE PROCEDURE [VADIUM].CAMBIAR_PASSWORD @user NVARCHAR(255), @pass NVARCHAR(255)
+AS
+BEGIN TRY
+	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @user))
+	BEGIN
+		UPDATE USUARIO SET usuario_password = HashBytes('SHA2_256',@pass) WHERE usuario_username = @user;
+	END
+END TRY
+BEGIN CATCH
+  SELECT 'ERROR', ERROR_MESSAGE()
+END CATCH
+GO
+CREATE PROCEDURE [VADIUM].BLOQUEAR @user NVARCHAR(255)
+AS
+BEGIN TRY
+	IF (EXISTS(SELECT 1 FROM USUARIO WHERE usuario_username = @user))
+	BEGIN
+		UPDATE USUARIO SET usuario_intentosLogin = 0, usuario_activo = 0 WHERE usuario_username = @user;
 	END
 END TRY
 BEGIN CATCH

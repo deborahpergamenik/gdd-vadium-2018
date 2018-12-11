@@ -16,16 +16,8 @@ namespace PalcoNet.Model
         public string usuario_username { get; set; }
         public string password { get; set; }
         public int usuario_intentosLogin { get; set; }
-        public string mail { get; set; }
-        public string telefono { get; set; }
-        public string direccion { get; set; }
-        public string Calle { get; set; }
-        public string NroPiso { get; set; }
-        public string Depto { get; set; }
-        public string Localidad { get; set; }
-        public string cod_postal { get; set; }        
         public bool usuario_activo { get; set; }
-
+        public bool primeraVez { get; set; }
 
         public List<Rol> Roles = new List<Rol>();
 
@@ -223,27 +215,24 @@ namespace PalcoNet.Model
 
         public void cambiarpassword(string nuevoPass)
         {
-            UTF8Encoding encoderHash = new UTF8Encoding();
-            SHA256Managed hasher = new SHA256Managed();
-            byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(nuevoPass));
-            string password = bytesDeHasheoToString(bytesDeHasheo);
+           
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
-            SqlConnector.agregarParametro(listaParametros, "@password", password);
-            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_password = @password, primera_vez = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@user", this.usuario_username);
+            SqlConnector.agregarParametro(listaParametros, "@pass", password);
+            SqlConnector.ObtenerDataReader("VADIUM.CAMBIAR_PASSWORD", "SP", listaParametros);
             SqlConnector.cerrarConexion();
         }
 
-        private string bytesDeHasheoToString(byte[] array)
-        {
-            StringBuilder salida = new StringBuilder("");
-            for (int i = 0; i < array.Length; i++)
-            {
-                salida.Append(array[i].ToString("X2"));
-            }
-            return salida.ToString();
-        }
+        //private string bytesDeHasheoToString(byte[] array)
+        //{
+        //    StringBuilder salida = new StringBuilder("");
+        //    for (int i = 0; i < array.Length; i++)
+        //    {
+        //        salida.Append(array[i].ToString("X2"));
+        //    }
+        //    return salida.ToString();
+        //}
 
         public Boolean obtenerRoles()
         {
@@ -344,5 +333,58 @@ namespace PalcoNet.Model
                 return -1;
         }
 
+
+        internal string LoguearUsuario(out bool resultado, out bool passwordMatched)
+        {
+            string mensaje = "";
+            passwordMatched = false;
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@user", this.usuario_username);
+            SqlConnector.agregarParametro(listaParametros, "@pass", password);
+            DataTable dataTable = SqlConnector.obtenerDataTable("VADIUM.VERIFICAR_USUARIO_PASSWORD", "SP", listaParametros);
+            SqlConnector.cerrarConexion();
+            if (dataTable.Rows[0].ItemArray[0].ToString() == "ERROR")
+            {
+                resultado = false;
+                mensaje = dataTable.Rows[0].ItemArray[1].ToString();
+
+            }
+            else if (dataTable.Rows[0].ItemArray[0].ToString() == "")
+            {
+                resultado = false;
+                mensaje = "Password o Usuario Incorrecto";
+
+            }
+            else
+            {
+                resultado = true;
+                password = dataTable.Rows[0].ItemArray[0].ToString();
+                usuario_username = dataTable.Rows[0].ItemArray[1].ToString();
+                usuario_activo = Convert.ToBoolean(dataTable.Rows[0].ItemArray[2]);
+                usuario_id = Convert.ToInt32(dataTable.Rows[0].ItemArray[3]);
+                usuario_intentosLogin = Convert.ToInt32(dataTable.Rows[0].ItemArray[4]);
+                primeraVez = Convert.ToBoolean(dataTable.Rows[0].ItemArray[5]);
+                string val = dataTable.Rows[0].ItemArray[6].ToString();
+                passwordMatched = Convert.ToBoolean(Convert.ToInt32(dataTable.Rows[0].ItemArray[6].ToString()));
+            }
+
+            return mensaje;
+        }
+
+        internal void bloquear()
+        {
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@user", this.usuario_username);
+            SqlConnector.ObtenerDataReader("VADIUM.BLOQUEAR", "SP", listaParametros);
+            SqlConnector.cerrarConexion();
+        }
+
+        internal void usuarioLogueado()
+        {
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@user", this.usuario_username);
+            SqlConnector.ObtenerDataReader("VADIUM.USUARIO_LOGUEADO", "SP", listaParametros);
+            SqlConnector.cerrarConexion();
+        }
     }
 }

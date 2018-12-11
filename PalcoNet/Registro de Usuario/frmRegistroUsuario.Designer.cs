@@ -82,6 +82,7 @@
             this.txtContrasenia.Name = "txtContrasenia";
             this.txtContrasenia.Size = new System.Drawing.Size(260, 22);
             this.txtContrasenia.TabIndex = 0;
+            this.txtContrasenia.UseSystemPasswordChar = true;
             // 
             // groupBox1
             // 
@@ -93,7 +94,7 @@
             this.groupBox1.Size = new System.Drawing.Size(288, 64);
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "nombre de usuario";
+            this.groupBox1.Text = "Nombre de usuario";
             // 
             // txtusuario_username
             // 

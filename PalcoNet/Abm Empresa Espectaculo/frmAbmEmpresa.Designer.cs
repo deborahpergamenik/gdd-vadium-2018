@@ -54,15 +54,15 @@
             this.txtDireccion = new System.Windows.Forms.TextBox();
             this.txtTelefono = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label10 = new System.Windows.Forms.Label();
+            this.dgResultados = new System.Windows.Forms.DataGridView();
             this.btnBusqueda = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.txtFilterRazonSocial = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtFilterTelefono = new System.Windows.Forms.TextBox();
             this.txtFilterEmail = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.dgResultados = new System.Windows.Forms.DataGridView();
+            this.label10 = new System.Windows.Forms.Label();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgResultados)).BeginInit();
@@ -142,6 +142,7 @@
             this.txtCiudad.Name = "txtCiudad";
             this.txtCiudad.Size = new System.Drawing.Size(262, 22);
             this.txtCiudad.TabIndex = 43;
+            this.txtCiudad.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // txtRazonSocial
             // 
@@ -169,9 +170,9 @@
             this.label1.Location = new System.Drawing.Point(400, 46);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 17);
+            this.label1.Size = new System.Drawing.Size(58, 17);
             this.label1.TabIndex = 38;
-            this.label1.Text = "cuit (*)";
+            this.label1.Text = "CUIT (*)";
             // 
             // txtCuit
             // 
@@ -199,9 +200,9 @@
             this.label17.Location = new System.Drawing.Point(8, 84);
             this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(52, 17);
+            this.label17.Size = new System.Drawing.Size(66, 17);
             this.label17.TabIndex = 4;
-            this.label17.Text = "mail (*)";
+            this.label17.Text = "E-mail (*)";
             // 
             // txtMail
             // 
@@ -360,15 +361,15 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Baja o modificación de Empresas";
             // 
-            // label10
+            // dgResultados
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(8, 35);
-            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(73, 17);
-            this.label10.TabIndex = 2;
-            this.label10.Text = "Filtrar por:";
+            this.dgResultados.BackgroundColor = System.Drawing.SystemColors.Menu;
+            this.dgResultados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgResultados.Location = new System.Drawing.Point(11, 153);
+            this.dgResultados.Margin = new System.Windows.Forms.Padding(4);
+            this.dgResultados.Name = "dgResultados";
+            this.dgResultados.Size = new System.Drawing.Size(692, 404);
+            this.dgResultados.TabIndex = 40;
             // 
             // btnBusqueda
             // 
@@ -380,6 +381,16 @@
             this.btnBusqueda.Text = "Buscar";
             this.btnBusqueda.UseVisualStyleBackColor = true;
             this.btnBusqueda.Click += new System.EventHandler(this.btnBusqueda_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(8, 113);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(51, 17);
+            this.label4.TabIndex = 23;
+            this.label4.Text = "E-mail:";
             // 
             // label6
             // 
@@ -399,6 +410,7 @@
             this.txtFilterRazonSocial.Name = "txtFilterRazonSocial";
             this.txtFilterRazonSocial.Size = new System.Drawing.Size(192, 22);
             this.txtFilterRazonSocial.TabIndex = 19;
+            this.txtFilterRazonSocial.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // label5
             // 
@@ -418,6 +430,7 @@
             this.txtFilterTelefono.Name = "txtFilterTelefono";
             this.txtFilterTelefono.Size = new System.Drawing.Size(158, 22);
             this.txtFilterTelefono.TabIndex = 17;
+            this.txtFilterTelefono.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
             // txtFilterEmail
             // 
@@ -428,25 +441,15 @@
             this.txtFilterEmail.Size = new System.Drawing.Size(480, 22);
             this.txtFilterEmail.TabIndex = 20;
             // 
-            // label4
+            // label10
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 113);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(51, 17);
-            this.label4.TabIndex = 23;
-            this.label4.Text = "E-mail:";
-            // 
-            // dgResultados
-            // 
-            this.dgResultados.BackgroundColor = System.Drawing.SystemColors.Menu;
-            this.dgResultados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgResultados.Location = new System.Drawing.Point(11, 153);
-            this.dgResultados.Margin = new System.Windows.Forms.Padding(4);
-            this.dgResultados.Name = "dgResultados";
-            this.dgResultados.Size = new System.Drawing.Size(692, 404);
-            this.dgResultados.TabIndex = 40;
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(8, 35);
+            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(73, 17);
+            this.label10.TabIndex = 2;
+            this.label10.Text = "Filtrar por:";
             // 
             // frmAbmEmpresa
             // 

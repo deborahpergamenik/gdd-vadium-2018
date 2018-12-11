@@ -30,7 +30,6 @@ namespace PalcoNet.Model
     public class TipoUbicacion
     {
         public int id { get; set; }
-        public decimal codigo { get; set; }
         public string descripcion { get; set; }
 
     }

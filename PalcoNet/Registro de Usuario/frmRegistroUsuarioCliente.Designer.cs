@@ -184,7 +184,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 17);
             this.label3.TabIndex = 2;
-            this.label3.Text = "nombre (*)";
+            this.label3.Text = "Nombre (*)";
             // 
             // label4
             // 
@@ -194,7 +194,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(77, 17);
             this.label4.TabIndex = 3;
-            this.label4.Text = "apellido (*)";
+            this.label4.Text = "Apellido (*)";
             // 
             // cbAno
             // 
@@ -314,7 +314,6 @@
             this.txtdireccion.Name = "txtdireccion";
             this.txtdireccion.Size = new System.Drawing.Size(191, 22);
             this.txtdireccion.TabIndex = 2;
-            this.txtdireccion.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // txtmail
             // 
@@ -324,7 +323,6 @@
             this.txtmail.Name = "txtmail";
             this.txtmail.Size = new System.Drawing.Size(191, 22);
             this.txtmail.TabIndex = 7;
-            this.txtmail.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // txttelefono
             // 
@@ -334,6 +332,7 @@
             this.txttelefono.Name = "txttelefono";
             this.txttelefono.Size = new System.Drawing.Size(191, 22);
             this.txttelefono.TabIndex = 8;
+            this.txttelefono.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
             // groupBox1
             // 
@@ -358,17 +357,17 @@
             this.label12.Location = new System.Drawing.Point(470, 36);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(50, 17);
+            this.label12.Size = new System.Drawing.Size(57, 17);
             this.label12.TabIndex = 3;
             this.label12.Text = "CUIL (*)";
             // 
             // txtCUIL
             // 
-            this.txtCUIL.Location = new System.Drawing.Point(522, 33);
+            this.txtCUIL.Location = new System.Drawing.Point(535, 33);
             this.txtCUIL.Margin = new System.Windows.Forms.Padding(4);
             this.txtCUIL.MaxLength = 18;
             this.txtCUIL.Name = "txtCUIL";
-            this.txtCUIL.Size = new System.Drawing.Size(191, 22);
+            this.txtCUIL.Size = new System.Drawing.Size(178, 22);
             this.txtCUIL.TabIndex = 2;
             this.txtCUIL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 

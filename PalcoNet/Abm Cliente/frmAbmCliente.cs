@@ -337,6 +337,11 @@ namespace PalcoNet.Abm_Cliente
             }
         }
 
+        private void textboxcuilKeyPress(object sender, KeyPressEventArgs e)
+        {
+
+        }
+
 
 
         private void btnAtras_Click(object sender, EventArgs e)

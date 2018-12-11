@@ -78,28 +78,11 @@ namespace PalcoNet.Registro_de_Usuario
 
                 List<SqlParameter> listaParametros = new List<SqlParameter>();
                 SqlConnector.agregarParametro(listaParametros, "@usuario_username", username);
-                SqlConnector.agregarParametro(listaParametros, "@password", password);
+                SqlConnector.agregarParametro(listaParametros, "@usuario_password", password);
                 SqlConnector.agregarParametro(listaParametros, "@usuario_intentosLogin", 0);
-                SqlConnector.agregarParametro(listaParametros, "@primera_vez", 0);
-
-                SqlConnector.agregarParametro(listaParametros, "@mail", mail);                
-                SqlConnector.agregarParametro(listaParametros, "@direccion", direccion);
-                if (telefono.Equals(""))
-                {
-                    SqlConnector.agregarParametro(listaParametros, "@telefono", DBNull.Value);
-                }
-                else
-                {
-                    SqlConnector.agregarParametro(listaParametros, "@telefono", Convert.ToInt64(telefono));
-                }
-
-                SqlConnector.agregarParametro(listaParametros, "@NroPiso", nroPiso);
-                SqlConnector.agregarParametro(listaParametros, "@Departamento", departamento);
-                SqlConnector.agregarParametro(listaParametros, "@Localidad", localidad);
-                SqlConnector.agregarParametro(listaParametros, "@cod_postal", cod_postal);
                 SqlConnector.agregarParametro(listaParametros, "@usuario_activo", 1);
-
-                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO (usuario_username, password, usuario_intentosLogin, primera_vez, mail, direccion, telefono, NroPiso, Departamento, Localidad, cod_postal, usuario_activo) VALUES (@usuario_username, @password, @usuario_intentosLogin, @primera_vez, @mail, @direccion, @telefono, @NroPiso, @Departamento, @Localidad, @cod_postal, @usuario_activo)", listaParametros, SqlConnector.iniciarConexion());
+                SqlConnector.agregarParametro(listaParametros, "@primera_vez", 0);
+                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO (usuario_username, usuario_password, usuario_intentosLogin, usuario_activo, primera_vez) VALUES (@usuario_username, @usuario_password, @usuario_intentosLogin, @usuario_activo, @primera_vez)", listaParametros, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros2 = new List<SqlParameter>();
@@ -109,30 +92,48 @@ namespace PalcoNet.Registro_de_Usuario
                 int idUser = Convert.ToInt32(lector["usuario_id"]);
                 SqlConnector.cerrarConexion();
 
+
                 List<SqlParameter> listaParametros3 = new List<SqlParameter>();
                 SqlConnector.agregarParametro(listaParametros3, "@usuario_id", idUser);
-                SqlConnector.agregarParametro(listaParametros3, "@nombre", nombre);
-                SqlConnector.agregarParametro(listaParametros3, "@apellido", apellido);
                 SqlConnector.agregarParametro(listaParametros3, "@tipoDocumento", tipoDocumentoumento);
                 SqlConnector.agregarParametro(listaParametros3, "@numeroDocumento", numeroDocumento);
                 SqlConnector.agregarParametro(listaParametros3, "@CUIL", CUIL);
-                SqlConnector.agregarParametro(listaParametros3, "@FechaNacimiento", fechaNacimiento);
+                SqlConnector.agregarParametro(listaParametros3, "@nombre", nombre);
+                SqlConnector.agregarParametro(listaParametros3, "@apellido", apellido);
+                SqlConnector.agregarParametro(listaParametros3, "@mail", mail);
+                SqlConnector.agregarParametro(listaParametros3, "@calle", direccion);
+                SqlConnector.agregarParametro(listaParametros3, "@cod_postal", cod_postal);
+                SqlConnector.agregarParametro(listaParametros3, "@fechaNacimiento", fechaNacimiento);
                 SqlConnector.agregarParametro(listaParametros3, "@fechaCreacion", Configuration.getActualDate());
+                SqlConnector.agregarParametro(listaParametros3, "@tarjetaCredito", "idtarjetaDeCredito"); //cambiar este campo
+                SqlConnector.agregarParametro(listaParametros3, "@localidad", localidad);
+                SqlConnector.agregarParametro(listaParametros3, "@piso", nroPiso);
+                SqlConnector.agregarParametro(listaParametros3, "@depto", departamento);
 
-                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.CLIENTE (usuario_id,nombre,apellido,tipoDocumento,numeroDocumento,CUIL,FechaNacimiento,fechaCreacion) VALUES(@usuario_id, @nombre, @apellido, @tipoDocumento, @numeroDocumento, @CUIL, @FechaNacimiento, @fechaCreacion)", listaParametros3, SqlConnector.iniciarConexion());
+                if (telefono.Equals(""))
+                {
+                    SqlConnector.agregarParametro(listaParametros3, "@telefono", DBNull.Value);
+                }
+                else
+                {
+                    SqlConnector.agregarParametro(listaParametros3, "@telefono", Convert.ToInt64(telefono));
+                }
+
+                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.CLIENTE (usuario_id, tipoDocumento, numeroDocumento, CUIL, apellido, nombre, mail, calle, cod_postal, fechaNacimiento, fechaCreacion, tarjetaCredito,localidad, piso, depto)" +
+                                           "VALUES(@usuario_id, @tipoDocumento, @numeroDocumento, @CUIL, @nombre, @apellido, @mail, @calle, @cod_postal, @fechaNacimiento, @fechaCreacion, @tarjetaCredito,@localidad, @piso, @depto)", listaParametros3, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros4 = new List<SqlParameter>();
-                SqlConnector.agregarParametro(listaParametros4, "@nombre", "Cliente");
-                SqlDataReader lector1 = SqlConnector.ejecutarReader("SELECT rol_id FROM VADIUM.ROL WHERE nombre = @nombre", listaParametros4, SqlConnector.iniciarConexion());
+                SqlConnector.agregarParametro(listaParametros4, "@rol_nombre", "CLIENTE");
+                SqlDataReader lector1 = SqlConnector.ejecutarReader("SELECT rol_id FROM VADIUM.ROL WHERE rol_nombre = @rol_nombre", listaParametros4, SqlConnector.iniciarConexion());
                 lector1.Read();
-                int rol_id = Convert.ToInt32(lector1["rol_id"]);
+                int idRol = Convert.ToInt32(lector1["rol_id"]);
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros5 = new List<SqlParameter>();
-                SqlConnector.agregarParametro(listaParametros5, "@rol_id", rol_id);
+                SqlConnector.agregarParametro(listaParametros5, "@rol_id", idRol);
                 SqlConnector.agregarParametro(listaParametros5, "@usuario_id", idUser);
-                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.ROL_POR_USUARIO VALUES(@usuario_id, @rol_id)", listaParametros5, SqlConnector.iniciarConexion());
+                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.ROL_POR_USUARIO(usuario_id, rol_id) VALUES(@usuario_id, @rol_id)", listaParametros5, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 return true;
@@ -174,7 +175,7 @@ namespace PalcoNet.Registro_de_Usuario
             {
                 if (Interfaz.esNumerico(txtNumeroDocumento.Text, System.Globalization.NumberStyles.Integer))
                 {
-                    if (!SqlConnector.existenSimultaneamente(txtNumeroDocumento.Text, cbtipoDocumentoumento.SelectedItem.ToString(), "VADIUM.CLIENTE", "numeroDocumento", "Tipo_Doc"))
+                    if (!SqlConnector.existenSimultaneamente(txtNumeroDocumento.Text, cbtipoDocumentoumento.SelectedItem.ToString(), "VADIUM.CLIENTE", "numeroDocumento", "tipoDocumento"))
                     {
                         if (Interfaz.esNumerico(txttelefono.Text, System.Globalization.NumberStyles.Integer) || txttelefono.Text.Equals(""))
                         {

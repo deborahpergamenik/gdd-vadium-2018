@@ -160,7 +160,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(52, 17);
             this.label6.TabIndex = 7;
-            this.label6.Text = "ciudad";
+            this.label6.Text = "Ciudad";
             // 
             // txtDepartamento
             // 
@@ -221,11 +221,11 @@
             // 
             // txtcod_postal
             // 
-            this.txtcod_postal.Location = new System.Drawing.Point(543, 77);
+            this.txtcod_postal.Location = new System.Drawing.Point(516, 77);
             this.txtcod_postal.Margin = new System.Windows.Forms.Padding(4);
             this.txtcod_postal.MaxLength = 50;
             this.txtcod_postal.Name = "txtcod_postal";
-            this.txtcod_postal.Size = new System.Drawing.Size(183, 22);
+            this.txtcod_postal.Size = new System.Drawing.Size(210, 22);
             this.txtcod_postal.TabIndex = 5;
             // 
             // txtmail
@@ -287,9 +287,9 @@
             this.label2.Location = new System.Drawing.Point(427, 40);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(58, 17);
+            this.label2.Size = new System.Drawing.Size(51, 17);
             this.label2.TabIndex = 2;
-            this.label2.Text = "cuit (*)";
+            this.label2.Text = "Cuit (*)";
             // 
             // txtcuit
             // 

@@ -128,6 +128,7 @@
             this.txtpassword.Name = "txtpassword";
             this.txtpassword.Size = new System.Drawing.Size(158, 22);
             this.txtpassword.TabIndex = 1;
+            this.txtpassword.UseSystemPasswordChar = true;
             // 
             // txtUsuario
             // 
@@ -164,9 +165,9 @@
             this.label1.Location = new System.Drawing.Point(8, 35);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(127, 17);
+            this.label1.Size = new System.Drawing.Size(129, 17);
             this.label1.TabIndex = 0;
-            this.label1.Text = "nombre de usuario";
+            this.label1.Text = "Nombre de usuario";
             // 
             // groupBox3
             // 
@@ -227,7 +228,7 @@
             this.txtCUIL.Name = "txtCUIL";
             this.txtCUIL.Size = new System.Drawing.Size(196, 22);
             this.txtCUIL.TabIndex = 39;
-            this.txtCUIL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
+            this.txtCUIL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxcuilKeyPress);
             // 
             // label12
             // 
@@ -361,9 +362,9 @@
             this.label15.Location = new System.Drawing.Point(8, 83);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(75, 17);
+            this.label15.Size = new System.Drawing.Size(77, 17);
             this.label15.TabIndex = 2;
-            this.label15.Text = "nombre (*)";
+            this.label15.Text = "Nombre (*)";
             // 
             // label16
             // 
@@ -371,9 +372,9 @@
             this.label16.Location = new System.Drawing.Point(425, 82);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(76, 17);
+            this.label16.Size = new System.Drawing.Size(77, 17);
             this.label16.TabIndex = 3;
-            this.label16.Text = "apellido (*)";
+            this.label16.Text = "Apellido (*)";
             // 
             // cmbAno
             // 

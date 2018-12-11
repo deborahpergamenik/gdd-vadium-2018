@@ -44,6 +44,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btnLimpiar = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.txtNroCalle = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtCUIL = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
@@ -74,7 +75,6 @@
             this.txtDireccion = new System.Windows.Forms.TextBox();
             this.txtTelefono = new System.Windows.Forms.TextBox();
             this.btnAtras = new System.Windows.Forms.Button();
-            this.txtNroCalle = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgResultados)).BeginInit();
             this.groupBox3.SuspendLayout();
@@ -110,7 +110,7 @@
             this.dgResultados.Margin = new System.Windows.Forms.Padding(4);
             this.dgResultados.Name = "dgResultados";
             this.dgResultados.Size = new System.Drawing.Size(692, 404);
-            this.dgResultados.TabIndex = 39;            
+            this.dgResultados.TabIndex = 39;
             // 
             // btnBusqueda
             // 
@@ -284,6 +284,15 @@
             this.label3.TabIndex = 43;
             this.label3.Text = "Nro callle";
             // 
+            // txtNroCalle
+            // 
+            this.txtNroCalle.Location = new System.Drawing.Point(108, 197);
+            this.txtNroCalle.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNroCalle.MaxLength = 255;
+            this.txtNroCalle.Name = "txtNroCalle";
+            this.txtNroCalle.Size = new System.Drawing.Size(262, 22);
+            this.txtNroCalle.TabIndex = 42;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -302,7 +311,7 @@
             this.txtCUIL.Name = "txtCUIL";
             this.txtCUIL.Size = new System.Drawing.Size(176, 22);
             this.txtCUIL.TabIndex = 39;
-            this.txtCUIL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
+            this.txtCUIL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxcuilKeyPress);
             // 
             // label17
             // 
@@ -579,15 +588,6 @@
             this.btnAtras.Text = "Atras";
             this.btnAtras.UseVisualStyleBackColor = true;
             this.btnAtras.Click += new System.EventHandler(this.btnAtras_Click);
-            // 
-            // txtNroCalle
-            // 
-            this.txtNroCalle.Location = new System.Drawing.Point(108, 197);
-            this.txtNroCalle.Margin = new System.Windows.Forms.Padding(4);
-            this.txtNroCalle.MaxLength = 255;
-            this.txtNroCalle.Name = "txtNroCalle";
-            this.txtNroCalle.Size = new System.Drawing.Size(262, 22);
-            this.txtNroCalle.TabIndex = 42;
             // 
             // frmAbmCliente
             // 

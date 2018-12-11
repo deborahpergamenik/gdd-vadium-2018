@@ -54,13 +54,13 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             this.password = txtpassword.Text;
             this.usuario_activo = cmbusuario_activo.SelectedIndex;
 
-            this.razonSocial = txtrazonSocial.Text;
-            this.cuit = txtcuit.Text;
-            this.telefono = txttelefono.Text;
-            this.direccion = txtdireccion.Text;
-            this.cod_postal = txtcod_postal.Text;
-            this.ciudad = txtciudad.Text;
-            this.mail = txtmail.Text;
+            this.razonSocial = txtRazonSocial.Text;
+            this.cuit = txtCuit.Text;
+            this.telefono = txtTelefono.Text;
+            this.direccion = txtDireccion.Text;
+            this.cod_postal = txtCodPostal.Text;
+            this.ciudad = txtCiudad.Text;
+            this.mail = txtEmail.Text;
             this.Localidad = txtLocalidad.Text;
             this.Departamento = txtDepartamento.Text;
             this.NroPiso = txtNroPiso.Text;
@@ -119,31 +119,31 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             SqlDataReader lector = SqlConnector.ejecutarReader("SELECT razonSocial, cuit, telefono, direccion, cod_postal, ciudad, mail, DAY(fechaCreacion) AS fechaCreacion_Dia, MONTH(fechaCreacion) AS fechaCreacion_Mes, YEAR(fechaCreacion) AS fechaCreacion_Ano  FROM VADIUM.EMPRESA WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
 
-            txtrazonSocial.Text = Convert.ToString(lector["razonSocial"]);
-            txtcuit.Text = Convert.ToString(lector["cuit"]);
+            txtRazonSocial.Text = Convert.ToString(lector["razonSocial"]);
+            txtCuit.Text = Convert.ToString(lector["cuit"]);
 
             if (lector["telefono"] != DBNull.Value)
             {
-                txttelefono.Text = Convert.ToInt64(lector["telefono"]).ToString();
+                txtTelefono.Text = Convert.ToInt64(lector["telefono"]).ToString();
             }
             else
             {
-                txttelefono.Text = "";
+                txtTelefono.Text = "";
             }
 
-            txtdireccion.Text = Convert.ToString(lector["direccion"]);
-            txtcod_postal.Text = Convert.ToString(lector["cod_postal"]);
+            txtDireccion.Text = Convert.ToString(lector["direccion"]);
+            txtCodPostal.Text = Convert.ToString(lector["cod_postal"]);
 
             if (lector["ciudad"] != DBNull.Value)
             {
-                txtciudad.Text = Convert.ToString(lector["ciudad"]);
+                txtCiudad.Text = Convert.ToString(lector["ciudad"]);
             }
             else
             {
-                txtciudad.Text = "";
+                txtCiudad.Text = "";
             }
 
-            txtmail.Text = Convert.ToString(lector["mail"]);
+            txtEmail.Text = Convert.ToString(lector["mail"]);
 
             txtDepartamento.Text = Convert.ToString(lector["Departamento"]);
             txtNroPiso.Text = Convert.ToString(lector["NroPiso"]);
@@ -339,11 +339,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 modificacion = true;
             }
 
-            if (cambioString(this.razonSocial, txtrazonSocial.Text))
+            if (cambioString(this.razonSocial, txtRazonSocial.Text))
             {
-                if (!txtrazonSocial.Text.Equals("") && !SqlConnector.existeString(txtrazonSocial.Text, "VADIUM.EMPRESA", "razonSocial"))
+                if (!txtRazonSocial.Text.Equals("") && !SqlConnector.existeString(txtRazonSocial.Text, "VADIUM.EMPRESA", "razonSocial"))
                 {
-                    cambiarStringEmpresas("razonSocial", txtrazonSocial.Text);
+                    cambiarStringEmpresas("razonSocial", txtRazonSocial.Text);
                     resumenModificaciones = resumenModificaciones + "\nRazón Social";
                     modificacion = true;
                 }
@@ -354,11 +354,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 }
             }
 
-            if (cambioString(this.cuit, txtcuit.Text))
+            if (cambioString(this.cuit, txtCuit.Text))
             {
-                if (!txtcuit.Text.Equals("") && !SqlConnector.existeString(txtcuit.Text, "VADIUM.EMPRESA", "cuit") && txtcuit.Text.Length <= 50)
+                if (!txtCuit.Text.Equals("") && !SqlConnector.existeString(txtCuit.Text, "VADIUM.EMPRESA", "cuit") && txtCuit.Text.Length <= 50)
                 {
-                    cambiarStringEmpresas("cuit", txtcuit.Text);
+                    cambiarStringEmpresas("cuit", txtCuit.Text);
                     resumenModificaciones = resumenModificaciones + "\ncuit";
                     modificacion = true;
                 }
@@ -370,11 +370,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 }
             }
 
-            if (cambioString(this.telefono, txttelefono.Text))
+            if (cambioString(this.telefono, txtTelefono.Text))
             {
-                if (txttelefono.Text.Equals("") || ((Interfaz.esNumerico(txttelefono.Text, System.Globalization.NumberStyles.Integer)) && (txttelefono.Text.Length <= 18)))
+                if (txtTelefono.Text.Equals("") || ((Interfaz.esNumerico(txtTelefono.Text, System.Globalization.NumberStyles.Integer)) && (txtTelefono.Text.Length <= 18)))
                 {
-                    if (txttelefono.Text.Equals(""))
+                    if (txtTelefono.Text.Equals(""))
                     {
                         cambiarNullEmpresas("telefono");
                         resumenModificaciones = resumenModificaciones + "\nTeléfono";
@@ -382,9 +382,9 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                     }
                     else
                     {
-                        if (!SqlConnector.existeString(txttelefono.Text, "VADIUM.EMPRESA", "telefono"))
+                        if (!SqlConnector.existeString(txtTelefono.Text, "VADIUM.EMPRESA", "telefono"))
                         {
-                            cambiarLongIntEmpresas("telefono", Convert.ToInt64(txttelefono.Text));
+                            cambiarLongIntEmpresas("telefono", Convert.ToInt64(txtTelefono.Text));
                             resumenModificaciones = resumenModificaciones + "\nTeléfono";
                             modificacion = true;
                         }
@@ -402,11 +402,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 }
             }
 
-            if (cambioString(this.direccion, txtdireccion.Text))
+            if (cambioString(this.direccion, txtDireccion.Text))
             {
-                if (!txtdireccion.Text.Equals(""))
+                if (!txtDireccion.Text.Equals(""))
                 {
-                    cambiarStringEmpresas("direccion", txtdireccion.Text);
+                    cambiarStringEmpresas("direccion", txtDireccion.Text);
                     resumenModificaciones = resumenModificaciones + "\nDirección";
                     modificacion = true;
                 }
@@ -417,11 +417,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 }
             }
 
-            if (cambioString(this.cod_postal, txtcod_postal.Text))
+            if (cambioString(this.cod_postal, txtCodPostal.Text))
             {
-                if (!txtcod_postal.Text.Equals("") && txtcod_postal.Text.Length <= 50)
+                if (!txtCodPostal.Text.Equals("") && txtCodPostal.Text.Length <= 50)
                 {
-                    cambiarStringEmpresas("cod_postal", txtcod_postal.Text);
+                    cambiarStringEmpresas("cod_postal", txtCodPostal.Text);
                     resumenModificaciones = resumenModificaciones + "\nCódigo postal";
                     modificacion = true;
                 }
@@ -432,11 +432,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 }
             }
 
-            if (cambioString(this.ciudad, txtciudad.Text))
+            if (cambioString(this.ciudad, txtCiudad.Text))
             {
-                if (txtciudad.Text.Equals("") || txtciudad.Text.Length <= 50)
+                if (txtCiudad.Text.Equals("") || txtCiudad.Text.Length <= 50)
                 {
-                    if (txtciudad.Text.Equals(""))
+                    if (txtCiudad.Text.Equals(""))
                     {
                         cambiarNullEmpresas("ciudad");
                         resumenModificaciones = resumenModificaciones + "\nciudad";
@@ -444,7 +444,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                     }
                     else
                     {
-                        cambiarStringEmpresas("ciudad", txtciudad.Text);
+                        cambiarStringEmpresas("ciudad", txtCiudad.Text);
                         resumenModificaciones = resumenModificaciones + "\nciudad";
                         modificacion = true;
                     }
@@ -457,11 +457,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 }
             }
 
-            if (cambioString(this.mail, txtmail.Text))
+            if (cambioString(this.mail, txtEmail.Text))
             {
-                if (!txtmail.Text.Equals(""))
+                if (!txtEmail.Text.Equals(""))
                 {
-                    cambiarStringEmpresas("mail", txtmail.Text);
+                    cambiarStringEmpresas("mail", txtEmail.Text);
                     resumenModificaciones = resumenModificaciones + "\nE-mail";
                     modificacion = true;
                 }

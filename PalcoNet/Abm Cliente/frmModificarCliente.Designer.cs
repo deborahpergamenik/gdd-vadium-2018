@@ -105,7 +105,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(825, 82);
+            this.groupBox1.Size = new System.Drawing.Size(800, 82);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Datos identificatorios";
@@ -114,10 +114,10 @@
             // 
             this.cmbusuario_activo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbusuario_activo.FormattingEnabled = true;
-            this.cmbusuario_activo.Location = new System.Drawing.Point(696, 29);
+            this.cmbusuario_activo.Location = new System.Drawing.Point(658, 29);
             this.cmbusuario_activo.Margin = new System.Windows.Forms.Padding(4);
             this.cmbusuario_activo.Name = "cmbusuario_activo";
-            this.cmbusuario_activo.Size = new System.Drawing.Size(114, 24);
+            this.cmbusuario_activo.Size = new System.Drawing.Size(116, 24);
             this.cmbusuario_activo.TabIndex = 2;
             // 
             // txtpassword
@@ -142,12 +142,12 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(588, 32);
+            this.label4.Location = new System.Drawing.Point(598, 32);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(100, 17);
+            this.label4.Size = new System.Drawing.Size(52, 17);
             this.label4.TabIndex = 3;
-            this.label4.Text = "usuario_activo";
+            this.label4.Text = "Estado";
             // 
             // label2
             // 
@@ -205,7 +205,7 @@
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox3.Size = new System.Drawing.Size(825, 339);
+            this.groupBox3.Size = new System.Drawing.Size(800, 339);
             this.groupBox3.TabIndex = 37;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Datos Personales";

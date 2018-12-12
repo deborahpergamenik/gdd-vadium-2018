@@ -38,7 +38,7 @@ namespace PalcoNet.Registro_de_Usuario
             int i;
             for (i = 1; i <= 31; i++)
             {
-                this.cbDia.Items.Add(i.ToString());
+                this.cmbDia.Items.Add(i.ToString());
             }
         }
 
@@ -47,7 +47,7 @@ namespace PalcoNet.Registro_de_Usuario
             int i;
             for (i = 1; i <= 12; i++)
             {
-                this.cbMes.Items.Add(i.ToString());
+                this.cmbMes.Items.Add(i.ToString());
             }
         }
 
@@ -56,33 +56,33 @@ namespace PalcoNet.Registro_de_Usuario
             int i;
             for (i = 1914; i <= 2014; i++)
             {
-                this.cbAno.Items.Add(i.ToString());
+                this.cmbAno.Items.Add(i.ToString());
             }
         }
 
         public void llenarCbtipoDocumento()
         {
-            this.cbtipoDocumentoumento.Items.Add("DU");
-            this.cbtipoDocumentoumento.Items.Add("CI");
-            this.cbtipoDocumentoumento.Items.Add("LC");
+            this.cmbTipoDocumento.Items.Add("DU");
+            this.cmbTipoDocumento.Items.Add("CI");
+            this.cmbTipoDocumento.Items.Add("LC");
         }
 
         public Boolean registrarCliente(string username, string passwordNoHash, string tipoDocumentoumento, string numeroDocumento, string CUIL, string nombre, string apellido, string mail, string telefono, string direccion, string cod_postal, string nroPiso, string departamento, string localidad, DateTime fechaNacimiento)
         {
             try
             {
-                UTF8Encoding encoderHash = new UTF8Encoding();
-                SHA256Managed hasher = new SHA256Managed();
-                byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passwordNoHash));
-                string password = bytesDeHasheoToString(bytesDeHasheo);
+                //UTF8Encoding encoderHash = new UTF8Encoding();
+                //SHA256Managed hasher = new SHA256Managed();
+                //byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passwordNoHash));
+                //string password = bytesDeHasheoToString(bytesDeHasheo);
 
                 List<SqlParameter> listaParametros = new List<SqlParameter>();
                 SqlConnector.agregarParametro(listaParametros, "@usuario_username", username);
-                SqlConnector.agregarParametro(listaParametros, "@usuario_password", password);
+                SqlConnector.agregarParametro(listaParametros, "@usuario_password", passwordNoHash);
                 SqlConnector.agregarParametro(listaParametros, "@usuario_intentosLogin", 0);
                 SqlConnector.agregarParametro(listaParametros, "@usuario_activo", 1);
                 SqlConnector.agregarParametro(listaParametros, "@primera_vez", 0);
-                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO (usuario_username, usuario_password, usuario_intentosLogin, usuario_activo, primera_vez) VALUES (@usuario_username, @usuario_password, @usuario_intentosLogin, @usuario_activo, @primera_vez)", listaParametros, SqlConnector.iniciarConexion());
+                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO (usuario_username, usuario_password, usuario_intentosLogin, usuario_activo, primera_vez) VALUES (@usuario_username, CONVERT(BINARY(32), @usuario_password), @usuario_intentosLogin, @usuario_activo, @primera_vez)", listaParametros, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros2 = new List<SqlParameter>();
@@ -96,7 +96,7 @@ namespace PalcoNet.Registro_de_Usuario
                 List<SqlParameter> listaParametros3 = new List<SqlParameter>();
                 SqlConnector.agregarParametro(listaParametros3, "@usuario_id", idUser);
                 SqlConnector.agregarParametro(listaParametros3, "@tipoDocumento", tipoDocumentoumento);
-                SqlConnector.agregarParametro(listaParametros3, "@numeroDocumento", numeroDocumento);
+                SqlConnector.agregarParametro(listaParametros3, "@numeroDocumento", Convert.ToInt32(numeroDocumento));
                 SqlConnector.agregarParametro(listaParametros3, "@CUIL", CUIL);
                 SqlConnector.agregarParametro(listaParametros3, "@nombre", nombre);
                 SqlConnector.agregarParametro(listaParametros3, "@apellido", apellido);
@@ -105,7 +105,7 @@ namespace PalcoNet.Registro_de_Usuario
                 SqlConnector.agregarParametro(listaParametros3, "@cod_postal", cod_postal);
                 SqlConnector.agregarParametro(listaParametros3, "@fechaNacimiento", fechaNacimiento);
                 SqlConnector.agregarParametro(listaParametros3, "@fechaCreacion", Configuration.getActualDate());
-                SqlConnector.agregarParametro(listaParametros3, "@tarjetaCredito", "idtarjetaDeCredito"); //cambiar este campo
+                SqlConnector.agregarParametro(listaParametros3, "@tarjetaCredito", 1); //cambiar este campo
                 SqlConnector.agregarParametro(listaParametros3, "@localidad", localidad);
                 SqlConnector.agregarParametro(listaParametros3, "@piso", nroPiso);
                 SqlConnector.agregarParametro(listaParametros3, "@depto", departamento);
@@ -171,17 +171,17 @@ namespace PalcoNet.Registro_de_Usuario
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            if (cbtipoDocumentoumento.SelectedIndex != -1 && !txtNumeroDocumento.Text.Equals("") && !txtCUIL.Text.Equals("") && !txtnombre.Text.Equals("") && !txtapellido.Text.Equals("") && !txtmail.Text.Equals("") && !txtdireccion.Text.Equals("") && !txtcod_postal.Text.Equals("") && cbDia.SelectedIndex != -1 && cbMes.SelectedIndex != -1 && cbAno.SelectedIndex != -1)
+            if (cmbTipoDocumento.SelectedIndex != -1 && !txtNumeroDocumento.Text.Equals("") && !txtCUIL.Text.Equals("") && !txtNombre.Text.Equals("") && !txtApellido.Text.Equals("") && !txtMail.Text.Equals("") && !txtDireccion.Text.Equals("") && !txtCodPostal.Text.Equals("") && cmbDia.SelectedIndex != -1 && cmbMes.SelectedIndex != -1 && cmbAno.SelectedIndex != -1)
             {
                 if (Interfaz.esNumerico(txtNumeroDocumento.Text, System.Globalization.NumberStyles.Integer))
                 {
-                    if (!SqlConnector.existenSimultaneamente(txtNumeroDocumento.Text, cbtipoDocumentoumento.SelectedItem.ToString(), "VADIUM.CLIENTE", "numeroDocumento", "tipoDocumento"))
+                    if (!SqlConnector.existenSimultaneamente(txtNumeroDocumento.Text, cmbTipoDocumento.SelectedItem.ToString(), "VADIUM.CLIENTE", "numeroDocumento", "tipoDocumento"))
                     {
-                        if (Interfaz.esNumerico(txttelefono.Text, System.Globalization.NumberStyles.Integer) || txttelefono.Text.Equals(""))
+                        if (Interfaz.esNumerico(txtTelefono.Text, System.Globalization.NumberStyles.Integer))
                         {
-                            if (!SqlConnector.existetelefono(Convert.ToInt32(txttelefono.Text)))
+                            if (!SqlConnector.existetelefono(Convert.ToInt32(txtTelefono.Text)))
                             {
-                                registrarCliente(username, password, cbtipoDocumentoumento.SelectedItem.ToString(), txtNumeroDocumento.Text, txtCUIL.Text, txtnombre.Text, txtapellido.Text, txtmail.Text, txttelefono.Text, txtdireccion.Text, txtcod_postal.Text, txtNroPiso.Text, txtDepartamento.Text, txtLocalidad.Text, fechaNacimiento(cbDia.SelectedItem.ToString(), cbMes.SelectedItem.ToString(), cbAno.SelectedItem.ToString()));
+                                registrarCliente(username, password, cmbTipoDocumento.SelectedItem.ToString(), txtNumeroDocumento.Text, txtCUIL.Text, txtNombre.Text, txtApellido.Text, txtMail.Text, txtTelefono.Text, txtDireccion.Text, txtCodPostal.Text, txtNroPiso.Text, txtDepartamento.Text, txtLocalidad.Text, fechaNacimiento(cmbDia.SelectedItem.ToString(), cmbMes.SelectedItem.ToString(), cmbAno.SelectedItem.ToString()));
                                 MessageBox.Show("Alta finalizada. Puede ingresar al sistema.", "Registro exitoso");
                                 frmLogin frmLogin = new frmLogin();
                                 this.Hide();
@@ -232,6 +232,14 @@ namespace PalcoNet.Registro_de_Usuario
         private void textboxNoNumerico_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar < 65 || e.KeyChar > 122)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtCUIL_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
             {
                 e.Handled = true;
             }

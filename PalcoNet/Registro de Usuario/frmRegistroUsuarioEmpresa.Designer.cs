@@ -299,6 +299,7 @@
             this.txtcuit.Name = "txtcuit";
             this.txtcuit.Size = new System.Drawing.Size(209, 22);
             this.txtcuit.TabIndex = 1;
+            this.txtcuit.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtcuit_KeyPress);
             // 
             // label9
             // 

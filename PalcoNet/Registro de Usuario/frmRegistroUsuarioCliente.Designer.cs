@@ -31,6 +31,8 @@
             this.btnCancelar = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.txtApellido = new System.Windows.Forms.TextBox();
+            this.txtNombre = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.txtLocalidad = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -39,26 +41,24 @@
             this.txtDepartamento = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.cbAno = new System.Windows.Forms.ComboBox();
+            this.cmbAno = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.cbMes = new System.Windows.Forms.ComboBox();
+            this.cmbMes = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.cbDia = new System.Windows.Forms.ComboBox();
+            this.cmbDia = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.txtnombre = new System.Windows.Forms.TextBox();
-            this.txtcod_postal = new System.Windows.Forms.TextBox();
-            this.txtapellido = new System.Windows.Forms.TextBox();
-            this.txtdireccion = new System.Windows.Forms.TextBox();
-            this.txtmail = new System.Windows.Forms.TextBox();
-            this.txttelefono = new System.Windows.Forms.TextBox();
+            this.txtCodPostal = new System.Windows.Forms.TextBox();
+            this.txtDireccion = new System.Windows.Forms.TextBox();
+            this.txtMail = new System.Windows.Forms.TextBox();
+            this.txtTelefono = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label12 = new System.Windows.Forms.Label();
             this.txtCUIL = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.cbtipoDocumentoumento = new System.Windows.Forms.ComboBox();
+            this.cmbTipoDocumento = new System.Windows.Forms.ComboBox();
             this.txtNumeroDocumento = new System.Windows.Forms.TextBox();
             this.btnAceptar = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
@@ -88,6 +88,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.txtApellido);
+            this.groupBox2.Controls.Add(this.txtNombre);
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.txtLocalidad);
             this.groupBox2.Controls.Add(this.label11);
@@ -96,20 +98,18 @@
             this.groupBox2.Controls.Add(this.txtDepartamento);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.cbAno);
+            this.groupBox2.Controls.Add(this.cmbAno);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.cbMes);
+            this.groupBox2.Controls.Add(this.cmbMes);
             this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.cbDia);
+            this.groupBox2.Controls.Add(this.cmbDia);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.txtnombre);
-            this.groupBox2.Controls.Add(this.txtcod_postal);
-            this.groupBox2.Controls.Add(this.txtapellido);
-            this.groupBox2.Controls.Add(this.txtdireccion);
-            this.groupBox2.Controls.Add(this.txtmail);
-            this.groupBox2.Controls.Add(this.txttelefono);
+            this.groupBox2.Controls.Add(this.txtCodPostal);
+            this.groupBox2.Controls.Add(this.txtDireccion);
+            this.groupBox2.Controls.Add(this.txtMail);
+            this.groupBox2.Controls.Add(this.txtTelefono);
             this.groupBox2.Location = new System.Drawing.Point(13, 102);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
@@ -118,6 +118,26 @@
             this.groupBox2.TabIndex = 31;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Datos personales";
+            // 
+            // txtApellido
+            // 
+            this.txtApellido.Location = new System.Drawing.Point(174, 72);
+            this.txtApellido.Margin = new System.Windows.Forms.Padding(4);
+            this.txtApellido.MaxLength = 255;
+            this.txtApellido.Name = "txtApellido";
+            this.txtApellido.Size = new System.Drawing.Size(191, 22);
+            this.txtApellido.TabIndex = 2;
+            this.txtApellido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
+            // 
+            // txtNombre
+            // 
+            this.txtNombre.Location = new System.Drawing.Point(175, 35);
+            this.txtNombre.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNombre.MaxLength = 255;
+            this.txtNombre.Name = "txtNombre";
+            this.txtNombre.Size = new System.Drawing.Size(191, 22);
+            this.txtNombre.TabIndex = 1;
+            this.txtNombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // label13
             // 
@@ -136,7 +156,7 @@
             this.txtLocalidad.MaxLength = 18;
             this.txtLocalidad.Name = "txtLocalidad";
             this.txtLocalidad.Size = new System.Drawing.Size(192, 22);
-            this.txtLocalidad.TabIndex = 3;
+            this.txtLocalidad.TabIndex = 4;
             // 
             // label11
             // 
@@ -165,7 +185,7 @@
             this.txtNroPiso.MaxLength = 255;
             this.txtNroPiso.Name = "txtNroPiso";
             this.txtNroPiso.Size = new System.Drawing.Size(191, 22);
-            this.txtNroPiso.TabIndex = 9;
+            this.txtNroPiso.TabIndex = 10;
             // 
             // txtDepartamento
             // 
@@ -174,7 +194,7 @@
             this.txtDepartamento.MaxLength = 18;
             this.txtDepartamento.Name = "txtDepartamento";
             this.txtDepartamento.Size = new System.Drawing.Size(179, 22);
-            this.txtDepartamento.TabIndex = 10;
+            this.txtDepartamento.TabIndex = 11;
             // 
             // label3
             // 
@@ -196,15 +216,16 @@
             this.label4.TabIndex = 3;
             this.label4.Text = "Apellido (*)";
             // 
-            // cbAno
+            // cmbAno
             // 
-            this.cbAno.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAno.FormattingEnabled = true;
-            this.cbAno.Location = new System.Drawing.Point(297, 192);
-            this.cbAno.Margin = new System.Windows.Forms.Padding(4);
-            this.cbAno.Name = "cbAno";
-            this.cbAno.Size = new System.Drawing.Size(68, 24);
-            this.cbAno.TabIndex = 6;
+            this.cmbAno.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAno.FormattingEnabled = true;
+            this.cmbAno.ItemHeight = 16;
+            this.cmbAno.Location = new System.Drawing.Point(297, 192);
+            this.cmbAno.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbAno.Name = "cmbAno";
+            this.cmbAno.Size = new System.Drawing.Size(68, 24);
+            this.cmbAno.TabIndex = 6;
             // 
             // label5
             // 
@@ -216,15 +237,16 @@
             this.label5.TabIndex = 4;
             this.label5.Text = "E-mail (*)";
             // 
-            // cbMes
+            // cmbMes
             // 
-            this.cbMes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMes.FormattingEnabled = true;
-            this.cbMes.Location = new System.Drawing.Point(236, 192);
-            this.cbMes.Margin = new System.Windows.Forms.Padding(4);
-            this.cbMes.Name = "cbMes";
-            this.cbMes.Size = new System.Drawing.Size(52, 24);
-            this.cbMes.TabIndex = 5;
+            this.cmbMes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbMes.FormattingEnabled = true;
+            this.cmbMes.ItemHeight = 16;
+            this.cmbMes.Location = new System.Drawing.Point(236, 192);
+            this.cmbMes.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbMes.Name = "cmbMes";
+            this.cmbMes.Size = new System.Drawing.Size(52, 24);
+            this.cmbMes.TabIndex = 5;
             // 
             // label6
             // 
@@ -236,15 +258,16 @@
             this.label6.TabIndex = 5;
             this.label6.Text = "Teléfono";
             // 
-            // cbDia
+            // cmbDia
             // 
-            this.cbDia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbDia.FormattingEnabled = true;
-            this.cbDia.Location = new System.Drawing.Point(175, 192);
-            this.cbDia.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDia.Name = "cbDia";
-            this.cbDia.Size = new System.Drawing.Size(52, 24);
-            this.cbDia.TabIndex = 4;
+            this.cmbDia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDia.FormattingEnabled = true;
+            this.cmbDia.ItemHeight = 16;
+            this.cmbDia.Location = new System.Drawing.Point(175, 192);
+            this.cmbDia.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbDia.Name = "cmbDia";
+            this.cmbDia.Size = new System.Drawing.Size(52, 24);
+            this.cmbDia.TabIndex = 4;
             // 
             // label7
             // 
@@ -276,63 +299,43 @@
             this.label9.TabIndex = 8;
             this.label9.Text = "Fecha de nacimiento (*)";
             // 
-            // txtnombre
+            // txtCodPostal
             // 
-            this.txtnombre.Location = new System.Drawing.Point(175, 33);
-            this.txtnombre.Margin = new System.Windows.Forms.Padding(4);
-            this.txtnombre.MaxLength = 255;
-            this.txtnombre.Name = "txtnombre";
-            this.txtnombre.Size = new System.Drawing.Size(191, 22);
-            this.txtnombre.TabIndex = 0;
-            this.txtnombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
+            this.txtCodPostal.Location = new System.Drawing.Point(539, 191);
+            this.txtCodPostal.Margin = new System.Windows.Forms.Padding(4);
+            this.txtCodPostal.MaxLength = 50;
+            this.txtCodPostal.Name = "txtCodPostal";
+            this.txtCodPostal.Size = new System.Drawing.Size(164, 22);
+            this.txtCodPostal.TabIndex = 12;
+            this.txtCodPostal.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
-            // txtcod_postal
+            // txtDireccion
             // 
-            this.txtcod_postal.Location = new System.Drawing.Point(539, 191);
-            this.txtcod_postal.Margin = new System.Windows.Forms.Padding(4);
-            this.txtcod_postal.MaxLength = 50;
-            this.txtcod_postal.Name = "txtcod_postal";
-            this.txtcod_postal.Size = new System.Drawing.Size(164, 22);
-            this.txtcod_postal.TabIndex = 11;
-            this.txtcod_postal.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
+            this.txtDireccion.Location = new System.Drawing.Point(175, 111);
+            this.txtDireccion.Margin = new System.Windows.Forms.Padding(4);
+            this.txtDireccion.MaxLength = 255;
+            this.txtDireccion.Name = "txtDireccion";
+            this.txtDireccion.Size = new System.Drawing.Size(191, 22);
+            this.txtDireccion.TabIndex = 3;
             // 
-            // txtapellido
+            // txtMail
             // 
-            this.txtapellido.Location = new System.Drawing.Point(175, 70);
-            this.txtapellido.Margin = new System.Windows.Forms.Padding(4);
-            this.txtapellido.MaxLength = 255;
-            this.txtapellido.Name = "txtapellido";
-            this.txtapellido.Size = new System.Drawing.Size(191, 22);
-            this.txtapellido.TabIndex = 1;
-            this.txtapellido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
+            this.txtMail.Location = new System.Drawing.Point(512, 35);
+            this.txtMail.Margin = new System.Windows.Forms.Padding(4);
+            this.txtMail.MaxLength = 255;
+            this.txtMail.Name = "txtMail";
+            this.txtMail.Size = new System.Drawing.Size(191, 22);
+            this.txtMail.TabIndex = 8;
             // 
-            // txtdireccion
+            // txtTelefono
             // 
-            this.txtdireccion.Location = new System.Drawing.Point(175, 111);
-            this.txtdireccion.Margin = new System.Windows.Forms.Padding(4);
-            this.txtdireccion.MaxLength = 255;
-            this.txtdireccion.Name = "txtdireccion";
-            this.txtdireccion.Size = new System.Drawing.Size(191, 22);
-            this.txtdireccion.TabIndex = 2;
-            // 
-            // txtmail
-            // 
-            this.txtmail.Location = new System.Drawing.Point(512, 35);
-            this.txtmail.Margin = new System.Windows.Forms.Padding(4);
-            this.txtmail.MaxLength = 255;
-            this.txtmail.Name = "txtmail";
-            this.txtmail.Size = new System.Drawing.Size(191, 22);
-            this.txtmail.TabIndex = 7;
-            // 
-            // txttelefono
-            // 
-            this.txttelefono.Location = new System.Drawing.Point(512, 69);
-            this.txttelefono.Margin = new System.Windows.Forms.Padding(4);
-            this.txttelefono.MaxLength = 18;
-            this.txttelefono.Name = "txttelefono";
-            this.txttelefono.Size = new System.Drawing.Size(191, 22);
-            this.txttelefono.TabIndex = 8;
-            this.txttelefono.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
+            this.txtTelefono.Location = new System.Drawing.Point(512, 69);
+            this.txtTelefono.Margin = new System.Windows.Forms.Padding(4);
+            this.txtTelefono.MaxLength = 18;
+            this.txtTelefono.Name = "txtTelefono";
+            this.txtTelefono.Size = new System.Drawing.Size(191, 22);
+            this.txtTelefono.TabIndex = 9;
+            this.txtTelefono.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
             // groupBox1
             // 
@@ -340,7 +343,7 @@
             this.groupBox1.Controls.Add(this.txtCUIL);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.cbtipoDocumentoumento);
+            this.groupBox1.Controls.Add(this.cmbTipoDocumento);
             this.groupBox1.Controls.Add(this.txtNumeroDocumento);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
@@ -369,7 +372,7 @@
             this.txtCUIL.Name = "txtCUIL";
             this.txtCUIL.Size = new System.Drawing.Size(178, 22);
             this.txtCUIL.TabIndex = 2;
-            this.txtCUIL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
+            this.txtCUIL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCUIL_KeyPress);
             // 
             // label1
             // 
@@ -391,14 +394,15 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Número (*)";
             // 
-            // cbtipoDocumentoumento
+            // cmbTipoDocumento
             // 
-            this.cbtipoDocumentoumento.FormattingEnabled = true;
-            this.cbtipoDocumentoumento.Location = new System.Drawing.Point(103, 33);
-            this.cbtipoDocumentoumento.Margin = new System.Windows.Forms.Padding(4);
-            this.cbtipoDocumentoumento.Name = "cbtipoDocumentoumento";
-            this.cbtipoDocumentoumento.Size = new System.Drawing.Size(93, 24);
-            this.cbtipoDocumentoumento.TabIndex = 0;
+            this.cmbTipoDocumento.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTipoDocumento.FormattingEnabled = true;
+            this.cmbTipoDocumento.Location = new System.Drawing.Point(103, 33);
+            this.cmbTipoDocumento.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbTipoDocumento.Name = "cmbTipoDocumento";
+            this.cmbTipoDocumento.Size = new System.Drawing.Size(93, 24);
+            this.cmbTipoDocumento.TabIndex = 0;
             // 
             // txtNumeroDocumento
             // 
@@ -449,24 +453,22 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox cbAno;
+        private System.Windows.Forms.ComboBox cmbAno;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox cbMes;
+        private System.Windows.Forms.ComboBox cmbMes;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox cbDia;
+        private System.Windows.Forms.ComboBox cmbDia;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox txtnombre;
-        private System.Windows.Forms.TextBox txtcod_postal;
-        private System.Windows.Forms.TextBox txtapellido;
-        private System.Windows.Forms.TextBox txtdireccion;
-        private System.Windows.Forms.TextBox txtmail;
-        private System.Windows.Forms.TextBox txttelefono;
+        private System.Windows.Forms.TextBox txtCodPostal;
+        private System.Windows.Forms.TextBox txtDireccion;
+        private System.Windows.Forms.TextBox txtMail;
+        private System.Windows.Forms.TextBox txtTelefono;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox cbtipoDocumentoumento;
+        private System.Windows.Forms.ComboBox cmbTipoDocumento;
         private System.Windows.Forms.TextBox txtNumeroDocumento;
         private System.Windows.Forms.Button btnAceptar;
         private System.Windows.Forms.Label label13;
@@ -477,5 +479,7 @@
         private System.Windows.Forms.TextBox txtDepartamento;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox txtCUIL;
+        private System.Windows.Forms.TextBox txtApellido;
+        private System.Windows.Forms.TextBox txtNombre;
     }
 }

@@ -55,6 +55,7 @@
             // 
             // cmbRol
             // 
+            this.cmbRol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRol.FormattingEnabled = true;
             this.cmbRol.Location = new System.Drawing.Point(13, 25);
             this.cmbRol.Margin = new System.Windows.Forms.Padding(4);

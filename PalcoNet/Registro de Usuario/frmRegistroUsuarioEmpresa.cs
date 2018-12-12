@@ -32,18 +32,18 @@ namespace PalcoNet.Registro_de_Usuario
         {
             try
             {
-                UTF8Encoding encoderHash = new UTF8Encoding();
-                SHA256Managed hasher = new SHA256Managed();
-                byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passwordNoHash));
-                string password = bytesDeHasheoToString(bytesDeHasheo);
+                //UTF8Encoding encoderHash = new UTF8Encoding();
+                //SHA256Managed hasher = new SHA256Managed();
+                //byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passwordNoHash));
+                //string password = bytesDeHasheoToString(bytesDeHasheo);
 
                 List<SqlParameter> listaParametros = new List<SqlParameter>();
                 SqlConnector.agregarParametro(listaParametros, "@usuario_username", username);
-                SqlConnector.agregarParametro(listaParametros, "@usuario_password", password);
+                SqlConnector.agregarParametro(listaParametros, "@usuario_password", passwordNoHash);
                 SqlConnector.agregarParametro(listaParametros, "@usuario_intentosLogin", 0);
                 SqlConnector.agregarParametro(listaParametros, "@usuario_activo", 1);
                 SqlConnector.agregarParametro(listaParametros, "@primera_vez", 0);
-                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO (usuario_username, usuario_password, usuario_intentosLogin, usuario_activo, primera_vez) VALUES (@usuario_username, @usuario_password, @usuario_intentosLogin, @usuario_activo, @primera_vez)", listaParametros, SqlConnector.iniciarConexion());
+                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO (usuario_username, usuario_password, usuario_intentosLogin, usuario_activo, primera_vez) VALUES (@usuario_username, CONVERT(BINARY(32), @usuario_password), @usuario_intentosLogin, @usuario_activo, @primera_vez)", listaParametros, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros2 = new List<SqlParameter>();
@@ -137,7 +137,7 @@ namespace PalcoNet.Registro_de_Usuario
                 {
                     if (!SqlConnector.existeString(txtcuit.Text, "VADIUM.EMPRESA", "cuit"))
                     {
-                        if (Interfaz.esNumerico(txttelefono.Text, System.Globalization.NumberStyles.Integer) || txttelefono.Text.Equals(""))
+                        if (Interfaz.esNumerico(txttelefono.Text, System.Globalization.NumberStyles.Integer))
                         {
                             if (!SqlConnector.existetelefono(Convert.ToInt32(txttelefono.Text)))
                             {
@@ -154,7 +154,7 @@ namespace PalcoNet.Registro_de_Usuario
                         }
                         else
                         {
-                            MessageBox.Show("Teléfono inválido existente.", "Error");
+                            MessageBox.Show("Teléfono inválido.", "Error");
                         }
                     }
                     else
@@ -170,6 +170,14 @@ namespace PalcoNet.Registro_de_Usuario
             else
             {
                 MessageBox.Show("Debe completar los campos solicitados.", "Error");
+            }
+        }
+
+        private void txtcuit_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
+            {
+                e.Handled = true;
             }
         }
     }

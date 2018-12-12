@@ -337,11 +337,13 @@ namespace PalcoNet.Abm_Cliente
             }
         }
 
-        private void textboxcuilKeyPress(object sender, KeyPressEventArgs e)
+        private void textboxcuil_KeyPress(object sender, KeyPressEventArgs e)
         {
-
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
+            {
+                e.Handled = true;
+            }
         }
-
 
 
         private void btnAtras_Click(object sender, EventArgs e)

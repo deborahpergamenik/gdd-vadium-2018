@@ -443,9 +443,9 @@
             this.label1.Location = new System.Drawing.Point(8, 35);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(107, 17);
+            this.label1.Size = new System.Drawing.Size(109, 17);
             this.label1.TabIndex = 0;
-            this.label1.Text = "nombre usuario";
+            this.label1.Text = "Nombre usuario";
             // 
             // frmModificarEmpresa
             // 

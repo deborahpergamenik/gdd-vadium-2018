@@ -3,6 +3,18 @@ GO
 
 -------------------------------DROP PROCEDURES-------------------
 
+IF OBJECT_ID('VADIUM.VERIFICAR_USUARIO_PASSWORD') IS NOT NULL
+DROP PROCEDURE VADIUM.VERIFICAR_USUARIO_PASSWORD;
+GO
+IF OBJECT_ID('VADIUM.USUARIO_LOGUEADO') IS NOT NULL
+DROP PROCEDURE VADIUM.USUARIO_LOGUEADO;
+GO
+IF OBJECT_ID('VADIUM.BLOQUEAR') IS NOT NULL
+DROP PROCEDURE VADIUM.BLOQUEAR;
+GO
+IF OBJECT_ID('VADIUM.CAMBIAR_PASSWORD') IS NOT NULL
+DROP PROCEDURE VADIUM.CAMBIAR_PASSWORD;
+GO
 IF OBJECT_ID('VADIUM.MayorCantLocalidadesNoVendidos') IS NOT NULL
 DROP PROCEDURE VADIUM.MayorCantLocalidadesNoVendidos;
 GO
@@ -185,7 +197,6 @@ GO
 --CREATE TABLE [VADIUM].DIRECCION(
 --	direccion_id int PRIMARY KEY IDENTITY(1,1),
 --	calle NVARCHAR(255),
---	nro_calle NUMERIC(18,0),
 --	piso NUMERIC(18,0),
 --	depto NVARCHAR (255),
 --	cod_postal nvarchar(255),
@@ -208,7 +219,6 @@ CREATE TABLE [VADIUM].CLIENTE(
 	mail nvarchar(255),
 	telefono nvarchar(255),
 	calle NVARCHAR(255),
-	nro_calle NUMERIC(18,0),
 	piso NUMERIC(18,0),
 	depto NVARCHAR (255),
 	cod_postal nvarchar(255),
@@ -235,7 +245,6 @@ CREATE TABLE [VADIUM].EMPRESA(
 	 mail nvarchar(255),
 	 telefono nvarchar(255),
 	calle NVARCHAR(255),
-	nro_calle NUMERIC(18,0),
 	piso NUMERIC(18,0),
 	depto NVARCHAR (255),
 	cod_postal nvarchar(255),
@@ -338,9 +347,9 @@ BEGIN
 		WHERE NOT EXISTS(SELECT 2 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 1 AND rolUser.usuario_id = us.usuario_id)
 
 
-		INSERT INTO VADIUM.EMPRESA(razonSocial, cuit, mail,  fechaCreacion, usuario_id, calle, nro_calle, piso, depto, cod_postal)
+		INSERT INTO VADIUM.EMPRESA(razonSocial, cuit, mail,  fechaCreacion, usuario_id, calle, piso, depto, cod_postal)
 		SELECT ins.razonSocial, ins.cuit, ins.mail, ins.fechaCreacion, 
-			(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.calle, ins.nro_calle, ins.piso, ins.depto, ins.cod_postal
+			(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.calle, ins.piso, ins.depto, ins.cod_postal
 		FROM inserted ins
 	END TRY
 	BEGIN CATCH
@@ -369,9 +378,9 @@ BEGIN
 		GROUP BY us.usuario_id,us.usuario_username, i.mail
 
 
-		INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,  usuario_id, calle, nro_calle, piso, depto, cod_postal )
+		INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,  usuario_id, calle, piso, depto, cod_postal )
 		SELECT ins.numeroDocumento, ins.tipoDocumento, ins.apellido, ins.nombre,ins.fechaNacimiento, ins.mail, 
-		(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.calle, ins.nro_calle, ins.piso, ins.depto, ins.cod_postal
+		(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.calle, ins.piso, ins.depto, ins.cod_postal
 		FROM inserted ins
 
 	END TRY
@@ -427,31 +436,31 @@ BEGIN
 	GROUP BY Ubicacion_Tipo_Codigo, Ubicacion_Tipo_Descripcion
 	HAVING m.Ubicacion_Tipo_Codigo IS NOT NULL
 	-------DIRECCIONES CLIENTE----
-	--INSERT INTO [VADIUM].DIRECCION(calle, nro_calle, piso, depto, cod_postal)
-	--SELECT  m.Cli_Dom_Calle, m.Cli_Nro_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
+	--INSERT INTO [VADIUM].DIRECCION(calle, piso, depto, cod_postal)
+	--SELECT  m.Cli_Dom_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
 	--FROM gd_esquema.Maestra m
-	--GROUP BY m.Cli_Dom_Calle, m.Cli_Nro_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal	
+	--GROUP BY m.Cli_Dom_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal	
 	--HAVING m.Cli_Dom_Calle IS NOT NULL
 	-------Cliente------
-	INSERT INTO [VADIUM].Cliente (numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail, calle, nro_calle, piso, depto, cod_postal )
-	SELECT  m.Cli_Dni,'DNI' ,m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Mail,m.Cli_Dom_Calle, m.Cli_Nro_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
+	INSERT INTO [VADIUM].Cliente (numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail, calle, piso, depto, cod_postal )
+	SELECT  m.Cli_Dni,'DNI' ,m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Mail,m.Cli_Dom_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
 
 	FROM gd_esquema.Maestra m
-	GROUP BY m.Cli_Mail, m.Cli_Dni, m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Dom_Calle, m.Cli_Nro_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
+	GROUP BY m.Cli_Mail, m.Cli_Dni, m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Dom_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
 	HAVING m.Cli_Mail IS NOT NULL
 
 	-------DIRECCIONES EMPRESA----
-	--INSERT INTO [VADIUM].DIRECCION(calle, nro_calle, piso, depto, cod_postal)
-	--SELECT  m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Nro_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal
+	--INSERT INTO [VADIUM].DIRECCION(calle, piso, depto, cod_postal)
+	--SELECT  m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal
 	--FROM gd_esquema.Maestra m
-	--GROUP BY m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Nro_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal	
+	--GROUP BY m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal	
 	--HAVING m.Espec_Empresa_Dom_Calle IS NOT NULL
 	-------EMPRESA------
-	INSERT INTO [VADIUM].EMPRESA(razonSocial, cuit, mail, fechaCreacion, calle, nro_calle, piso, depto, cod_postal )
+	INSERT INTO [VADIUM].EMPRESA(razonSocial, cuit, mail, fechaCreacion, calle, piso, depto, cod_postal )
 	SELECT  m.Espec_Empresa_Razon_Social, m.Espec_Empresa_Cuit, m.Espec_Empresa_Mail, m.Espec_Empresa_Fecha_Creacion,
-				m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Nro_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal
+				m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal
 	FROM gd_esquema.Maestra m
-	GROUP BY m.Espec_Empresa_Razon_Social, m.Espec_Empresa_Cuit, m.Espec_Empresa_Mail, m.Espec_Empresa_Fecha_Creacion, m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Nro_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal	
+	GROUP BY m.Espec_Empresa_Razon_Social, m.Espec_Empresa_Cuit, m.Espec_Empresa_Mail, m.Espec_Empresa_Fecha_Creacion, m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal	
 	HAVING m.Espec_Empresa_Razon_Social IS NOT NULL
 
 	------RUBRO--------

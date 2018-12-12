@@ -51,6 +51,7 @@
             // 
             // cmbFuncionalidades
             // 
+            this.cmbFuncionalidades.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFuncionalidades.FormattingEnabled = true;
             this.cmbFuncionalidades.Location = new System.Drawing.Point(13, 25);
             this.cmbFuncionalidades.Margin = new System.Windows.Forms.Padding(4);

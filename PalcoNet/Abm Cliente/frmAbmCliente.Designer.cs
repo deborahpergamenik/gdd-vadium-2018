@@ -311,7 +311,7 @@
             this.txtCUIL.Name = "txtCUIL";
             this.txtCUIL.Size = new System.Drawing.Size(176, 22);
             this.txtCUIL.TabIndex = 39;
-            this.txtCUIL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxcuilKeyPress);
+            this.txtCUIL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxcuil_KeyPress);
             // 
             // label17
             // 
@@ -384,6 +384,7 @@
             // 
             // cmbTipoDocumentoumento
             // 
+            this.cmbTipoDocumentoumento.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTipoDocumentoumento.FormattingEnabled = true;
             this.cmbTipoDocumentoumento.Location = new System.Drawing.Point(104, 41);
             this.cmbTipoDocumentoumento.Margin = new System.Windows.Forms.Padding(4);

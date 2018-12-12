@@ -73,8 +73,7 @@ namespace PalcoNet.Login
 
         public void listarFuncionalidades()
         {
-            if (rolActual.Funcionalidades.Count != 0)
-            {
+            
                 cmbFuncionalidades.Items.Add(new itemComboBox("Cambiar Contraseña", -2));
                 rolActual.Funcionalidades.ForEach(x => cmbFuncionalidades.Items.Add(new itemComboBox(x.Descripcion, x.Id)));
 

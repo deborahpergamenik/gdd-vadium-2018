@@ -49,6 +49,8 @@
             this.btnAnteriorPag = new System.Windows.Forms.Button();
             this.Publicaciones_Datagrid1 = new System.Windows.Forms.DataGridView();
             this.Publicaciones_Datagrid = new Code4Bugs.SimpleDataGridViewPaging.DataGridViewPaging();
+            this.lstRubros = new System.Windows.Forms.ListBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Publicaciones_Datagrid1)).BeginInit();
             this.SuspendLayout();
@@ -67,6 +69,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.lstRubros);
             this.groupBox1.Controls.Add(this.cmbRubros);
             this.groupBox1.Controls.Add(this.chkHasta);
             this.groupBox1.Controls.Add(this.chkDesde);
@@ -80,11 +84,11 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(14, 15);
+            this.groupBox1.Location = new System.Drawing.Point(14, 13);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox1.Size = new System.Drawing.Size(1005, 178);
+            this.groupBox1.Size = new System.Drawing.Size(1005, 180);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filtros:";
@@ -97,6 +101,7 @@
             this.cmbRubros.Name = "cmbRubros";
             this.cmbRubros.Size = new System.Drawing.Size(336, 28);
             this.cmbRubros.TabIndex = 43;
+            this.cmbRubros.SelectedIndexChanged += new System.EventHandler(this.cmbRubros_SelectedIndexChanged);
             // 
             // chkHasta
             // 
@@ -298,11 +303,31 @@
             this.Publicaciones_Datagrid.Size = new System.Drawing.Size(924, 398);
             this.Publicaciones_Datagrid.TabIndex = 44;
             // 
+            // lstRubros
+            // 
+            this.lstRubros.FormattingEnabled = true;
+            this.lstRubros.ItemHeight = 20;
+            this.lstRubros.Location = new System.Drawing.Point(713, 29);
+            this.lstRubros.Name = "lstRubros";
+            this.lstRubros.Size = new System.Drawing.Size(129, 144);
+            this.lstRubros.TabIndex = 44;
+            this.lstRubros.SelectedIndexChanged += new System.EventHandler(this.lstRubros_SelectedIndexChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(709, 6);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(185, 20);
+            this.label2.TabIndex = 45;
+            this.label2.Text = "Rubro/s seleccionados:";
+            // 
             // frmComprar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1039, 678);
+            this.ClientSize = new System.Drawing.Size(1065, 688);
             this.Controls.Add(this.Publicaciones_Datagrid);
             this.Controls.Add(this.btnAtras);
             this.Controls.Add(this.groupBox1);
@@ -346,5 +371,7 @@
         private System.Windows.Forms.DateTimePicker dateTimePickerDesde;
         private System.Windows.Forms.ComboBox cmbRubros;
         private Code4Bugs.SimpleDataGridViewPaging.DataGridViewPaging Publicaciones_Datagrid;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ListBox lstRubros;
     }
 }

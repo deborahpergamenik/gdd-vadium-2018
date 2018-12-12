@@ -24,7 +24,7 @@ namespace PalcoNet.Comprar
         DateTime? start = null;
         DateTime? finish = null;
         string rubro;
-        static List<Rubro> rubros = new List<Rubro>();
+        static List<string> rubros = new List<string>();
         public frmSeleccionFuncionalidades frmSeleccionFuncionalidades { get; set; }
 
         public frmComprar(frmSeleccionFuncionalidades _frmSeleccionFuncionalidades)
@@ -62,7 +62,7 @@ namespace PalcoNet.Comprar
 
         private void cargarRubros()
         {
-            throw new NotImplementedException();
+            Rubros.obtenerRubros().ForEach(x => cmbRubros.Items.Add(x.Descripcion));
         }
 
         public void cargarPublicaciones()
@@ -112,7 +112,7 @@ namespace PalcoNet.Comprar
                 btnPrimerPag.Enabled = true;
             }
 
-            Publicaciones_Datagrid.DataSource = Publicaciones.obtenerPublicacionesPaginadas(desde, hasta, rubro, descripcion, start, finish);
+           // Publicaciones_Datagrid.DataSource = Publicaciones.obtenerPublicacionesPaginadas(desde, hasta, rubros, descripcion, start, finish);
             Publicaciones_Datagrid.MaxRecords = 10;
             //List<Publicacion> listaPublicaciones = Publicaciones.obtenerPublicacionesPaginadas(desde, hasta,rubro,descripcion,start,finish );
             //Publicaciones_Datagrid1.DataSource = listaPublicaciones;
@@ -232,7 +232,10 @@ namespace PalcoNet.Comprar
             if (chkHasta.Checked)
                 finish = dateTimePickerHasta.Value;
             descripcion = txtDescripcion.Text;
-            rubro = cmbRubros.SelectedValue.ToString();
+            foreach (var item in lstRubros.Items)
+            {
+                rubros.Add(item.ToString());
+            }
             cargarPublicaciones();
         }
 
@@ -342,6 +345,18 @@ namespace PalcoNet.Comprar
         private void frmComprar_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void cmbRubros_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string rubro = cmbRubros.SelectedValue.ToString();
+            lstRubros.Items.Add(rubro);
+        }
+
+        private void lstRubros_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int select = lstRubros.SelectedIndex;
+            lstRubros.Items.Remove(select);
         }
     }
 }

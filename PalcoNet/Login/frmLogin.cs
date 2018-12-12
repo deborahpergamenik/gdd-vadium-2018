@@ -30,35 +30,43 @@ namespace PalcoNet
             {
                 bool primera = usuarioLogin.primeraVez;
                 
-                if (primera)
-                {
-                    frmCambiarpassword changePass = new frmCambiarpassword(true);
-                    changePass.Show();
-                }
-                else 
-                {
-                    usuarioLogin.usuarioLogueado();
+               
+
                      if (usuarioLogin.obtenerRoles())
                      {
-                         if (usuarioLogin.Roles.Count() == 1)
+                         if (primera)
                          {
-                             this.Hide();
-                             UserInstance.getUserInstance().loadInformation(usuarioLogin, usuarioLogin.Roles[0]);
-                             frmSeleccionFuncionalidades formSeleccionFuncionalidades = new frmSeleccionFuncionalidades(usuarioLogin, usuarioLogin.Roles[0].Id, true);
-                             formSeleccionFuncionalidades.Show();
+                             txtpassword.Text = "";
+                             txtpassword.Focus();
+                             UserInstance.getUserInstance().loadInformation(usuarioLogin);
+                             frmCambiarpassword changePass = new frmCambiarpassword(true);
+                             changePass.Show();
+
                          }
                          else
                          {
-                             this.Hide();
-                             frmSeleccionRoles formSeleccionRoles = new frmSeleccionRoles(usuarioLogin);
-                             formSeleccionRoles.Show();
+                             if (usuarioLogin.Roles.Count() == 1)
+                             {
+                                 this.Hide();
+                                 UserInstance.getUserInstance().loadInformation(usuarioLogin);
+                                 UserInstance.getUserInstance().loadRol(usuarioLogin.Roles[0]);
+                                 frmSeleccionFuncionalidades formSeleccionFuncionalidades = new frmSeleccionFuncionalidades(usuarioLogin, usuarioLogin.Roles[0].Id, true);
+                                 formSeleccionFuncionalidades.Show();
+                             }
+                             else
+                             {
+                                 this.Hide();
+                                 frmSeleccionRoles formSeleccionRoles = new frmSeleccionRoles(usuarioLogin);
+                                 formSeleccionRoles.Show();
+                             }
                          }
+                         
                      }
                      else
                      {
                          MessageBox.Show("El usuario no tiene roles asignados", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
                      }
-                }
+                
             }
         }
 

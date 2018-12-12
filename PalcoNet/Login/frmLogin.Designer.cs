@@ -40,10 +40,10 @@
             // 
             // btnCerrar
             // 
-            this.btnCerrar.Location = new System.Drawing.Point(168, 349);
-            this.btnCerrar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCerrar.Location = new System.Drawing.Point(189, 436);
+            this.btnCerrar.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnCerrar.Name = "btnCerrar";
-            this.btnCerrar.Size = new System.Drawing.Size(126, 42);
+            this.btnCerrar.Size = new System.Drawing.Size(142, 52);
             this.btnCerrar.TabIndex = 26;
             this.btnCerrar.Text = "Cerrar";
             this.btnCerrar.UseVisualStyleBackColor = true;
@@ -51,10 +51,10 @@
             // 
             // btnIngresar
             // 
-            this.btnIngresar.Location = new System.Drawing.Point(79, 271);
-            this.btnIngresar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnIngresar.Location = new System.Drawing.Point(89, 339);
+            this.btnIngresar.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnIngresar.Name = "btnIngresar";
-            this.btnIngresar.Size = new System.Drawing.Size(126, 42);
+            this.btnIngresar.Size = new System.Drawing.Size(142, 52);
             this.btnIngresar.TabIndex = 25;
             this.btnIngresar.Text = "Ingresar";
             this.btnIngresar.UseVisualStyleBackColor = true;
@@ -65,10 +65,10 @@
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(75, 191);
+            this.label4.Location = new System.Drawing.Point(84, 239);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(105, 20);
+            this.label4.Size = new System.Drawing.Size(124, 25);
             this.label4.TabIndex = 24;
             this.label4.Text = "Contraseña";
             // 
@@ -78,10 +78,10 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(75, 135);
+            this.label3.Location = new System.Drawing.Point(84, 169);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 20);
+            this.label3.Size = new System.Drawing.Size(86, 25);
             this.label3.TabIndex = 23;
             this.label3.Text = "Usuario";
             // 
@@ -91,40 +91,40 @@
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(41, 46);
+            this.label1.Location = new System.Drawing.Point(46, 58);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label1.Size = new System.Drawing.Size(386, 25);
+            this.label1.Size = new System.Drawing.Size(465, 29);
             this.label1.TabIndex = 22;
             this.label1.Text = "Bienvenido Al Sistema PalcoNet-FRBA";
             // 
             // txtpassword
             // 
-            this.txtpassword.Location = new System.Drawing.Point(201, 191);
-            this.txtpassword.Margin = new System.Windows.Forms.Padding(4);
+            this.txtpassword.Location = new System.Drawing.Point(226, 239);
+            this.txtpassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtpassword.Name = "txtpassword";
             this.txtpassword.PasswordChar = '*';
-            this.txtpassword.Size = new System.Drawing.Size(195, 22);
+            this.txtpassword.Size = new System.Drawing.Size(219, 26);
             this.txtpassword.TabIndex = 21;
             this.txtpassword.Tag = "Ingresar";
             this.txtpassword.UseSystemPasswordChar = true;
             // 
             // txtUsuario
             // 
-            this.txtUsuario.Location = new System.Drawing.Point(201, 135);
-            this.txtUsuario.Margin = new System.Windows.Forms.Padding(4);
+            this.txtUsuario.Location = new System.Drawing.Point(226, 169);
+            this.txtUsuario.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtUsuario.Name = "txtUsuario";
-            this.txtUsuario.Size = new System.Drawing.Size(195, 22);
+            this.txtUsuario.Size = new System.Drawing.Size(219, 26);
             this.txtUsuario.TabIndex = 20;
             this.txtUsuario.UseWaitCursor = true;
             // 
             // btnRegistrarse
             // 
-            this.btnRegistrarse.Location = new System.Drawing.Point(255, 271);
-            this.btnRegistrarse.Margin = new System.Windows.Forms.Padding(4);
+            this.btnRegistrarse.Location = new System.Drawing.Point(287, 339);
+            this.btnRegistrarse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnRegistrarse.Name = "btnRegistrarse";
-            this.btnRegistrarse.Size = new System.Drawing.Size(126, 40);
+            this.btnRegistrarse.Size = new System.Drawing.Size(142, 50);
             this.btnRegistrarse.TabIndex = 27;
             this.btnRegistrarse.Text = "Registrarse";
             this.btnRegistrarse.UseVisualStyleBackColor = true;
@@ -132,10 +132,10 @@
             // 
             // frmLogin
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkKhaki;
-            this.ClientSize = new System.Drawing.Size(484, 432);
+            this.ClientSize = new System.Drawing.Size(544, 540);
             this.Controls.Add(this.btnRegistrarse);
             this.Controls.Add(this.btnCerrar);
             this.Controls.Add(this.btnIngresar);
@@ -144,6 +144,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtpassword);
             this.Controls.Add(this.txtUsuario);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmLogin";
             this.Text = "frmLogin";
             this.ResumeLayout(false);

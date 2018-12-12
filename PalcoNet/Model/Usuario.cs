@@ -219,7 +219,7 @@ namespace PalcoNet.Model
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@user", this.usuario_username);
-            SqlConnector.agregarParametro(listaParametros, "@pass", password);
+            SqlConnector.agregarParametro(listaParametros, "@pass", nuevoPass);
             SqlConnector.ObtenerDataReader("VADIUM.CAMBIAR_PASSWORD", "SP", listaParametros);
             SqlConnector.cerrarConexion();
         }
@@ -246,9 +246,9 @@ namespace PalcoNet.Model
                 {
                     List<SqlParameter> listaParametros2 = new List<SqlParameter>();
                     SqlConnector.agregarParametro(listaParametros2, "@rol_id", Convert.ToInt32(lectorRolesUsuario["rol_id"]));
-                    SqlDataReader lectorRoles = SqlConnector.ejecutarReader("SELECT nombre, usuario_activo FROM VADIUM.ROL WHERE rol_id = @rol_id", listaParametros2, conexion);
+                    SqlDataReader lectorRoles = SqlConnector.ejecutarReader("SELECT rol_nombre, rol_habilitado FROM VADIUM.ROL WHERE rol_id = @rol_id", listaParametros2, conexion);
                     lectorRoles.Read();
-                    Rol nuevoRol = new Rol(Convert.ToInt32(lectorRolesUsuario["rol_id"]), lectorRoles["nombre"].ToString(), (bool)lectorRoles["usuario_activo"]);
+                    Rol nuevoRol = new Rol(Convert.ToInt32(lectorRolesUsuario["rol_id"]), lectorRoles["rol_nombre"].ToString(), (bool)lectorRoles["rol_habilitado"]);
                     nuevoRol.obtenerFuncionalidades(conexion);
                     this.Roles.Add(nuevoRol);
                 }

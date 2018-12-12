@@ -224,7 +224,7 @@ CREATE TABLE [VADIUM].CLIENTE(
 	cod_postal nvarchar(255),
 	localidad nvarchar(255),
 
-)
+) 
 GO
 CREATE TABLE [VADIUM].TARJETADECREDITO(
 	NroTarjeta numeric(18,0) PRIMARY KEY IDENTITY(1,1),
@@ -663,6 +663,21 @@ GO
 ---------------------------CLIENTE -----------------------------------
 
 CREATE	 PROCEDURE [VADIUM].LISTADO_SELECCION_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI numeric(18), @mail nvarchar(255)
+AS
+BEGIN TRY
+	SELECT *
+	FROM [VADIUM].CLIENTE cli 
+	WHERE
+	(@NOMBRE = '' OR @NOMBRE is null OR  lower(cli.nombre) LIKE '%' + lower(@NOMBRE) + '%') AND
+	(@APELLIDO = '' OR @APELLIDO is null OR lower(cli.apellido) LIKE '%' + lower(@APELLIDO) + '%') AND
+	(@DNI = '' OR @DNI is null OR cli.numeroDocumento = @DNI) AND
+	(@mail = '' OR @mail is null OR lower(cli.mail) LIKE '%' + lower(@mail) + '%');
+END TRY
+BEGIN CATCH
+  SELECT 'ERROR', ERROR_MESSAGE()
+END CATCH
+GO
+CREATE	 PROCEDURE [VADIUM].OBTENER_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI numeric(18), @mail nvarchar(255)
 AS
 BEGIN TRY
 	SELECT *

@@ -49,12 +49,13 @@ namespace PalcoNet.Login
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@user", Interfaz.usuario.usuario_username);
             SqlConnector.agregarParametro(listaParametros, "@pass", password);
-            SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.VERIFICAR_USUARIO_PASSWORD", "SP", listaParametros);
+              DataTable dataTable = SqlConnector.obtenerDataTable("VADIUM.VERIFICAR_USUARIO_PASSWORD", "SP", listaParametros);
             //SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_password FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id AND usuario_password = @password", listaParametros, SqlConnector.iniciarConexion());
             bool res = false;
-            if (lector.HasRows)
+            if (!String.IsNullOrEmpty( dataTable.Rows[0].ItemArray[0].ToString()))
             {
-                 res = Convert.ToBoolean(lector["PasswordMatched"].ToString());
+                
+                res = Convert.ToBoolean(Convert.ToInt32(dataTable.Rows[0].ItemArray[6].ToString()));
             }
             SqlConnector.cerrarConexion();
             return res;
@@ -64,9 +65,6 @@ namespace PalcoNet.Login
         {
             if ((!passViejoNH.Text.Equals("") || primera_vez == true) && !pass1.Text.Equals("") && !pass2.Text.Equals(""))
             {
-                //if (primera_vez == false)
-                //{
-                    
                     string passViejo = passViejoNH.Text;
 
                     if (chequearpassword(passViejo))
@@ -77,6 +75,8 @@ namespace PalcoNet.Login
                             MessageBox.Show("Contraseña modificada.");
                             UserInstance.getUserInstance().usuario.usuarioLogueado();
                             this.Hide();
+                            MessageBox.Show("Vuelva a ingresar con la nueva contraseña");
+                            
                         }
                         else
                         {
@@ -87,20 +87,6 @@ namespace PalcoNet.Login
                     {
                         MessageBox.Show("El password viejo no es correcto.", "Error");
                     }
-                //}
-                //else
-                //{
-                //    if (pass1.Text == pass2.Text)
-                //    {
-                //        Interfaz.usuario.cambiarpassword(pass1.Text);
-                //        MessageBox.Show("Contraseña modificada.");
-                //        this.Hide();
-                //    }
-                //    else
-                //    {
-                //        MessageBox.Show("Las contraseñas no coinciden.", "Error");
-                //    }
-                //}
             }
             else
             {
@@ -108,15 +94,7 @@ namespace PalcoNet.Login
             }
         }
 
-        private string bytesDeHasheoToString(byte[] array)
-        {
-            StringBuilder salida = new StringBuilder("");
-            for (int i = 0; i < array.Length; i++)
-            {
-                salida.Append(array[i].ToString("X2"));
-            }
-            return salida.ToString();
-        }
+ 
 
         private void frmCambiarpassword_Load(object sender, EventArgs e)
         {

@@ -30,6 +30,8 @@
         {
             this.btnAtras = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.lstRubros = new System.Windows.Forms.ListBox();
             this.cmbRubros = new System.Windows.Forms.ComboBox();
             this.chkHasta = new System.Windows.Forms.CheckBox();
             this.chkDesde = new System.Windows.Forms.CheckBox();
@@ -47,12 +49,9 @@
             this.btnPrimerPag = new System.Windows.Forms.Button();
             this.btnSiguientePag = new System.Windows.Forms.Button();
             this.btnAnteriorPag = new System.Windows.Forms.Button();
-            this.Publicaciones_Datagrid1 = new System.Windows.Forms.DataGridView();
-            this.Publicaciones_Datagrid = new Code4Bugs.SimpleDataGridViewPaging.DataGridViewPaging();
-            this.lstRubros = new System.Windows.Forms.ListBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.Publicaciones_Datagrid = new System.Windows.Forms.DataGridView();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Publicaciones_Datagrid1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Publicaciones_Datagrid)).BeginInit();
             this.SuspendLayout();
             // 
             // btnAtras
@@ -93,6 +92,26 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filtros:";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(709, 6);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(185, 20);
+            this.label2.TabIndex = 45;
+            this.label2.Text = "Rubro/s seleccionados:";
+            // 
+            // lstRubros
+            // 
+            this.lstRubros.FormattingEnabled = true;
+            this.lstRubros.ItemHeight = 20;
+            this.lstRubros.Location = new System.Drawing.Point(713, 29);
+            this.lstRubros.Name = "lstRubros";
+            this.lstRubros.Size = new System.Drawing.Size(129, 144);
+            this.lstRubros.TabIndex = 44;
+            this.lstRubros.SelectedIndexChanged += new System.EventHandler(this.lstRubros_SelectedIndexChanged);
             // 
             // cmbRubros
             // 
@@ -270,65 +289,31 @@
             this.btnAnteriorPag.UseVisualStyleBackColor = true;
             this.btnAnteriorPag.Click += new System.EventHandler(this.btnAnteriorPag_Click);
             // 
-            // Publicaciones_Datagrid1
-            // 
-            this.Publicaciones_Datagrid1.AllowUserToAddRows = false;
-            this.Publicaciones_Datagrid1.AllowUserToDeleteRows = false;
-            this.Publicaciones_Datagrid1.AllowUserToResizeColumns = false;
-            this.Publicaciones_Datagrid1.AllowUserToResizeRows = false;
-            this.Publicaciones_Datagrid1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.Publicaciones_Datagrid1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.Publicaciones_Datagrid1.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.Publicaciones_Datagrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Publicaciones_Datagrid1.Location = new System.Drawing.Point(14, 200);
-            this.Publicaciones_Datagrid1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Publicaciones_Datagrid1.MultiSelect = false;
-            this.Publicaciones_Datagrid1.Name = "Publicaciones_Datagrid1";
-            this.Publicaciones_Datagrid1.ReadOnly = true;
-            this.Publicaciones_Datagrid1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Publicaciones_Datagrid1.Size = new System.Drawing.Size(57, 38);
-            this.Publicaciones_Datagrid1.TabIndex = 13;
-            this.Publicaciones_Datagrid1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Publicaciones_Datagrid_CellContentClick);
-            // 
             // Publicaciones_Datagrid
             // 
-            this.Publicaciones_Datagrid.AutoHideNavigator = false;
-            this.Publicaciones_Datagrid.DataSource = null;
-            this.Publicaciones_Datagrid.DbRequestHandler = null;
-            this.Publicaciones_Datagrid.Location = new System.Drawing.Point(78, 202);
-            this.Publicaciones_Datagrid.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Publicaciones_Datagrid.MaxRecords = 100;
+            this.Publicaciones_Datagrid.AllowUserToAddRows = false;
+            this.Publicaciones_Datagrid.AllowUserToDeleteRows = false;
+            this.Publicaciones_Datagrid.AllowUserToResizeColumns = false;
+            this.Publicaciones_Datagrid.AllowUserToResizeRows = false;
+            this.Publicaciones_Datagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.Publicaciones_Datagrid.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.Publicaciones_Datagrid.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.Publicaciones_Datagrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Publicaciones_Datagrid.Location = new System.Drawing.Point(14, 200);
+            this.Publicaciones_Datagrid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Publicaciones_Datagrid.MultiSelect = false;
             this.Publicaciones_Datagrid.Name = "Publicaciones_Datagrid";
-            this.Publicaciones_Datagrid.NavigatorHorizontal = Code4Bugs.SimpleDataGridViewPaging.NavigatorHorizontal.Default;
-            this.Publicaciones_Datagrid.Size = new System.Drawing.Size(924, 398);
-            this.Publicaciones_Datagrid.TabIndex = 44;
-            // 
-            // lstRubros
-            // 
-            this.lstRubros.FormattingEnabled = true;
-            this.lstRubros.ItemHeight = 20;
-            this.lstRubros.Location = new System.Drawing.Point(713, 29);
-            this.lstRubros.Name = "lstRubros";
-            this.lstRubros.Size = new System.Drawing.Size(129, 144);
-            this.lstRubros.TabIndex = 44;
-            this.lstRubros.SelectedIndexChanged += new System.EventHandler(this.lstRubros_SelectedIndexChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(709, 6);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(185, 20);
-            this.label2.TabIndex = 45;
-            this.label2.Text = "Rubro/s seleccionados:";
+            this.Publicaciones_Datagrid.ReadOnly = true;
+            this.Publicaciones_Datagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.Publicaciones_Datagrid.Size = new System.Drawing.Size(1004, 391);
+            this.Publicaciones_Datagrid.TabIndex = 13;
+            this.Publicaciones_Datagrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Publicaciones_Datagrid_CellContentClick);
             // 
             // frmComprar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1065, 688);
-            this.Controls.Add(this.Publicaciones_Datagrid);
             this.Controls.Add(this.btnAtras);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnAbrirPublicacion);
@@ -336,14 +321,14 @@
             this.Controls.Add(this.btnPrimerPag);
             this.Controls.Add(this.btnSiguientePag);
             this.Controls.Add(this.btnAnteriorPag);
-            this.Controls.Add(this.Publicaciones_Datagrid1);
+            this.Controls.Add(this.Publicaciones_Datagrid);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmComprar";
             this.Text = "frmComprar";
             this.Load += new System.EventHandler(this.frmComprar_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Publicaciones_Datagrid1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Publicaciones_Datagrid)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -363,14 +348,13 @@
         private System.Windows.Forms.Button btnPrimerPag;
         private System.Windows.Forms.Button btnSiguientePag;
         private System.Windows.Forms.Button btnAnteriorPag;
-        private System.Windows.Forms.DataGridView Publicaciones_Datagrid1;
+        private System.Windows.Forms.DataGridView Publicaciones_Datagrid;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox chkHasta;
         private System.Windows.Forms.CheckBox chkDesde;
         private System.Windows.Forms.DateTimePicker dateTimePickerHasta;
         private System.Windows.Forms.DateTimePicker dateTimePickerDesde;
         private System.Windows.Forms.ComboBox cmbRubros;
-        private Code4Bugs.SimpleDataGridViewPaging.DataGridViewPaging Publicaciones_Datagrid;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListBox lstRubros;
     }

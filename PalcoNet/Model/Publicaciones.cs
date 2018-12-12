@@ -64,15 +64,15 @@ namespace PalcoNet.Model
             return publicaciones;
         }
 
-        public static DataTable obtenerPublicaiones(int start, int finish, string rubro, string desc, DateTime? desde, DateTime? hasta)
+        public static DataTable obtenerPublicaiones(int start, int finish, List<int> rubros, string desc, DateTime? desde, DateTime? hasta)
         {
             try{
                 List<Publicacion> publicaciones = new List<Publicacion>();
-
+                string query = armarquery(start, finish, rubros, desc, desde, hasta);
                 List<SqlParameter> listaParametros = new List<SqlParameter>();
                 SqlConnector.agregarParametro(listaParametros, "@desde", desde);
                 SqlConnector.agregarParametro(listaParametros, "@hasta", hasta);
-                SqlConnector.agregarParametro(listaParametros, "@rubro", hasta);
+                SqlConnector.agregarParametro(listaParametros, "@rubros", rubros);
                 SqlConnector.agregarParametro(listaParametros, "@descripcion", hasta);
                 DataTable table = SqlConnector.obtenerDataTable("VADIUM.ObtenerPublicaciones", "SP", listaParametros);
                 return table;
@@ -81,6 +81,58 @@ namespace PalcoNet.Model
             {
                 return null;
             }
+        }
+        private static string armarquery(int start, int finish, List<int> rubros, string desc, DateTime? desde, DateTime? hasta)
+        {
+            string filtro = "";
+            filtro += filtrosRubro(rubros);
+          
+
+            if (!String.IsNullOrEmpty(desc))
+            {
+                if (filtro != "")
+                    filtro += " AND ";
+                filtro += " p.descripcion LIKE  '%" + desc + "%' ";
+            }
+
+
+            if (desde!= null)
+            {
+                if (!string.IsNullOrEmpty(filtro))
+                    filtro += " AND ";
+
+                filtro += " p.fecha >= " + desde;
+            }
+
+            if (hasta!= null)
+            {
+                if (!string.IsNullOrEmpty(filtro))
+                    filtro += " AND ";
+                filtro += " p.fecha <= " + hasta;
+            }
+
+            return filtro;
+        }
+
+        private static string filtrosRubro(List<int> rubros)
+        {
+            string filtro = "";
+            if (rubros != null )
+            {
+                for (int i = 0; i < rubros.Count; i++)
+                {
+                   
+                    if (i == 0)
+                        filtro += " (";
+                    else filtro += " or ";
+
+                    filtro = filtro + "r.rubro_id = " + rubros[i];
+
+                    if (i == rubros.Count - 1)
+                        filtro += " ) ";
+                }
+            }
+            return filtro;
         }
     }
 }

@@ -11,7 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Code4Bugs.SimpleDataGridViewPaging;
 namespace PalcoNet.Comprar
 {
     public partial class frmComprar : Form
@@ -23,8 +22,7 @@ namespace PalcoNet.Comprar
         string descripcion;
         DateTime? start = null;
         DateTime? finish = null;
-        string rubro;
-        static List<string> rubros = new List<string>();
+        static List<int> rubros = new List<int>();
         public frmSeleccionFuncionalidades frmSeleccionFuncionalidades { get; set; }
 
         public frmComprar(frmSeleccionFuncionalidades _frmSeleccionFuncionalidades)
@@ -62,7 +60,7 @@ namespace PalcoNet.Comprar
 
         private void cargarRubros()
         {
-            Rubros.obtenerRubros().ForEach(x => cmbRubros.Items.Add(x.Descripcion));
+            Rubros.obtenerRubros().ForEach(x => cmbRubros.Items.Add(new ComboBoxItem { Text =x.Descripcion, Value=x.Id }));
         }
 
         public void cargarPublicaciones()
@@ -112,7 +110,7 @@ namespace PalcoNet.Comprar
                 btnPrimerPag.Enabled = true;
             }
 
-           // Publicaciones_Datagrid.DataSource = Publicaciones.obtenerPublicacionesPaginadas(desde, hasta, rubros, descripcion, start, finish);
+            Publicaciones_Datagrid.DataSource = Publicaciones.obtenerPublicaiones(desde, hasta, rubros, descripcion, start, finish);
             Publicaciones_Datagrid.MaxRecords = 10;
             //List<Publicacion> listaPublicaciones = Publicaciones.obtenerPublicacionesPaginadas(desde, hasta,rubro,descripcion,start,finish );
             //Publicaciones_Datagrid1.DataSource = listaPublicaciones;
@@ -187,11 +185,11 @@ namespace PalcoNet.Comprar
 
         private void btnAbrirPublicacion_Click(object sender, EventArgs e)
         {
-            if (Publicaciones_Datagrid1.SelectedRows.Count == 0)
+            if (Publicaciones_Datagrid.SelectedRows.Count == 0)
                 return;
             else
             {
-                Publicacion unaPublicacion = Publicaciones_Datagrid1.CurrentRow.DataBoundItem as Publicacion;
+                Publicacion unaPublicacion = Publicaciones_Datagrid.CurrentRow.DataBoundItem as Publicacion;
                 frmDetallePublicacion detalleForm = new frmDetallePublicacion(unaPublicacion);
                 detalleForm.ShowDialog();
                 cargarPublicaciones();
@@ -232,86 +230,15 @@ namespace PalcoNet.Comprar
             if (chkHasta.Checked)
                 finish = dateTimePickerHasta.Value;
             descripcion = txtDescripcion.Text;
-            foreach (var item in lstRubros.Items)
+            foreach (ComboBoxItem item in lstRubros.Items)
             {
-                rubros.Add(item.ToString());
+                rubros.Add((int)item.Value);
             }
             cargarPublicaciones();
         }
 
 
-        //private void armarFiltro()
-        //{
-        //    filtro = "";
-        //    filtroRubros = false;
-
-        //    if (rubros != null)
-        //    {
-        //        for (int i = 0; i < rubros.Count; i++)
-        //        {
-        //            filtroRubros = true;
-
-        //            if (i == 0)
-        //                filtro += " (";
-        //            else filtro += " or ";
-
-        //            filtro = filtro + "r.rubro_id = " + rubros[i].Id;
-
-        //            if (i == rubros.Count - 1)
-        //                filtro += " ) ";
-        //        }
-        //    }
-
-        //    if (txtDescripcion.Text != "")
-        //    {
-        //        if (filtro != "")
-        //            filtro += "AND ";
-        //        filtro += " p.descripcion LIKE  '%" + txtDescripcion.Text + "%' ";
-        //    }
-
-
-        //    DateTime fechaDesde;
-        //    bool fechaDesdeNula;
-        //    if (dateTimePickerDesde.Text == " ")
-        //    {
-        //        fechaDesdeNula = true;
-        //        fechaDesde = Convert.ToDateTime(null);
-        //    }
-        //    else
-        //    {
-        //        fechaDesdeNula = false;
-        //        fechaDesde = Convert.ToDateTime(dateTimePickerDesde.Text);
-        //    }
-
-
-        //    if (!fechaDesdeNula)
-        //    {
-        //        if (filtro != "")
-        //            filtro += "AND ";
-        //        filtro += " p.fecha >= " + fechaDesde;
-        //    }
-
-
-        //    DateTime fechaHasta;
-        //    bool fechaHastaNula;
-        //    if (dateTimePickerHasta.Text == " ")
-        //    {
-        //        fechaHastaNula = true;
-        //        fechaHasta = Convert.ToDateTime(null);
-        //    }
-        //    else
-        //    {
-        //        fechaHastaNula = false;
-        //        fechaHasta = Convert.ToDateTime(dateTimePickerHasta.Text);
-        //    }
-
-        //    if (!fechaHastaNula)
-        //    {
-        //        if (filtro != "")
-        //            filtro += "AND ";
-        //        filtro += " p.fecha <= " + fechaHasta;
-        //    }
-        //}
+       
 
         private void btnReset_Click(object sender, EventArgs e)
         {
@@ -349,7 +276,7 @@ namespace PalcoNet.Comprar
 
         private void cmbRubros_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string rubro = cmbRubros.SelectedValue.ToString();
+            ComboBoxItem rubro = (ComboBoxItem)cmbRubros.SelectedValue;
             lstRubros.Items.Add(rubro);
         }
 

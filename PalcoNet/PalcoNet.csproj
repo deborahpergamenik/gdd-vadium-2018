@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SimpleDataGridViewPaging">
-      <HintPath>packages\SimpleDataGridViewPaging.2.0.0\lib\net45\SimpleDataGridViewPaging.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -343,7 +340,6 @@
     <EmbeddedResource Include="Registro de Usuario\frmRegistroUsuarioEmpresa.resx">
       <DependentUpon>frmRegistroUsuarioEmpresa.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

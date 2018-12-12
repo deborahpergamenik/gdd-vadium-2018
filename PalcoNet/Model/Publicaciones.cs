@@ -68,19 +68,43 @@ namespace PalcoNet.Model
         {
             try{
                 List<Publicacion> publicaciones = new List<Publicacion>();
-                string query = armarquery(start, finish, rubros, desc, desde, hasta);
-                List<SqlParameter> listaParametros = new List<SqlParameter>();
-                SqlConnector.agregarParametro(listaParametros, "@desde", desde);
-                SqlConnector.agregarParametro(listaParametros, "@hasta", hasta);
-                SqlConnector.agregarParametro(listaParametros, "@rubros", rubros);
-                SqlConnector.agregarParametro(listaParametros, "@descripcion", hasta);
-                DataTable table = SqlConnector.obtenerDataTable("VADIUM.ObtenerPublicaciones", "SP", listaParametros);
+                string query = obtenerQuerySinFiltros();
+                string filtros = armarquery(start, finish, rubros, desc, desde, hasta);
+                
+                if (!String.IsNullOrEmpty(filtros))
+                {
+                    query = query + " WHERE " + filtros;
+                }
+                query = AgregarOrderBy(query);
+                int cant = finish - start;
+                query = agregarPaginacion(query, start, cant);
+                //List<SqlParameter> listaParametros = new List<SqlParameter>();
+                //SqlConnector.agregarParametro(listaParametros, "@desde", desde);
+                //SqlConnector.agregarParametro(listaParametros, "@hasta", hasta);
+                //SqlConnector.agregarParametro(listaParametros, "@rubros", rubros);
+                //SqlConnector.agregarParametro(listaParametros, "@descripcion", hasta);
+                DataTable table = SqlConnector.obtenerDataTable(query, "T" );
                 return table;
             }
             catch(Exception e)
             {
                 return null;
             }
+        }
+
+        private static string agregarPaginacion(string query, int start, int cant)
+        {
+
+            string paginacion = "offset " + start + " rows fetch next " + cant + " rows only";
+            query = query + " " + paginacion;
+            return paginacion;
+        }
+
+        private static string AgregarOrderBy(string query)
+        {
+            string orderBy = " order by gr.comision DESC ";
+            query = query + " " + orderBy;
+            return query;
         }
         private static string armarquery(int start, int finish, List<int> rubros, string desc, DateTime? desde, DateTime? hasta)
         {
@@ -112,6 +136,16 @@ namespace PalcoNet.Model
             }
 
             return filtro;
+        }
+
+        private static string obtenerQuerySinFiltros()
+        {
+            return "SELECT pub.codigoEspectaculo, pub.descripcion,pub.fecha, pub.fechaVencimiento, rub.rubro_id, rub.descripcion as rubro_descripcion, " +
+                    "pub.direccion as direccionEspectaculo, gr.descripcion as grado_descripcion, gr.comision as comision, gr.grado_id as grado_id, " +
+                    "pub.empresa_id, es.codigo as estado_id, es.descripcion as estado_descripcion " +
+                     "FROM VADIUM.PUBLICACION pub JOIN ESTADO es ON (pub.estado_id = es.codigo) " +
+                                        "JOIN RUBRO rub ON (pub.rubro_id = rub.rubro_id) " +
+                                        "JOIN GRADO gr ON (pub.grado_id = gr.grado_id)";
         }
 
         private static string filtrosRubro(List<int> rubros)

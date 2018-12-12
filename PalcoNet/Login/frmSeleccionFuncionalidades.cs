@@ -76,68 +76,70 @@ namespace PalcoNet.Login
             if (rolActual.Funcionalidades.Count != 0)
             {
                 cmbFuncionalidades.Items.Add(new itemComboBox("Cambiar Contraseña", -2));
-                for (int i = 0; i < rolActual.Funcionalidades.Count; i++)
-                {
-                    if (rolActual.Funcionalidades[i].Id == 1)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Clientes", rolActual.Funcionalidades[i].Id));
-                    }
+                rolActual.Funcionalidades.ForEach(x => cmbFuncionalidades.Items.Add(new itemComboBox(x.Descripcion, x.Id)));
 
-                    if (rolActual.Funcionalidades[i].Id == 2)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Empresas", rolActual.Funcionalidades[i].Id));
-                    }
+                //for (int i = 0; i < rolActual.Funcionalidades.Count; i++)
+                //{
+                //    if (rolActual.Funcionalidades[i].Id == 1)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Clientes", rolActual.Funcionalidades[i].Id));
+                //    }
 
-                    if (rolActual.Funcionalidades[i].Id == 3)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Grado", rolActual.Funcionalidades[i].Id));
-                    }
+                //    if (rolActual.Funcionalidades[i].Id == 2)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Empresas", rolActual.Funcionalidades[i].Id));
+                //    }
 
-                    if (rolActual.Funcionalidades[i].Id == 4)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Roles", rolActual.Funcionalidades[i].Id));
-                    }
+                //    if (rolActual.Funcionalidades[i].Id == 3)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Grado", rolActual.Funcionalidades[i].Id));
+                //    }
 
-                    if (rolActual.Funcionalidades[i].Id == 5)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Rubro", rolActual.Funcionalidades[i].Id));
-                    }
+                //    if (rolActual.Funcionalidades[i].Id == 4)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Roles", rolActual.Funcionalidades[i].Id));
+                //    }
 
-                    if (rolActual.Funcionalidades[i].Id == 6)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Puntos", rolActual.Funcionalidades[i].Id));
-                    }
+                //    if (rolActual.Funcionalidades[i].Id == 5)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Rubro", rolActual.Funcionalidades[i].Id));
+                //    }
 
-                    if (rolActual.Funcionalidades[i].Id == 7)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Compras", rolActual.Funcionalidades[i].Id));
-                    }
+                //    if (rolActual.Funcionalidades[i].Id == 6)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Puntos", rolActual.Funcionalidades[i].Id));
+                //    }
 
-                    if (rolActual.Funcionalidades[i].Id == 8)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Editar Publicación", rolActual.Funcionalidades[i].Id));
-                    }
+                //    if (rolActual.Funcionalidades[i].Id == 7)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Compras", rolActual.Funcionalidades[i].Id));
+                //    }
 
-                    if (rolActual.Funcionalidades[i].Id == 9)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Generar Publicación", rolActual.Funcionalidades[i].Id));
-                    }
+                //    if (rolActual.Funcionalidades[i].Id == 8)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Editar Publicación", rolActual.Funcionalidades[i].Id));
+                //    }
 
-                    if (rolActual.Funcionalidades[i].Id == 10)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Generar Rendiciones por Comisión", rolActual.Funcionalidades[i].Id));
-                    }
+                //    if (rolActual.Funcionalidades[i].Id == 9)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Generar Publicación", rolActual.Funcionalidades[i].Id));
+                //    }
 
-                    if (rolActual.Funcionalidades[i].Id == 11)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Historial de Cliente", rolActual.Funcionalidades[i].Id));
-                    }
+                //    if (rolActual.Funcionalidades[i].Id == 10)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Generar Rendiciones por Comisión", rolActual.Funcionalidades[i].Id));
+                //    }
 
-                    if (rolActual.Funcionalidades[i].Id == 12)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Listado Estadístico", rolActual.Funcionalidades[i].Id));
-                    }
-                }
+                //    if (rolActual.Funcionalidades[i].Id == 11)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Historial de Cliente", rolActual.Funcionalidades[i].Id));
+                //    }
+
+                //    if (rolActual.Funcionalidades[i].Id == 12)
+                //    {
+                //        cmbFuncionalidades.Items.Add(new itemComboBox("Listado Estadístico", rolActual.Funcionalidades[i].Id));
+                //    }
+                //}
             }
         }
 
@@ -157,71 +159,65 @@ namespace PalcoNet.Login
                         frmCambiarpassword formPass = new frmCambiarpassword(false);
                         formPass.Show();
                         break;
-                    case 1:
+                    case 2:
                         frmAbmCliente form1 = new frmAbmCliente(this);
                         this.Hide();
                         form1.Show();
                         break;
-                    case 2:
+                    case 3:
                         frmAbmEmpresa form2 = new frmAbmEmpresa(this);
                         this.Hide();
                         form2.Show();
                         break;
-                    case 3:
+                    case 4:
                         frmGrado form3 = new frmGrado();
                         this.Hide();
                         form3.ShowDialog();
                         this.Show();
                         break;
-                    case 4:
+                    case 10:
                         frmRol form4 = new frmRol(this);
                         this.Hide();
                         form4.Show();
                         break;
                     case 5:
-                        frmRubro form5 = new frmRubro(this);
-                        this.Hide();
-                        form5.ShowDialog();
-                        this.Show();
-                        break;
-                    case 6:
                         frmCanjePuntos form6 = new frmCanjePuntos(this.usuario.usuario_id, this);
                         this.Hide();
                         form6.ShowDialog();
                         this.Show();
                         break;
-                    case 7:
+                    case 0:
                         frmComprar form7 = new frmComprar(this);
                         this.Hide();
                         form7.ShowDialog();
                         this.Show();
                         break;
-                    case 8:
-                        frmEditarPublicacion form8 = new frmEditarPublicacion();
-                        this.Hide();
-                        form8.ShowDialog();
-                        this.Show();
-                        break;
-                    case 9:
+                    //case 6:
+                    //    frmEditarPublicacion form8 = new frmEditarPublicacion();
+                    //    this.Hide();
+                    //    form8.ShowDialog();
+                    //    this.Show();
+                    //    break;
+                    case 6:
                         string modo = "Nuevo";
                         frmGenerarPublicacion form9 = new frmGenerarPublicacion(modo);
                         this.Hide();
                         form9.ShowDialog();
                         this.Show();
                         break;
-                    case 10:
+                    case 7:
                         frmGenerarRendicionesComisiones form10 = new frmGenerarRendicionesComisiones();
                         this.Hide();
                         form10.ShowDialog();
                         this.Show();
                         break;
-                    case 11:
+                    case 8:
                         frmHistorialCliente form11 = new frmHistorialCliente(this);
                         this.Hide();
                         form11.ShowDialog();
                         this.Show();
                         break;
-                    case 12:
+                    case 9:
                         frmListadoEstadistico form12 = new frmListadoEstadistico();
                         this.Hide();
                         form12.Show();
@@ -244,6 +240,11 @@ namespace PalcoNet.Login
 
                 Environment.Exit(0);
             }
+        }
+
+        private void frmSeleccionFuncionalidades_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

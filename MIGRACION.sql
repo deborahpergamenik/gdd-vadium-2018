@@ -428,12 +428,12 @@ BEGIN
 		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ABM CLIENTE',2)
 		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ABM EMPRESA',3)
 		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ABM GRADO',4)
+		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ABM ROL',10)
 		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('CANJE PUNTOS',5)
 		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ABM PUBLICACION',6)
 		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('RENDICION DE COMISIONES',7)
 		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('HISTORIAL CLIENTE',8)
 		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ESTADISTICAS',9)
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ABM ROL',10)
 	--FUNCIONALIDADES POR ROL
 		INSERT INTO [VADIUM].ROL_POR_FUNCIONALIDAD(funcionalidad_id, rol_id) VALUES(0,1)
 		INSERT INTO [VADIUM].ROL_POR_FUNCIONALIDAD(funcionalidad_id, rol_id) VALUES(5,1)

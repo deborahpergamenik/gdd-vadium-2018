@@ -3,6 +3,13 @@ GO
 
 -------------------------------DROP PROCEDURES-------------------
 
+IF OBJECT_ID('VADIUM.AGREGAR_ROL') IS NOT NULL
+DROP PROCEDURE VADIUM.AGREGAR_ROL;
+GO
+IF OBJECT_ID('VADIUM.AGREGAR_FUNCIONALIDAD') IS NOT NULL
+DROP PROCEDURE VADIUM.AGREGAR_FUNCIONALIDAD;
+GO
+
 IF OBJECT_ID('VADIUM.VERIFICAR_USUARIO_PASSWORD') IS NOT NULL
 DROP PROCEDURE VADIUM.VERIFICAR_USUARIO_PASSWORD;
 GO
@@ -117,12 +124,6 @@ IF OBJECT_ID('VADIUM.GRADO') IS NOT NULL
 DROP TABLE [VADIUM].GRADO
 GO
 
-
-
-
-
-
-
 IF OBJECT_ID('VADIUM.PREMIO_POR_CLIENTE') IS NOT NULL
 DROP TABLE [VADIUM].PREMIO_POR_CLIENTE
 GO
@@ -171,7 +172,7 @@ GO
 CREATE TABLE [VADIUM].USUARIO(
 	usuario_id int PRIMARY KEY IDENTITY(1,1),
 	usuario_username nvarchar(255) NOT NULL UNIQUE,
-	usuario_password binary(32) NOT NULL,
+	usuario_password nvarchar(255) NOT NULL,
 	usuario_intentosLogin int default 0,
 	usuario_activo BIT,
 	primera_vez BIT
@@ -333,65 +334,65 @@ GO
 ----------------------------TRIGGERS-------------------------------
 
     -----------EMPRESA-------
-CREATE TRIGGER [VADIUM].TR_NuevaEmpresa
-ON VADIUM.EMPRESA
-INSTEAD OF INSERT
-AS
-BEGIN
-	BEGIN TRY
-		INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
-		SELECT I.mail,  HashBytes('SHA2_256',I.cuit), 1,0, 1
-		FROM inserted I
-		WHERE I.mail NOT IN(SELECT us2.usuario_username FROM VADIUM.USUARIO us2 )
+--CREATE TRIGGER [VADIUM].TR_NuevaEmpresa
+--ON VADIUM.EMPRESA
+--INSTEAD OF INSERT
+--AS
+--BEGIN
+--	BEGIN TRY
+--		INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
+--		SELECT I.mail,  HashBytes('SHA2_256',I.cuit), 1,0, 1
+--		FROM inserted I
+--		WHERE I.mail NOT IN(SELECT us2.usuario_username FROM VADIUM.USUARIO us2 )
 
-		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
-		SELECT 2, us.usuario_id
-		FROM inserted I JOIN USUARIO us ON (us.usuario_username = I.mail)
-		WHERE NOT EXISTS(SELECT 2 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 1 AND rolUser.usuario_id = us.usuario_id)
+--		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
+--		SELECT 2, us.usuario_id
+--		FROM inserted I JOIN USUARIO us ON (us.usuario_username = I.mail)
+--		WHERE NOT EXISTS(SELECT 2 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 1 AND rolUser.usuario_id = us.usuario_id)
 
 
-		INSERT INTO VADIUM.EMPRESA(razonSocial, cuit, mail,  fechaCreacion, usuario_id, calle, piso, depto, cod_postal)
-		SELECT ins.razonSocial, ins.cuit, ins.mail, ins.fechaCreacion, 
-			(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.calle, ins.piso, ins.depto, ins.cod_postal
-		FROM inserted ins
-	END TRY
-	BEGIN CATCH
-	  SELECT 'ERROR', ERROR_MESSAGE()
-	END CATCH
-END
-GO
-   -----CLIENTE--------
-CREATE TRIGGER [VADIUM].TR_NuevoCliente
-ON VADIUM.CLIENTE
-INSTEAD OF INSERT
-AS
-BEGIN
-	BEGIN TRY
-		INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
-		SELECT I.mail,  HashBytes('SHA2_256',I.mail), 1,0, 1
-		FROM inserted I
-		GROUP BY I.mail
-		HAVING I.mail NOT IN(SELECT us2.usuario_username FROM VADIUM.USUARIO us2 )
+--		INSERT INTO VADIUM.EMPRESA(razonSocial, cuit, mail,  fechaCreacion, usuario_id, calle, piso, depto, cod_postal)
+--		SELECT ins.razonSocial, ins.cuit, ins.mail, ins.fechaCreacion, 
+--			(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.calle, ins.piso, ins.depto, ins.cod_postal
+--		FROM inserted ins
+--	END TRY
+--	BEGIN CATCH
+--	  SELECT 'ERROR', ERROR_MESSAGE()
+--	END CATCH
+--END
+--GO
+--   -----CLIENTE--------
+--CREATE TRIGGER [VADIUM].TR_NuevoCliente
+--ON VADIUM.CLIENTE
+--INSTEAD OF INSERT
+--AS
+--BEGIN
+--	BEGIN TRY
+--		INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
+--		SELECT I.mail,  HashBytes('SHA2_256',I.mail), 1,0, 1
+--		FROM inserted I
+--		GROUP BY I.mail
+--		HAVING I.mail NOT IN(SELECT us2.usuario_username FROM VADIUM.USUARIO us2 )
 		
 
-		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
-		SELECT 1, us.usuario_id
-		FROM inserted I JOIN VADIUM.USUARIO us ON (us.usuario_username = I.mail)
-		WHERE NOT EXISTS(SELECT 1 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 2 AND rolUser.usuario_id = us.usuario_id)
-		GROUP BY us.usuario_id,us.usuario_username, i.mail
+--		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
+--		SELECT 1, us.usuario_id
+--		FROM inserted I JOIN VADIUM.USUARIO us ON (us.usuario_username = I.mail)
+--		WHERE NOT EXISTS(SELECT 1 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 2 AND rolUser.usuario_id = us.usuario_id)
+--		GROUP BY us.usuario_id,us.usuario_username, i.mail
 
 
-		INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,  usuario_id, calle, piso, depto, cod_postal )
-		SELECT ins.numeroDocumento, ins.tipoDocumento, ins.apellido, ins.nombre,ins.fechaNacimiento, ins.mail, 
-		(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.calle, ins.piso, ins.depto, ins.cod_postal
-		FROM inserted ins
+--		INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,  usuario_id, calle, piso, depto, cod_postal )
+--		SELECT ins.numeroDocumento, ins.tipoDocumento, ins.apellido, ins.nombre,ins.fechaNacimiento, ins.mail, 
+--		(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.calle, ins.piso, ins.depto, ins.cod_postal
+--		FROM inserted ins
 
-	END TRY
-	BEGIN CATCH
-	  SELECT 'ERROR', ERROR_MESSAGE()
-	END CATCH
-END
-GO
+--	END TRY
+--	BEGIN CATCH
+--	  SELECT 'ERROR', ERROR_MESSAGE()
+--	END CATCH
+--END
+--GO
 
 
 
@@ -399,23 +400,36 @@ GO
 CREATE PROCEDURE [VADIUM].PR_DATOS_INSERT_DATOS_INICIALES
 AS
 BEGIN
-	INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion) VALUES('Comprar')
+
 
 	-- ROL 
 	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(0,'Administrador',1)
 	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(1,'Cliente',1)
 	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(2,'Empresa',1)
 
-	--	-- USUARIO
-	--DECLARE @userId int
-	--INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
-	--VALUES('admin', HashBytes('SHA2_256','admin'), 1, 0,1)
-	--SELECT @userId =  SCOPE_IDENTITY()
 
-	--INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(1,@userId)
-	--INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(2,@userId)
-	--INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(3,@userId)
-	
+	/* FUNCIONALIDADES */
+
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarClientes');
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarEmpresas');
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarGrados');
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarRoles');
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarRubros');
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarPuntos');
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarCompras');
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('EditarPublicacion');
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('GenerarPublicacion');
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('RendicionesPorComision');
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('HistorialClientes');
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('ListadoEstadistico');
+
+
+	SET IDENTITY_INSERT VADIUM.USUARIO ON
+	INSERT INTO VADIUM.USUARIO(usuario_id,usuario_username,usuario_password,usuario_intentosLogin,usuario_activo,primera_vez) 
+	VALUES (0,'admin','8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918',0,1,0); --pass admin en SHA256
+	SET IDENTITY_INSERT VADIUM.USUARIO OFF
+
+		
 	-- GRADO 
 	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(0,5,'BAJO')
 	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(1,10,'MEDIO')
@@ -427,6 +441,7 @@ BEGIN
 END
 GO
 
+	
 ------------------------------MIGRACION------------------------------
 
 CREATE PROCEDURE [VADIUM].PR_MIGRACION
@@ -815,6 +830,86 @@ END TRY
 GO
 
 
---------ejecutar datos iniciales y migracion---------------------------
+	-------------------- SP agregar ROL al USUARIO ------------------------
+
+	CREATE PROCEDURE VADIUM.AGREGAR_ROL(@iduser int, @idrol int) AS
+	BEGIN
+		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
+			VALUES ((SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_id = @iduser),
+					(SELECT rol_id FROM VADIUM.ROL WHERE rol_id = @idrol))
+	END 
+	GO
+
+
+	--------------------- SP Agregar FUNCIONALIDAD al ROL --------------------------
+	CREATE PROCEDURE VADIUM.AGREGAR_FUNCIONALIDAD(@rol nvarchar(255), @func nvarchar(255)) AS
+	BEGIN
+		INSERT INTO VADIUM.ROL_POR_FUNCIONALIDAD(rol_id, funcionalidad_id)
+			VALUES ((SELECT rol_id FROM VADIUM.ROL WHERE rol_nombre = @rol),
+					(SELECT funcionalidad_id FROM VADIUM.FUNCIONALIDAD WHERE funcionalidad_descripcion = @func))
+	END
+	GO
+
+
+--------------Ejecutar datos iniciales y migracion------------------
 EXECUTE VADIUM.PR_DATOS_INSERT_DATOS_INICIALES;
 EXECUTE VADIUM.PR_MIGRACION;
+
+
+--------------Asignacion de Funcionalidades-------------------
+
+EXEC VADIUM.AGREGAR_ROL
+	@iduser = 0, @idrol = 0;
+GO
+
+----- ADMIN ------
+
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarClientes';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarEmpresas';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarGrados';	
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarRoles';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarRubros';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarPuntos';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarCompras';		
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'EditarPublicacion';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'GenerarPublicacion';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'RendicionesPorComision';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'HistorialClientes';	
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'ListadoEstadistico';		
+			
+	
+
+
+----- Cliente -----
+
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Cliente', @func = 'EditarPublicacion';		
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Cliente', @func = 'GenerarPublicacion';	
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Cliente', @func = 'HistorialClientes';	
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Cliente', @func = 'ListadoEstadistico';		
+		
+----- Empresas ----
+
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Empresa', @func = 'EditarPublicacion';		
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Empresa', @func = 'GenerarPublicacion';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Empresa', @func = 'HistorialClientes';			
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Empresa', @func = 'ListadoEstadistico';		

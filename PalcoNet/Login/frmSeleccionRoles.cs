@@ -45,7 +45,7 @@ namespace PalcoNet.Login
         {
             for (int i = 0; i < usuario.Roles.Count(); i++)
             {
-                if (usuario.Roles[i].usuario_activo != false) // TOMANDO EN CUENTA QUE 1 ES HABILITADO
+                if (usuario.Roles[i].habilitado != false) // TOMANDO EN CUENTA QUE 1 ES HABILITADO
                 {
                     cmbRoles.Items.Add(new itemComboBox(usuario.Roles[i].nombre, usuario.Roles[i].Id));
                 }
@@ -64,7 +64,7 @@ namespace PalcoNet.Login
                 if (this.usuario.Roles[cmbRoles.SelectedIndex].Funcionalidades.Count != 0)
                 {
                     itemComboBox seleccion = cmbRoles.SelectedItem as itemComboBox;
-                    UserInstance.getUserInstance().loadRol(usuario.Roles.Where(x => x.Id == seleccion.rol_id).FirstOrDefault());
+                    //UserInstance.getUserInstance().loadRol(usuario.Roles.Where(x => x.Id == seleccion.rol_id).FirstOrDefault());
                     frmSeleccionFuncionalidades formFuncionalidades = new frmSeleccionFuncionalidades(usuario, seleccion.rol_id, false);
                     this.Hide();
                     formFuncionalidades.Show();

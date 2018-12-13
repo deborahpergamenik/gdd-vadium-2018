@@ -186,6 +186,7 @@
             this.txtNroPiso.Name = "txtNroPiso";
             this.txtNroPiso.Size = new System.Drawing.Size(191, 22);
             this.txtNroPiso.TabIndex = 10;
+            this.txtNroPiso.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
             // txtDepartamento
             // 

@@ -84,7 +84,7 @@ namespace PalcoNet.Abm_Cliente
 
         public void llenarCbtipoDocumento()
         {
-            this.cmbtipoDocumentoumento.Items.Add("DU");
+            this.cmbtipoDocumentoumento.Items.Add("DNI");
             this.cmbtipoDocumentoumento.Items.Add("CI");
             this.cmbtipoDocumentoumento.Items.Add("LC");
         }
@@ -129,7 +129,7 @@ namespace PalcoNet.Abm_Cliente
             SqlDataReader lector = SqlConnector.ejecutarReader("SELECT tipoDocumento, numeroDocumento, CUIL, nombre, apellido, mail, telefono, direccion, cod_postal, DAY(fechaNacimiento) AS fechaNacimiento_Dia, MONTH(fechaNacimiento) AS fechaNacimiento_Mes, YEAR(fechaNacimiento) AS fechaNacimiento_Ano FROM VADIUM.CLIENTE WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
 
-            if (Convert.ToString(lector["tipoDocumentoumento"]) == "DU")
+            if (Convert.ToString(lector["tipoDocumentoumento"]) == "DNI")
             {
                 cmbtipoDocumentoumento.SelectedIndex = 0;
             }
@@ -265,7 +265,7 @@ namespace PalcoNet.Abm_Cliente
                         switch (cmbtipoDocumentoumento.SelectedIndex)
                         {
                             case 0:
-                                cambiarStringClientes("tipoDocumentoumento", "DU");
+                                cambiarStringClientes("tipoDocumentoumento", "DNI");
                                 break;
                             case 1:
                                 cambiarStringClientes("tipoDocumentoumento", "CI");

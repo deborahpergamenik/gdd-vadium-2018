@@ -51,7 +51,7 @@ namespace PalcoNet.Abm_Rol
             Rol unRol = dgvRoles.CurrentRow.DataBoundItem as Rol;
             string str;
 
-            if (!unRol.usuario_activo)
+            if (!unRol.habilitado)
             {
                 str = string.Format("No se puede eliminar el rol {0}. Este ya esta deshabilitado. Puede volver a habilitarlo desde Modificar", unRol.nombre);
                 MessageBox.Show(str, "Alerta!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);

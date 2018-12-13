@@ -59,7 +59,7 @@ namespace PalcoNet.Abm_Rol
                 actualizarCheckboxList(listaFuncQueTiene);
 
                 //si esta habilitado, NO permitir cambiar check, caso contrario permitir.
-                if (unRol.usuario_activo)
+                if (unRol.habilitado)
                 {
                     chkusuario_activo.Enabled = false;
                 }
@@ -144,7 +144,7 @@ namespace PalcoNet.Abm_Rol
                         List<Funcionalidad> listaFuncActuales = Funcionalidades.obtenerFuncionalidades(SqlConnector.iniciarConexion(), RolActual.Id);
 
                         //Me fijo que haya hecho al menos un cambio.. el OR (||) es por si entro como habilitado o deshabilitado.
-                        if (sonIguales(listaNuevasFunc, listaFuncActuales) && (txtnombre.Text == nombreAux) && (RolActual.usuario_activo || !RolActual.usuario_activo && !chkusuario_activo.Checked))
+                        if (sonIguales(listaNuevasFunc, listaFuncActuales) && (txtnombre.Text == nombreAux) && (RolActual.habilitado || !RolActual.habilitado && !chkusuario_activo.Checked))
                         {
                             MessageBox.Show("Por favor realice al menos un cambio", "Alerta!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
@@ -152,12 +152,12 @@ namespace PalcoNet.Abm_Rol
                         {
                             //actualizo al RolActual que fue habilitado (en caso de checkear el box), para que si sigue modificando ya se lo considere habilitado
                             if (chkusuario_activo.Checked)
-                                RolActual.usuario_activo = true;
+                                RolActual.habilitado = true;
 
 
                             //UPDATE de los cambios realizados, con cuidado especial en Habilitado. Con que haya un cambio, actualizo todo, por mas que sean redundantes
                             //dos de los 3 campos (por ejemplo), es un solo acceso a la BD.
-                            if (RolActual.usuario_activo)
+                            if (RolActual.habilitado)
                                 Roles.updatearRol(txtnombre.Text, listaNuevasFunc, true, RolActual.Id);
                             else
                                 Roles.updatearRol(txtnombre.Text, listaNuevasFunc, false, RolActual.Id);

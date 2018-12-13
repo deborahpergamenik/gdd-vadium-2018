@@ -99,7 +99,7 @@ namespace PalcoNet.Abm_Cliente
 
         public void llenarCmbtipoDocumento()
         {
-            this.cmbTipoDocumentoumento.Items.Add("DU");
+            this.cmbTipoDocumentoumento.Items.Add("DNI");
             this.cmbTipoDocumentoumento.Items.Add("CI");
             this.cmbTipoDocumentoumento.Items.Add("LC");
         }

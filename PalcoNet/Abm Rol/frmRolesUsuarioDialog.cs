@@ -41,7 +41,7 @@ namespace PalcoNet.Abm_Rol
         {
             for (int i = 0; i < todosLosRoles.Count(); i++)
             {
-                cblRoles.Items.Add(new Rol(todosLosRoles[i].Id, todosLosRoles[i].nombre, todosLosRoles[i].usuario_activo));
+                cblRoles.Items.Add(new Rol(todosLosRoles[i].Id, todosLosRoles[i].nombre, todosLosRoles[i].habilitado));
             }
         }
 

@@ -151,9 +151,9 @@ namespace PalcoNet.Model
         public Boolean verificarContrasenia()
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@Username", this.usuario_username);
-            SqlConnector.agregarParametro(listaParametros, "@password", this.password);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_username, usuario_password FROM VADIUM.USUARIO WHERE Username = @Username AND usuario_password = @password", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario_username);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_password", this.password);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_username, usuario_password FROM VADIUM.USUARIO WHERE usuario_username = @usuario_username AND usuario_password = @usuario_password", listaParametros, SqlConnector.iniciarConexion());
             Boolean res = lector.HasRows;
             SqlConnector.cerrarConexion();
             return res;
@@ -215,24 +215,28 @@ namespace PalcoNet.Model
 
         public void cambiarpassword(string nuevoPass)
         {
-           
+            UTF8Encoding encoderHash = new UTF8Encoding();
+            SHA256Managed hasher = new SHA256Managed();
+            byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(nuevoPass));
+            string password = bytesDeHasheoToString(bytesDeHasheo);
+
 
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@user", this.usuario_username);
-            SqlConnector.agregarParametro(listaParametros, "@pass", nuevoPass);
-            SqlConnector.ObtenerDataReader("VADIUM.CAMBIAR_PASSWORD", "SP", listaParametros);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
+            SqlConnector.agregarParametro(listaParametros, "@password", password);
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_password = @password, primera_vez = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
         }
 
-        //private string bytesDeHasheoToString(byte[] array)
-        //{
-        //    StringBuilder salida = new StringBuilder("");
-        //    for (int i = 0; i < array.Length; i++)
-        //    {
-        //        salida.Append(array[i].ToString("X2"));
-        //    }
-        //    return salida.ToString();
-        //}
+        private string bytesDeHasheoToString(byte[] array)
+        {
+            StringBuilder salida = new StringBuilder("");
+            for (int i = 0; i < array.Length; i++)
+            {
+                salida.Append(array[i].ToString("X2"));
+            }
+            return salida.ToString();
+        }
 
         public Boolean obtenerRoles()
         {

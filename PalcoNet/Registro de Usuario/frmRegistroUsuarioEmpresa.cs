@@ -32,10 +32,10 @@ namespace PalcoNet.Registro_de_Usuario
         {
             try
             {
-                //UTF8Encoding encoderHash = new UTF8Encoding();
-                //SHA256Managed hasher = new SHA256Managed();
-                //byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passwordNoHash));
-                //string password = bytesDeHasheoToString(bytesDeHasheo);
+                UTF8Encoding encoderHash = new UTF8Encoding();
+                SHA256Managed hasher = new SHA256Managed();
+                byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passwordNoHash));
+                string password = bytesDeHasheoToString(bytesDeHasheo);
 
                 List<SqlParameter> listaParametros = new List<SqlParameter>();
                 SqlConnector.agregarParametro(listaParametros, "@usuario_username", username);
@@ -43,7 +43,7 @@ namespace PalcoNet.Registro_de_Usuario
                 SqlConnector.agregarParametro(listaParametros, "@usuario_intentosLogin", 0);
                 SqlConnector.agregarParametro(listaParametros, "@usuario_activo", 1);
                 SqlConnector.agregarParametro(listaParametros, "@primera_vez", 0);
-                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO (usuario_username, usuario_password, usuario_intentosLogin, usuario_activo, primera_vez) VALUES (@usuario_username, CONVERT(BINARY(32), @usuario_password), @usuario_intentosLogin, @usuario_activo, @primera_vez)", listaParametros, SqlConnector.iniciarConexion());
+                SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO (usuario_username, usuario_password, usuario_intentosLogin, usuario_activo, primera_vez) VALUES (@usuario_username, @usuario_password, @usuario_intentosLogin, @usuario_activo, @primera_vez)", listaParametros, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros2 = new List<SqlParameter>();

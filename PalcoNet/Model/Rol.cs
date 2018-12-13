@@ -12,14 +12,14 @@ namespace PalcoNet.Model
     {
         public int Id { get; set; }
         public string nombre { get; set; }
-        public bool usuario_activo { get; set; }
+        public bool habilitado { get; set; }
         public List<Funcionalidad> Funcionalidades = new List<Funcionalidad>();
 
-        public Rol(int id, string nombre, bool usuario_activo)
+        public Rol(int id, string nombre, bool habilitado)
         {
             this.Id = id;
             this.nombre = nombre;
-            this.usuario_activo = usuario_activo;
+            this.habilitado = habilitado;
         }
 
         public void obtenerFuncionalidades(SqlConnection conexion)

@@ -186,7 +186,7 @@ CREATE TABLE [VADIUM].ROL_POR_USUARIO(
 GO
 
 CREATE TABLE [VADIUM].FUNCIONALIDAD(
-	funcionalidad_id int PRIMARY KEY,
+	funcionalidad_id int PRIMARY KEY IDENTITY (1,1),
 	funcionalidad_descripcion nvarchar(255)
 )
 GO
@@ -399,7 +399,7 @@ GO
 CREATE PROCEDURE [VADIUM].PR_DATOS_INSERT_DATOS_INICIALES
 AS
 BEGIN
-	
+	INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion) VALUES('Comprar')
 
 	-- ROL 
 	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(0,'Administrador',1)
@@ -424,31 +424,6 @@ BEGIN
 	-- PREMIOS
 	INSERT INTO [VADIUM].PREMIO (puntos, descripcion, stock, fechaVencimiento) VALUES (100, ' voucher entrada gratis', 10, convert(datetime,'18-06-19 10:34:09 PM',5))
 	INSERT INTO [VADIUM].PREMIO (puntos, descripcion,stock, fechaVencimiento) VALUES (50, ' voucher 50% descuento en entradas', 10 ,convert(datetime,'31-12-18 10:34:09 PM',5))
-
-	--FUNCIONALIDADES
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('COMPRAR', 0)
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('FACTURAR',1)
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ABM CLIENTE',2)
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ABM EMPRESA',3)
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ABM GRADO',4)
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ABM ROL',10)
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('CANJE PUNTOS',5)
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ABM PUBLICACION',6)
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('RENDICION DE COMISIONES',7)
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('HISTORIAL CLIENTE',8)
-		INSERT INTO [VADIUM].FUNCIONALIDAD(funcionalidad_descripcion, funcionalidad_id) VALUES('ESTADISTICAS',9)
-	--FUNCIONALIDADES POR ROL
-		INSERT INTO [VADIUM].ROL_POR_FUNCIONALIDAD(funcionalidad_id, rol_id) VALUES(0,1)
-		INSERT INTO [VADIUM].ROL_POR_FUNCIONALIDAD(funcionalidad_id, rol_id) VALUES(5,1)
-		INSERT INTO [VADIUM].ROL_POR_FUNCIONALIDAD(funcionalidad_id, rol_id) VALUES(8,1)
-
-		INSERT INTO [VADIUM].ROL_POR_FUNCIONALIDAD(funcionalidad_id, rol_id) VALUES(2,0)
-		INSERT INTO [VADIUM].ROL_POR_FUNCIONALIDAD(funcionalidad_id, rol_id) VALUES(3,0)
-		INSERT INTO [VADIUM].ROL_POR_FUNCIONALIDAD(funcionalidad_id, rol_id) VALUES(4,0)
-
-		INSERT INTO [VADIUM].ROL_POR_FUNCIONALIDAD(funcionalidad_id, rol_id) VALUES(1,2)
-		INSERT INTO [VADIUM].ROL_POR_FUNCIONALIDAD(funcionalidad_id, rol_id) VALUES(7,0)
-		INSERT INTO [VADIUM].ROL_POR_FUNCIONALIDAD(funcionalidad_id, rol_id) VALUES(9,0)
 END
 GO
 
@@ -705,7 +680,21 @@ BEGIN CATCH
   SELECT 'ERROR', ERROR_MESSAGE()
 END CATCH
 GO
-
+CREATE	 PROCEDURE [VADIUM].OBTENER_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI numeric(18), @mail nvarchar(255)
+AS
+BEGIN TRY
+	SELECT *
+	FROM [VADIUM].CLIENTE cli 
+	WHERE
+	(@NOMBRE = '' OR @NOMBRE is null OR  lower(cli.nombre) LIKE '%' + lower(@NOMBRE) + '%') AND
+	(@APELLIDO = '' OR @APELLIDO is null OR lower(cli.apellido) LIKE '%' + lower(@APELLIDO) + '%') AND
+	(@DNI = '' OR @DNI is null OR cli.numeroDocumento = @DNI) AND
+	(@mail = '' OR @mail is null OR lower(cli.mail) LIKE '%' + lower(@mail) + '%');
+END TRY
+BEGIN CATCH
+  SELECT 'ERROR', ERROR_MESSAGE()
+END CATCH
+GO
 CREATE PROCEDURE [VADIUM].HistorialCliente @clienteId int
 AS
 BEGIN

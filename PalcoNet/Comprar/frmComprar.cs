@@ -111,7 +111,7 @@ namespace PalcoNet.Comprar
             }
 
             Publicaciones_Datagrid.DataSource = Publicaciones.obtenerPublicaiones(desde, hasta, rubros, descripcion, start, finish);
-            
+            Publicaciones_Datagrid.MaxRecords = 10;
             //List<Publicacion> listaPublicaciones = Publicaciones.obtenerPublicacionesPaginadas(desde, hasta,rubro,descripcion,start,finish );
             //Publicaciones_Datagrid1.DataSource = listaPublicaciones;
             

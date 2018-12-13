@@ -40,11 +40,11 @@
             this.groupBox1.Controls.Add(this.cmbFuncionalidades);
             this.groupBox1.Controls.Add(this.btnAceptar);
             this.groupBox1.Controls.Add(this.btnAtras);
-            this.groupBox1.Location = new System.Drawing.Point(15, 16);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Location = new System.Drawing.Point(13, 13);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox1.Size = new System.Drawing.Size(404, 139);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Size = new System.Drawing.Size(359, 111);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "¿Qué desea hacer?";
@@ -53,18 +53,18 @@
             // 
             this.cmbFuncionalidades.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFuncionalidades.FormattingEnabled = true;
-            this.cmbFuncionalidades.Location = new System.Drawing.Point(15, 31);
-            this.cmbFuncionalidades.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.cmbFuncionalidades.Location = new System.Drawing.Point(13, 25);
+            this.cmbFuncionalidades.Margin = new System.Windows.Forms.Padding(4);
             this.cmbFuncionalidades.Name = "cmbFuncionalidades";
-            this.cmbFuncionalidades.Size = new System.Drawing.Size(370, 28);
+            this.cmbFuncionalidades.Size = new System.Drawing.Size(329, 24);
             this.cmbFuncionalidades.TabIndex = 0;
             // 
             // btnAceptar
             // 
-            this.btnAceptar.Location = new System.Drawing.Point(264, 78);
-            this.btnAceptar.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnAceptar.Location = new System.Drawing.Point(235, 62);
+            this.btnAceptar.Margin = new System.Windows.Forms.Padding(4);
             this.btnAceptar.Name = "btnAceptar";
-            this.btnAceptar.Size = new System.Drawing.Size(120, 46);
+            this.btnAceptar.Size = new System.Drawing.Size(107, 37);
             this.btnAceptar.TabIndex = 1;
             this.btnAceptar.Text = "Aceptar";
             this.btnAceptar.UseVisualStyleBackColor = true;
@@ -72,10 +72,10 @@
             // 
             // btnAtras
             // 
-            this.btnAtras.Location = new System.Drawing.Point(15, 78);
-            this.btnAtras.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnAtras.Location = new System.Drawing.Point(13, 62);
+            this.btnAtras.Margin = new System.Windows.Forms.Padding(4);
             this.btnAtras.Name = "btnAtras";
-            this.btnAtras.Size = new System.Drawing.Size(120, 46);
+            this.btnAtras.Size = new System.Drawing.Size(107, 37);
             this.btnAtras.TabIndex = 2;
             this.btnAtras.Text = "Atras";
             this.btnAtras.UseVisualStyleBackColor = true;
@@ -83,14 +83,12 @@
             // 
             // frmSeleccionFuncionalidades
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(430, 169);
+            this.ClientSize = new System.Drawing.Size(382, 135);
             this.Controls.Add(this.groupBox1);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmSeleccionFuncionalidades";
             this.Text = "frmSeleccionFuncionalidades";
-            this.Load += new System.EventHandler(this.frmSeleccionFuncionalidades_Load);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 

@@ -17,8 +17,8 @@ namespace PalcoNet.Abm_Cliente
     {
         public int usuario_id { get; set; }
 
-        public string Usuario { get; set; }
-        public string Passoword { get; set; }
+        public string username { get; set; }
+        public string passoword { get; set; }
         public int usuario_activo { get; set; }
 
         public int tipoDocumentoumento { get; set; }
@@ -52,8 +52,8 @@ namespace PalcoNet.Abm_Cliente
 
         public void cargarDatosViejos()
         {
-            this.Usuario = txtUsuario.Text;
-            this.Passoword = txtpassword.Text;
+            this.username = txtUsuario.Text;
+            this.passoword = txtpassword.Text;
             this.usuario_activo = cmbusuario_activo.SelectedIndex;
 
             this.tipoDocumentoumento = cmbtipoDocumentoumento.SelectedIndex;
@@ -126,24 +126,27 @@ namespace PalcoNet.Abm_Cliente
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT tipoDocumento, numeroDocumento, CUIL, nombre, apellido, mail, telefono, direccion, cod_postal, DAY(fechaNacimiento) AS fechaNacimiento_Dia, MONTH(fechaNacimiento) AS fechaNacimiento_Mes, YEAR(fechaNacimiento) AS fechaNacimiento_Ano FROM VADIUM.CLIENTE WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT cliente_id, usuario_id, nombre, apellido, tipoDocumento, numeroDocumento, CUIL, fechaCreacion, tarjetaCredito, mail, telefono, calle, piso, depto, cod_postal, localidad, DAY(fechaNacimiento) AS fechaNacimiento_Dia, MONTH(fechaNacimiento) AS fechaNacimiento_Mes, YEAR(fechaNacimiento) AS fechaNacimiento_Ano FROM VADIUM.CLIENTE WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
+            
 
-            if (Convert.ToString(lector["tipoDocumentoumento"]) == "DNI")
+            if (Convert.ToString(lector["tipoDocumento"]) == "DNI")
             {
                 cmbtipoDocumentoumento.SelectedIndex = 0;
             }
 
-            if (Convert.ToString(lector["tipoDocumentoumento"]) == "CI")
+            if (Convert.ToString(lector["tipoDocumento"]) == "CI")
             {
                 cmbtipoDocumentoumento.SelectedIndex = 1;
             }
 
-            if (Convert.ToString(lector["tipoDocumentoumento"]) == "LC")
+            if (Convert.ToString(lector["tipoDocumento"]) == "LC")
             {
                 cmbtipoDocumentoumento.SelectedIndex = 2;
             }
 
+
+            txtCUIL.Text = Convert.ToString(lector["CUIL"]);
             txtNumeroDocumento.Text = Convert.ToInt64(lector["numeroDocumento"]).ToString();
             txtnombre.Text = Convert.ToString(lector["nombre"]);
             txtapellido.Text = Convert.ToString(lector["apellido"]);
@@ -158,8 +161,11 @@ namespace PalcoNet.Abm_Cliente
                 txttelefono.Text = "";
             }
 
-            txtdireccion.Text = Convert.ToString(lector["direccion"]);
+            txtdireccion.Text = Convert.ToString(lector["calle"]);
             txtcod_postal.Text = Convert.ToString(lector["cod_postal"]);
+            txtLocalidad.Text = Convert.ToString(lector["localidad"]);
+            txtNroPiso.Text = Convert.ToString(lector["piso"]);
+            txtDepartamento.Text = Convert.ToString(lector["depto"]);
 
             cmbDia.SelectedIndex = Convert.ToInt32(lector["fechaNacimiento_Dia"]);
             cmbMes.SelectedIndex = Convert.ToInt32(lector["fechaNacimiento_Mes"]);
@@ -198,7 +204,7 @@ namespace PalcoNet.Abm_Cliente
             Boolean modificacion = false;
             Boolean error = false;
 
-            if (cambioString(this.Usuario, txtUsuario.Text))
+            if (cambioString(this.username, txtUsuario.Text))
             {
                 if (usernameValido())
                 {
@@ -207,14 +213,13 @@ namespace PalcoNet.Abm_Cliente
                     modificacion = true;
                 }
                 else
-                {
-                    //MessageBox.Show("nombre de usuario inválido.", "Error");
+                {     
                     resumenErrores = resumenErrores + "\nnombre de usuario (no ingresado o ya existente)";
                     error = true;
                 }
             }
 
-            if (cambioString(this.Passoword, txtpassword.Text))
+            if (cambioString(this.passoword, txtpassword.Text))
             {
                 UTF8Encoding encoderHash = new UTF8Encoding();
                 SHA256Managed hasher = new SHA256Managed();
@@ -619,7 +624,7 @@ namespace PalcoNet.Abm_Cliente
 
         private void btnAtras_Click(object sender, EventArgs e)
         {
-            this.Hide();
+            this.Close();
         }
     }
 }

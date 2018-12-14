@@ -109,7 +109,7 @@
             // 
             this.txtLocalidad.Location = new System.Drawing.Point(156, 115);
             this.txtLocalidad.Margin = new System.Windows.Forms.Padding(4);
-            this.txtLocalidad.MaxLength = 18;
+            this.txtLocalidad.MaxLength = 255;
             this.txtLocalidad.Name = "txtLocalidad";
             this.txtLocalidad.Size = new System.Drawing.Size(209, 22);
             this.txtLocalidad.TabIndex = 2;
@@ -139,7 +139,7 @@
             // 
             this.txtNroPiso.Location = new System.Drawing.Point(489, 115);
             this.txtNroPiso.Margin = new System.Windows.Forms.Padding(4);
-            this.txtNroPiso.MaxLength = 255;
+            this.txtNroPiso.MaxLength = 100;
             this.txtNroPiso.Name = "txtNroPiso";
             this.txtNroPiso.Size = new System.Drawing.Size(237, 22);
             this.txtNroPiso.TabIndex = 6;
@@ -149,7 +149,7 @@
             // 
             this.txtCiudad.Location = new System.Drawing.Point(156, 152);
             this.txtCiudad.Margin = new System.Windows.Forms.Padding(4);
-            this.txtCiudad.MaxLength = 50;
+            this.txtCiudad.MaxLength = 255;
             this.txtCiudad.Name = "txtCiudad";
             this.txtCiudad.Size = new System.Drawing.Size(209, 22);
             this.txtCiudad.TabIndex = 3;
@@ -188,7 +188,7 @@
             // 
             this.txtTelefono.Location = new System.Drawing.Point(156, 39);
             this.txtTelefono.Margin = new System.Windows.Forms.Padding(4);
-            this.txtTelefono.MaxLength = 18;
+            this.txtTelefono.MaxLength = 255;
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(209, 22);
             this.txtTelefono.TabIndex = 0;
@@ -300,7 +300,7 @@
             // 
             this.txtCuit.Location = new System.Drawing.Point(501, 37);
             this.txtCuit.Margin = new System.Windows.Forms.Padding(4);
-            this.txtCuit.MaxLength = 50;
+            this.txtCuit.MaxLength = 25;
             this.txtCuit.Name = "txtCuit";
             this.txtCuit.Size = new System.Drawing.Size(209, 22);
             this.txtCuit.TabIndex = 1;

@@ -97,7 +97,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox2.Size = new System.Drawing.Size(721, 559);
+            this.groupBox2.Size = new System.Drawing.Size(1332, 347);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Baja o modificación de clientes";
@@ -106,18 +106,19 @@
             // 
             this.dgResultados.BackgroundColor = System.Drawing.SystemColors.Menu;
             this.dgResultados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgResultados.Location = new System.Drawing.Point(11, 142);
+            this.dgResultados.Location = new System.Drawing.Point(11, 101);
             this.dgResultados.Margin = new System.Windows.Forms.Padding(4);
             this.dgResultados.Name = "dgResultados";
-            this.dgResultados.Size = new System.Drawing.Size(692, 404);
+            this.dgResultados.Size = new System.Drawing.Size(1310, 231);
             this.dgResultados.TabIndex = 39;
+            this.dgResultados.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgResultados_CellContentClick);
             // 
             // btnBusqueda
             // 
-            this.btnBusqueda.Location = new System.Drawing.Point(604, 62);
+            this.btnBusqueda.Location = new System.Drawing.Point(1222, 47);
             this.btnBusqueda.Margin = new System.Windows.Forms.Padding(4);
             this.btnBusqueda.Name = "btnBusqueda";
-            this.btnBusqueda.Size = new System.Drawing.Size(99, 57);
+            this.btnBusqueda.Size = new System.Drawing.Size(99, 37);
             this.btnBusqueda.TabIndex = 16;
             this.btnBusqueda.Text = "Buscar";
             this.btnBusqueda.UseVisualStyleBackColor = true;
@@ -126,7 +127,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(306, 65);
+            this.label2.Location = new System.Drawing.Point(881, 65);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(51, 17);
@@ -135,7 +136,7 @@
             // 
             // txtLastNameFilter
             // 
-            this.txtLastNameFilter.Location = new System.Drawing.Point(379, 97);
+            this.txtLastNameFilter.Location = new System.Drawing.Point(379, 62);
             this.txtLastNameFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtLastNameFilter.MaxLength = 255;
             this.txtLastNameFilter.Name = "txtLastNameFilter";
@@ -145,7 +146,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(8, 65);
+            this.label6.Location = new System.Drawing.Point(593, 65);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(70, 17);
@@ -154,7 +155,7 @@
             // 
             // txtFilterDoc
             // 
-            this.txtFilterDoc.Location = new System.Drawing.Point(81, 62);
+            this.txtFilterDoc.Location = new System.Drawing.Point(666, 62);
             this.txtFilterDoc.Margin = new System.Windows.Forms.Padding(4);
             this.txtFilterDoc.MaxLength = 18;
             this.txtFilterDoc.Name = "txtFilterDoc";
@@ -164,7 +165,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 100);
+            this.label4.Location = new System.Drawing.Point(8, 65);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(62, 17);
@@ -174,7 +175,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(306, 100);
+            this.label5.Location = new System.Drawing.Point(306, 65);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(62, 17);
@@ -183,7 +184,7 @@
             // 
             // txtNameFilter
             // 
-            this.txtNameFilter.Location = new System.Drawing.Point(81, 97);
+            this.txtNameFilter.Location = new System.Drawing.Point(81, 62);
             this.txtNameFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtNameFilter.MaxLength = 255;
             this.txtNameFilter.Name = "txtNameFilter";
@@ -192,7 +193,7 @@
             // 
             // txtmailFilter
             // 
-            this.txtmailFilter.Location = new System.Drawing.Point(379, 62);
+            this.txtmailFilter.Location = new System.Drawing.Point(954, 62);
             this.txtmailFilter.Margin = new System.Windows.Forms.Padding(4);
             this.txtmailFilter.MaxLength = 255;
             this.txtmailFilter.Name = "txtmailFilter";
@@ -221,6 +222,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btnAtras);
             this.groupBox3.Controls.Add(this.btnLimpiar);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.txtNroCalle);
@@ -254,11 +256,11 @@
             this.groupBox3.Controls.Add(this.txtApellido);
             this.groupBox3.Controls.Add(this.txtDireccion);
             this.groupBox3.Controls.Add(this.txtTelefono);
-            this.groupBox3.Location = new System.Drawing.Point(766, 22);
+            this.groupBox3.Location = new System.Drawing.Point(13, 389);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox3.Size = new System.Drawing.Size(718, 416);
+            this.groupBox3.Size = new System.Drawing.Size(1332, 416);
             this.groupBox3.TabIndex = 36;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Nuevo Cliente";
@@ -581,10 +583,10 @@
             // 
             // btnAtras
             // 
-            this.btnAtras.Location = new System.Drawing.Point(1371, 544);
+            this.btnAtras.Location = new System.Drawing.Point(1214, 33);
             this.btnAtras.Margin = new System.Windows.Forms.Padding(4);
             this.btnAtras.Name = "btnAtras";
-            this.btnAtras.Size = new System.Drawing.Size(113, 37);
+            this.btnAtras.Size = new System.Drawing.Size(99, 39);
             this.btnAtras.TabIndex = 37;
             this.btnAtras.Text = "Atras";
             this.btnAtras.UseVisualStyleBackColor = true;
@@ -594,11 +596,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1501, 586);
-            this.Controls.Add(this.btnAtras);
+            this.ClientSize = new System.Drawing.Size(1366, 833);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Name = "frmAbmCliente";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmAbmCliente";
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

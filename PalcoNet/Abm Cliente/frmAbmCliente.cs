@@ -51,24 +51,30 @@ namespace PalcoNet.Abm_Cliente
             llenarCmbAno();
             llenarCmbtipoDocumento();
             formatearDataGrid();
+            CargarDatos(string.Empty, string.Empty, string.Empty, string.Empty);
         }
 
 
-        public class ResultadoClientes
+        private void CargarDatos(string nombre, string apellido, string dni, string mail)
         {
-            public int usuario_id { get; set; }
-            public string nombre { get; set; }
-            public string apellido { get; set; }
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@NOMBRE", nombre);
+            SqlConnector.agregarParametro(listaParametros, "@APELLIDO", apellido);
+            SqlConnector.agregarParametro(listaParametros, "@DNI", dni);
+            SqlConnector.agregarParametro(listaParametros, "@mail", mail);
 
-            public ResultadoClientes(int usuario_id, string nombre, string apellido)
+
+            String commandtext = "VADIUM.LISTADO_SELECCION_CLIENTE";
+            DataTable table = SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
+            if (table.Rows.Count > 0 && table.Rows[0].ItemArray[0].ToString() == "ERROR")
             {
-                usuario_id = usuario_id;
-                nombre = nombre;
-                apellido = apellido;
+                MessageBox.Show(table.Rows[0].ItemArray[1].ToString());
+            }
+            else
+            {
+                dgResultados.DataSource = table;
             }
         }
-
-        public List<ResultadoClientes> resultados = new List<ResultadoClientes>();
 
         public void llenarCmbDia()
         {
@@ -204,6 +210,7 @@ namespace PalcoNet.Abm_Cliente
         }
 
 
+
         private void btnRegistrarse_Click(object sender, EventArgs e)
         {
             this.nombre = randomUser();
@@ -315,6 +322,79 @@ namespace PalcoNet.Abm_Cliente
             SqlConnector.cerrarConexion();
         }
 
+        private void btnAtras_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            frmSeleccionFuncionalidades.Show();
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            Interfaz.limpiarInterfaz(this);
+        }
+
+        private void btnBusqueda_Click(object sender, EventArgs e)
+        {
+            CargarDatos(txtNameFilter.Text, txtLastNameFilter.Text, txtFilterDoc.Text, txtmailFilter.Text);
+        }
+
+        public void formatearDataGrid()
+        {
+            int widthBotones = 80;
+
+            dgResultados.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dgResultados.RowHeadersVisible = false;
+
+            DataGridViewButtonColumn botonesModificar = new DataGridViewButtonColumn();
+            botonesModificar.HeaderText = "";
+            botonesModificar.Text = "Modificar";
+            botonesModificar.Name = "btnModificar";
+            botonesModificar.Width = widthBotones;
+            botonesModificar.UseColumnTextForButtonValue = true;
+            botonesModificar.Resizable = DataGridViewTriState.False;
+
+            DataGridViewButtonColumn botonesEliminar = new DataGridViewButtonColumn();
+            botonesEliminar.HeaderText = "";
+            botonesEliminar.Text = "Eliminar";
+            botonesEliminar.Name = "btnEliminar";
+            botonesEliminar.Width = widthBotones;
+            botonesEliminar.UseColumnTextForButtonValue = true;
+            botonesEliminar.Resizable = DataGridViewTriState.False;
+
+            dgResultados.Columns.Add(botonesModificar);
+            dgResultados.Columns.Add(botonesEliminar);
+        }
+
+        private void dgResultados_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgResultados.Rows[e.RowIndex].Cells[3].Value.ToString() != "")
+            {
+                switch (e.ColumnIndex)
+                {
+                    case 0:
+                        frmModificarCliente frmCliente = new frmModificarCliente(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[3].Value));
+                        frmCliente.Show();
+                        break;
+                    case 1:
+                        DialogResult result = MessageBox.Show("Se inhabilitará al cliente " + Convert.ToString(dgResultados.Rows[e.RowIndex].Cells[5].Value) + ", " + Convert.ToString(dgResultados.Rows[e.RowIndex].Cells[4].Value) + ".\n\n¿Está seguro?", "Confirmación", MessageBoxButtons.YesNoCancel);
+                        if (result == DialogResult.Yes)
+                        {
+                            eliminarCliente(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[3].Value));
+                        }
+                        break;
+                }
+            }
+        }
+
+        public void eliminarCliente(int id)
+        {
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", id);
+            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_activo = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.cerrarConexion();
+            MessageBox.Show("Usuario inhabilitado.");
+        }
+
         private void textboxNumerico_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar)
@@ -345,110 +425,5 @@ namespace PalcoNet.Abm_Cliente
             }
         }
 
-
-        private void btnAtras_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            frmSeleccionFuncionalidades.Show();
-        }
-
-        private void btnLimpiar_Click(object sender, EventArgs e)
-        {
-            Interfaz.limpiarInterfaz(this);
-        }
-
-
-        private void btnBusqueda_Click(object sender, EventArgs e)
-        {
-            List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario_username);
-
-            SqlConnector.agregarParametro(listaParametros, "@nombre", txtNameFilter.Text);
-            SqlConnector.agregarParametro(listaParametros, "@apellido", txtLastNameFilter.Text);
-            SqlConnector.agregarParametro(listaParametros, "@DNI", txtFilterDoc.Text);
-            SqlConnector.agregarParametro(listaParametros, "@mail", txtmailFilter.Text);
-
-            //revisar query
-            String commandtext = "VADIUM.LISTADO_SELECCION_CLIENTE";
-            DataTable table = SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
-            if (table.Rows.Count > 0 && table.Rows[0].ItemArray[0].ToString() == "ERROR")
-            {
-                MessageBox.Show(table.Rows[0].ItemArray[1].ToString());
-            }
-            else
-            {
-                dgResultados.DataSource = table;
-            }
-        }
-
-        public void formatearDataGrid()
-        {
-            int widthnombre = 100;
-            int widthapellido = 120;
-            int widthBotones = 80;
-
-            dgResultados.DataSource = resultados;
-            dgResultados.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgResultados.RowHeadersVisible = false;
-
-            DataGridViewColumn col_usuario_id = dgResultados.Columns[0];
-            col_usuario_id.Visible = false;
-
-            DataGridViewColumn col_nombre = dgResultados.Columns[1];
-            col_nombre.Resizable = DataGridViewTriState.False;
-            col_nombre.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col_nombre.Width = widthnombre;
-
-            DataGridViewColumn col_apellido = dgResultados.Columns[2];
-            col_apellido.Resizable = DataGridViewTriState.False;
-            col_apellido.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col_apellido.Width = widthapellido;
-
-            DataGridViewButtonColumn botonesModificar = new DataGridViewButtonColumn();
-            botonesModificar.HeaderText = "";
-            botonesModificar.Text = "Modificar";
-            botonesModificar.Name = "bMod";
-            botonesModificar.Width = widthBotones;
-            botonesModificar.UseColumnTextForButtonValue = true;
-            botonesModificar.Resizable = DataGridViewTriState.False;
-
-            DataGridViewButtonColumn botonesEliminar = new DataGridViewButtonColumn();
-            botonesEliminar.HeaderText = "";
-            botonesEliminar.Text = "Eliminar";
-            botonesEliminar.Name = "bElim";
-            botonesEliminar.Width = widthBotones;
-            botonesEliminar.UseColumnTextForButtonValue = true;
-            botonesEliminar.Resizable = DataGridViewTriState.False;
-
-            dgResultados.Columns.Add(botonesModificar);
-            dgResultados.Columns.Add(botonesEliminar);
-        }
-
-        public void eliminarCliente(int id)
-        {
-            List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@usuario_id", id);
-            SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_activo = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
-            SqlConnector.cerrarConexion();
-            MessageBox.Show("Usuario inhabilitado.");
-        }
-
-        private void dgResultados_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            switch (e.ColumnIndex)
-            {
-                case 0:
-                    frmModificarCliente frmCliente = new frmModificarCliente(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value));
-                    frmCliente.Show();
-                    break;
-                case 1:
-                    DialogResult result = MessageBox.Show("Se inhabilitará al cliente " + Convert.ToString(dgResultados.Rows[e.RowIndex].Cells[3].Value) + ", " + Convert.ToString(dgResultados.Rows[e.RowIndex].Cells[4].Value) + ".\n\n¿Está seguro?", "Confirmación", MessageBoxButtons.YesNoCancel);
-                    if (result == DialogResult.Yes)
-                    {
-                        eliminarCliente(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value));
-                    }
-                    break;
-            }
-        }
     }
 }

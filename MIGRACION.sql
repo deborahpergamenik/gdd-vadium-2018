@@ -215,7 +215,7 @@ CREATE TABLE [VADIUM].CLIENTE(
 	nombre nvarchar(255),
 	apellido nvarchar(255),
 	tipoDocumento nvarchar(50),
-	numeroDocumento numeric(18,0),
+	numeroDocumento nvarchar(50),
 	CUIL nvarchar(20),
 	fechaNacimiento datetime,
 	fechaCreacion datetime,
@@ -680,7 +680,7 @@ END CATCH
 GO
 ---------------------------CLIENTE -----------------------------------
 
-CREATE	 PROCEDURE [VADIUM].LISTADO_SELECCION_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI numeric(18), @mail nvarchar(255)
+CREATE	 PROCEDURE [VADIUM].LISTADO_SELECCION_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI NVARCHAR(50), @mail nvarchar(255)
 AS
 BEGIN TRY
 	SELECT *
@@ -688,14 +688,14 @@ BEGIN TRY
 	WHERE
 	(@NOMBRE = '' OR @NOMBRE is null OR  lower(cli.nombre) LIKE '%' + lower(@NOMBRE) + '%') AND
 	(@APELLIDO = '' OR @APELLIDO is null OR lower(cli.apellido) LIKE '%' + lower(@APELLIDO) + '%') AND
-	(@DNI = '' OR @DNI is null OR cli.numeroDocumento = @DNI) AND
+	(@DNI = '' OR @DNI is null OR lower(cli.numeroDocumento) LIKE '%' + lower(@DNI) + '%') AND
 	(@mail = '' OR @mail is null OR lower(cli.mail) LIKE '%' + lower(@mail) + '%');
 END TRY
 BEGIN CATCH
   SELECT 'ERROR', ERROR_MESSAGE()
 END CATCH
 GO
-CREATE	 PROCEDURE [VADIUM].OBTENER_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI numeric(18), @mail nvarchar(255)
+CREATE	 PROCEDURE [VADIUM].OBTENER_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI NVARCHAR(50), @mail nvarchar(255)
 AS
 BEGIN TRY
 	SELECT *
@@ -703,7 +703,7 @@ BEGIN TRY
 	WHERE
 	(@NOMBRE = '' OR @NOMBRE is null OR  lower(cli.nombre) LIKE '%' + lower(@NOMBRE) + '%') AND
 	(@APELLIDO = '' OR @APELLIDO is null OR lower(cli.apellido) LIKE '%' + lower(@APELLIDO) + '%') AND
-	(@DNI = '' OR @DNI is null OR cli.numeroDocumento = @DNI) AND
+	(@DNI = '' OR @DNI is null OR lower(cli.numeroDocumento) LIKE '%' + lower(@DNI) + '%') AND
 	(@mail = '' OR @mail is null OR lower(cli.mail) LIKE '%' + lower(@mail) + '%');
 END TRY
 BEGIN CATCH

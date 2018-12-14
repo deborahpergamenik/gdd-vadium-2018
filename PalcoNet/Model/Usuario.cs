@@ -213,7 +213,7 @@ namespace PalcoNet.Model
             SqlConnector.cerrarConexion();
         }
 
-        public void cambiarpassword(string nuevoPass)
+        public void cambiarPassword(string nuevoPass)
         {
             UTF8Encoding encoderHash = new UTF8Encoding();
             SHA256Managed hasher = new SHA256Managed();

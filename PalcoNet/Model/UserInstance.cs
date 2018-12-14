@@ -57,7 +57,7 @@ namespace PalcoNet.Model
             if (lector2.HasRows)
             {
                 lector2.Read();
-                this.empresaId = Convert.ToInt32(lector["empresa_id"]);
+                this.empresaId = Convert.ToInt32(lector2["empresa_id"]);
             }
 
             SqlConnector.cerrarConexion();

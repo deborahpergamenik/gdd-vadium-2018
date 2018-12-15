@@ -16,10 +16,8 @@ namespace PalcoNet.Login
 {
     public partial class frmCambiarpassword : Form
     {
-        public Boolean primera_vez { get; set; }
-        public frmCambiarpassword(Boolean pVez)
+        public frmCambiarpassword()
         {
-            this.primera_vez = pVez;
             InitializeComponent();
         }
 

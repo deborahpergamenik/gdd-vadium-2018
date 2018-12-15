@@ -728,7 +728,7 @@ GO
 ---------------------------EMPRESA -----------------------------------
 
 
-CREATE	 PROCEDURE [VADIUM].LISTADO_SELECCION_EMPRESA @razonSocial NVARCHAR(255),@CUIT NVARCHAR(255),@mail numeric(18)
+CREATE PROCEDURE [VADIUM].LISTADO_SELECCION_EMPRESA @razonSocial NVARCHAR(255),@CUIT NVARCHAR(255),@mail NVARCHAR(255)
 AS
 BEGIN TRY
 	SELECT *
@@ -736,14 +736,12 @@ BEGIN TRY
 	WHERE
 	(@razonSocial = '' OR @razonSocial is null OR  lower(emp.razonSocial) LIKE '%' + lower(@razonSocial) + '%') AND	
 	(@mail = '' OR @mail is null OR lower(emp.mail) LIKE '%' + lower(@mail) + '%')AND
-	(@CUIT = '' OR @CUIT is null OR emp.cuit = @CUIT) ;
+	(@CUIT = '' OR @CUIT is null OR lower(emp.cuit) LIKE '%' + lower(@CUIT) + '%' ) ;
 END TRY
 BEGIN CATCH
   SELECT 'ERROR', ERROR_MESSAGE()
 END CATCH
 GO
-
-
 ------------------- Canje de puntos ----------------------------------
 
 CREATE PROCEDURE [VADIUM].puntajeCliente  @cliente int, @fechaActual datetime

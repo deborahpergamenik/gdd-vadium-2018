@@ -67,7 +67,7 @@ namespace PalcoNet.Registro_de_Usuario
             this.cmbTipoDocumento.Items.Add("LC");
         }
 
-        public Boolean registrarCliente(string username, string passwordNoHash, string tipoDocumentoumento, string numeroDocumento, string CUIL, string nombre, string apellido, string mail, string telefono, string direccion, string cod_postal, string nroPiso, string departamento, string localidad, DateTime fechaNacimiento)
+        public Boolean registrarCliente(string username, string passwordNoHash, string tipoDocumento, string numeroDocumento, string CUIL, string nombre, string apellido, string mail, string telefono, string direccion, string cod_postal, string nroPiso, string departamento, string localidad, DateTime fechaNacimiento)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace PalcoNet.Registro_de_Usuario
 
                 List<SqlParameter> listaParametros3 = new List<SqlParameter>();
                 SqlConnector.agregarParametro(listaParametros3, "@usuario_id", idUser);
-                SqlConnector.agregarParametro(listaParametros3, "@tipoDocumento", tipoDocumentoumento);
+                SqlConnector.agregarParametro(listaParametros3, "@tipoDocumento", tipoDocumento);
                 SqlConnector.agregarParametro(listaParametros3, "@numeroDocumento", Convert.ToInt32(numeroDocumento));
                 SqlConnector.agregarParametro(listaParametros3, "@CUIL", CUIL);
                 SqlConnector.agregarParametro(listaParametros3, "@nombre", nombre);
@@ -241,10 +241,7 @@ namespace PalcoNet.Registro_de_Usuario
 
         private void textboxNoNumerico_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar < 65 || e.KeyChar > 122)
-            {
-                e.Handled = true;
-            }
+
         }
 
         private void txtCUIL_KeyPress(object sender, KeyPressEventArgs e)

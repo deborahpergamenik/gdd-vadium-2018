@@ -82,7 +82,7 @@ namespace PalcoNet
                         {
                             if (pVez == 1)
                             {
-                                frmCambiarpassword frmPassword = new frmCambiarpassword(false);
+                                frmCambiarpassword frmPassword = new frmCambiarpassword();
                                 frmPassword.Show();
                             }
                         }

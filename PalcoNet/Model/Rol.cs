@@ -44,9 +44,9 @@ namespace PalcoNet.Model
 
             listaParametros.Clear();
 
-            SqlConnector.agregarParametro(listaParametros, "@nombre", "Cliente");
+            SqlConnector.agregarParametro(listaParametros, "@rol_nombre", nombreRol);
 
-            string commandText = "SELECT rol_id FROM VADIUM.ROL WHERE nombre = @nombre";
+            string commandText = "SELECT rol_id FROM VADIUM.ROL WHERE rol_nombre = @rol_nombre";
 
             SqlDataReader lector = SqlConnector.ObtenerDataReader(commandText, "T", listaParametros);
 

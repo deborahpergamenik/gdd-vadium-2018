@@ -59,7 +59,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cmbusuario_activo = new System.Windows.Forms.ComboBox();
             this.txtpassword = new System.Windows.Forms.TextBox();
-            this.txtUsuario = new System.Windows.Forms.TextBox();
+            this.txtUsername = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -107,32 +107,35 @@
             // cmbAno
             // 
             this.cmbAno.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAno.Enabled = false;
             this.cmbAno.FormattingEnabled = true;
             this.cmbAno.Location = new System.Drawing.Point(286, 247);
             this.cmbAno.Margin = new System.Windows.Forms.Padding(4);
             this.cmbAno.Name = "cmbAno";
             this.cmbAno.Size = new System.Drawing.Size(79, 24);
-            this.cmbAno.TabIndex = 67;
+            this.cmbAno.TabIndex = 13;
             // 
             // cmbMes
             // 
             this.cmbMes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbMes.Enabled = false;
             this.cmbMes.FormattingEnabled = true;
             this.cmbMes.Location = new System.Drawing.Point(215, 247);
             this.cmbMes.Margin = new System.Windows.Forms.Padding(4);
             this.cmbMes.Name = "cmbMes";
             this.cmbMes.Size = new System.Drawing.Size(59, 24);
-            this.cmbMes.TabIndex = 66;
+            this.cmbMes.TabIndex = 12;
             // 
             // cmbDia
             // 
             this.cmbDia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDia.Enabled = false;
             this.cmbDia.FormattingEnabled = true;
             this.cmbDia.Location = new System.Drawing.Point(141, 247);
             this.cmbDia.Margin = new System.Windows.Forms.Padding(4);
             this.cmbDia.Name = "cmbDia";
             this.cmbDia.Size = new System.Drawing.Size(59, 24);
-            this.cmbDia.TabIndex = 64;
+            this.cmbDia.TabIndex = 11;
             // 
             // label7
             // 
@@ -161,8 +164,7 @@
             this.txtCiudad.MaxLength = 50;
             this.txtCiudad.Name = "txtCiudad";
             this.txtCiudad.Size = new System.Drawing.Size(262, 22);
-            this.txtCiudad.TabIndex = 63;
-            this.txtCiudad.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
+            this.txtCiudad.TabIndex = 9;
             // 
             // txtRazonSocial
             // 
@@ -171,8 +173,7 @@
             this.txtRazonSocial.MaxLength = 255;
             this.txtRazonSocial.Name = "txtRazonSocial";
             this.txtRazonSocial.Size = new System.Drawing.Size(239, 22);
-            this.txtRazonSocial.TabIndex = 60;
-            this.txtRazonSocial.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
+            this.txtRazonSocial.TabIndex = 1;
             // 
             // label5
             // 
@@ -187,7 +188,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(399, 48);
+            this.label6.Location = new System.Drawing.Point(428, 48);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(54, 17);
@@ -196,12 +197,12 @@
             // 
             // txtCuit
             // 
-            this.txtCuit.Location = new System.Drawing.Point(502, 44);
+            this.txtCuit.Location = new System.Drawing.Point(531, 44);
             this.txtCuit.Margin = new System.Windows.Forms.Padding(4);
             this.txtCuit.MaxLength = 18;
             this.txtCuit.Name = "txtCuit";
             this.txtCuit.Size = new System.Drawing.Size(200, 22);
-            this.txtCuit.TabIndex = 59;
+            this.txtCuit.TabIndex = 2;
             this.txtCuit.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxcuit_KeyPress);
             // 
             // label17
@@ -221,7 +222,7 @@
             this.txtEmail.MaxLength = 255;
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(262, 22);
-            this.txtEmail.TabIndex = 50;
+            this.txtEmail.TabIndex = 3;
             // 
             // label13
             // 
@@ -240,13 +241,12 @@
             this.txtLocalidad.MaxLength = 18;
             this.txtLocalidad.Name = "txtLocalidad";
             this.txtLocalidad.Size = new System.Drawing.Size(262, 22);
-            this.txtLocalidad.TabIndex = 45;
-            this.txtLocalidad.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
+            this.txtLocalidad.TabIndex = 7;
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(399, 128);
+            this.label14.Location = new System.Drawing.Point(428, 128);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(58, 17);
@@ -256,7 +256,7 @@
             // ASDASD
             // 
             this.ASDASD.AutoSize = true;
-            this.ASDASD.Location = new System.Drawing.Point(399, 171);
+            this.ASDASD.Location = new System.Drawing.Point(428, 171);
             this.ASDASD.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.ASDASD.Name = "ASDASD";
             this.ASDASD.Size = new System.Drawing.Size(98, 17);
@@ -265,26 +265,27 @@
             // 
             // txtNroPiso
             // 
-            this.txtNroPiso.Location = new System.Drawing.Point(502, 125);
+            this.txtNroPiso.Location = new System.Drawing.Point(531, 125);
             this.txtNroPiso.Margin = new System.Windows.Forms.Padding(4);
             this.txtNroPiso.MaxLength = 255;
             this.txtNroPiso.Name = "txtNroPiso";
             this.txtNroPiso.Size = new System.Drawing.Size(200, 22);
-            this.txtNroPiso.TabIndex = 52;
+            this.txtNroPiso.TabIndex = 6;
+            this.txtNroPiso.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
             // txtDepartamento
             // 
-            this.txtDepartamento.Location = new System.Drawing.Point(505, 165);
+            this.txtDepartamento.Location = new System.Drawing.Point(534, 165);
             this.txtDepartamento.Margin = new System.Windows.Forms.Padding(4);
             this.txtDepartamento.MaxLength = 18;
             this.txtDepartamento.Name = "txtDepartamento";
             this.txtDepartamento.Size = new System.Drawing.Size(197, 22);
-            this.txtDepartamento.TabIndex = 53;
+            this.txtDepartamento.TabIndex = 8;
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(399, 89);
+            this.label18.Location = new System.Drawing.Point(428, 89);
             this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(64, 17);
@@ -304,7 +305,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(399, 208);
+            this.label20.Location = new System.Drawing.Point(428, 208);
             this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(113, 17);
@@ -313,12 +314,12 @@
             // 
             // txtCodPostal
             // 
-            this.txtCodPostal.Location = new System.Drawing.Point(520, 205);
+            this.txtCodPostal.Location = new System.Drawing.Point(549, 205);
             this.txtCodPostal.Margin = new System.Windows.Forms.Padding(4);
             this.txtCodPostal.MaxLength = 50;
             this.txtCodPostal.Name = "txtCodPostal";
             this.txtCodPostal.Size = new System.Drawing.Size(182, 22);
-            this.txtCodPostal.TabIndex = 55;
+            this.txtCodPostal.TabIndex = 10;
             this.txtCodPostal.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
             // txtDireccion
@@ -328,25 +329,25 @@
             this.txtDireccion.MaxLength = 255;
             this.txtDireccion.Name = "txtDireccion";
             this.txtDireccion.Size = new System.Drawing.Size(262, 22);
-            this.txtDireccion.TabIndex = 44;
+            this.txtDireccion.TabIndex = 5;
             // 
             // txtTelefono
             // 
-            this.txtTelefono.Location = new System.Drawing.Point(502, 83);
+            this.txtTelefono.Location = new System.Drawing.Point(531, 83);
             this.txtTelefono.Margin = new System.Windows.Forms.Padding(4);
             this.txtTelefono.MaxLength = 18;
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(200, 22);
-            this.txtTelefono.TabIndex = 51;
+            this.txtTelefono.TabIndex = 4;
             this.txtTelefono.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
             // btnModificar
             // 
-            this.btnModificar.Location = new System.Drawing.Point(599, 285);
+            this.btnModificar.Location = new System.Drawing.Point(589, 285);
             this.btnModificar.Margin = new System.Windows.Forms.Padding(4);
             this.btnModificar.Name = "btnModificar";
             this.btnModificar.Size = new System.Drawing.Size(142, 37);
-            this.btnModificar.TabIndex = 3;
+            this.btnModificar.TabIndex = 16;
             this.btnModificar.Text = "Modificar";
             this.btnModificar.UseVisualStyleBackColor = true;
             this.btnModificar.Click += new System.EventHandler(this.btnModificar_Click);
@@ -354,6 +355,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.Color.Red;
             this.label12.Location = new System.Drawing.Point(8, 305);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
@@ -376,7 +378,7 @@
             // 
             this.groupBox1.Controls.Add(this.cmbusuario_activo);
             this.groupBox1.Controls.Add(this.txtpassword);
-            this.groupBox1.Controls.Add(this.txtUsuario);
+            this.groupBox1.Controls.Add(this.txtUsername);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
@@ -393,10 +395,10 @@
             // 
             this.cmbusuario_activo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbusuario_activo.FormattingEnabled = true;
-            this.cmbusuario_activo.Location = new System.Drawing.Point(620, 29);
+            this.cmbusuario_activo.Location = new System.Drawing.Point(630, 29);
             this.cmbusuario_activo.Margin = new System.Windows.Forms.Padding(4);
             this.cmbusuario_activo.Name = "cmbusuario_activo";
-            this.cmbusuario_activo.Size = new System.Drawing.Size(121, 24);
+            this.cmbusuario_activo.Size = new System.Drawing.Size(111, 24);
             this.cmbusuario_activo.TabIndex = 2;
             // 
             // txtpassword
@@ -408,14 +410,14 @@
             this.txtpassword.Size = new System.Drawing.Size(158, 22);
             this.txtpassword.TabIndex = 1;
             // 
-            // txtUsuario
+            // txtUsername
             // 
-            this.txtUsuario.Location = new System.Drawing.Point(126, 32);
-            this.txtUsuario.Margin = new System.Windows.Forms.Padding(4);
-            this.txtUsuario.MaxLength = 255;
-            this.txtUsuario.Name = "txtUsuario";
-            this.txtUsuario.Size = new System.Drawing.Size(148, 22);
-            this.txtUsuario.TabIndex = 0;
+            this.txtUsername.Location = new System.Drawing.Point(126, 32);
+            this.txtUsername.Margin = new System.Windows.Forms.Padding(4);
+            this.txtUsername.MaxLength = 255;
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.Size = new System.Drawing.Size(148, 22);
+            this.txtUsername.TabIndex = 0;
             // 
             // label4
             // 
@@ -423,9 +425,9 @@
             this.label4.Location = new System.Drawing.Point(551, 34);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(52, 17);
+            this.label4.Size = new System.Drawing.Size(71, 17);
             this.label4.TabIndex = 3;
-            this.label4.Text = "Estado";
+            this.label4.Text = "Habilitado";
             // 
             // label2
             // 
@@ -474,7 +476,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox cmbusuario_activo;
         private System.Windows.Forms.TextBox txtpassword;
-        private System.Windows.Forms.TextBox txtUsuario;
+        private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;

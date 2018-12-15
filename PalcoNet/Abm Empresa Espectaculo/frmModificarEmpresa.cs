@@ -28,9 +28,9 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         public string cod_postal { get; set; }
         public string ciudad { get; set; }
         public string mail { get; set; }
-        public string Localidad { get; set; }
-        public string NroPiso { get; set; }
-        public string Departamento { get; set; }
+        public string localidad { get; set; }
+        public string nroPiso { get; set; }
+        public string departamento { get; set; }
 
         public int Dia { get; set; }
         public int Mes { get; set; }
@@ -50,7 +50,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         public void cargarDatosViejos()
         {
-            this.usuario_username = txtUsuario.Text;
+            this.usuario_username = txtUsername.Text;
             this.password = txtpassword.Text;
             this.usuario_activo = cmbusuario_activo.SelectedIndex;
 
@@ -61,9 +61,9 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             this.cod_postal = txtCodPostal.Text;
             this.ciudad = txtCiudad.Text;
             this.mail = txtEmail.Text;
-            this.Localidad = txtLocalidad.Text;
-            this.Departamento = txtDepartamento.Text;
-            this.NroPiso = txtNroPiso.Text;
+            this.localidad = txtLocalidad.Text;
+            this.departamento = txtDepartamento.Text;
+            this.nroPiso = txtNroPiso.Text;
 
             this.Dia = cmbDia.SelectedIndex;
             this.Mes = cmbMes.SelectedIndex;
@@ -106,7 +106,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         public void llenarCmbAno()
         {
             int i;
-            for (i = 1000; i <= 2014; i++)
+            for (i = 1000; i <= 2018; i++)
             {
                 this.cmbAno.Items.Add(i.ToString());
             }
@@ -116,7 +116,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT razonSocial, cuit, telefono, direccion, cod_postal, ciudad, mail, DAY(fechaCreacion) AS fechaCreacion_Dia, MONTH(fechaCreacion) AS fechaCreacion_Mes, YEAR(fechaCreacion) AS fechaCreacion_Ano  FROM VADIUM.EMPRESA WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT empresa_id, usuario_id, razonSocial, cuit, mail, telefono, calle, piso, depto, cod_postal, localidad, ciudad, DAY(fechaCreacion) AS fechaCreacion_Dia, MONTH(fechaCreacion) AS fechaCreacion_Mes, YEAR(fechaCreacion) AS fechaCreacion_Ano  FROM VADIUM.EMPRESA WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
 
             txtRazonSocial.Text = Convert.ToString(lector["razonSocial"]);
@@ -131,7 +131,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 txtTelefono.Text = "";
             }
 
-            txtDireccion.Text = Convert.ToString(lector["direccion"]);
+            txtDireccion.Text = Convert.ToString(lector["calle"]);
             txtCodPostal.Text = Convert.ToString(lector["cod_postal"]);
 
             if (lector["ciudad"] != DBNull.Value)
@@ -145,9 +145,9 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
             txtEmail.Text = Convert.ToString(lector["mail"]);
 
-            txtDepartamento.Text = Convert.ToString(lector["Departamento"]);
-            txtNroPiso.Text = Convert.ToString(lector["NroPiso"]);
-            txtLocalidad.Text = Convert.ToString(lector["Localidad"]);
+            txtDepartamento.Text = Convert.ToString(lector["depto"]);
+            txtNroPiso.Text = Convert.ToString(lector["piso"]);
+            txtLocalidad.Text = Convert.ToString(lector["localidad"]);
 
             cmbDia.SelectedIndex = Convert.ToInt32(lector["fechaCreacion_Dia"]);
             cmbMes.SelectedIndex = Convert.ToInt32(lector["fechaCreacion_Mes"]);
@@ -163,7 +163,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_username, usuario_activo FROM VADIUM.USUARIO WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
 
-            txtUsuario.Text = Convert.ToString(lector["usuario_username"]);
+            txtUsername.Text = Convert.ToString(lector["usuario_username"]);
 
             if (Convert.ToInt32(lector["usuario_activo"]) == 0)
             {
@@ -296,12 +296,12 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             Boolean modificacion = false;
             Boolean error = false;
 
-            if (cambioString(this.usuario_username, txtUsuario.Text))
+            if (cambioString(this.usuario_username, txtUsername.Text))
             {
                 if (usuario_usernameValido())
                 {
-                    cambiarStringUsuarios("usuario_username", txtUsuario.Text);
-                    resumenModificaciones = resumenModificaciones + "\nnombre de usuario";
+                    cambiarStringUsuarios("usuario_username", txtUsername.Text);
+                    resumenModificaciones = resumenModificaciones + "\nNombre de usuario";
                     modificacion = true;
                 }
                 else
@@ -321,11 +321,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
                 List<SqlParameter> listaParametros = new List<SqlParameter>();
                 SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario_id);
-                SqlConnector.agregarParametro(listaParametros, "@password", password);
+                SqlConnector.agregarParametro(listaParametros, "@usuario_password", password);
 
-                MessageBox.Show("usuario_id: " + this.usuario_id + "\npassword: " + txtpassword.Text + "\nHASH: " + password);
+                //MessageBox.Show("usuario_id: " + this.usuario_id + "\npassword: " + txtpassword.Text + "\nHASH: " + password);
 
-                SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET password = @password, primera_vez = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
+                SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_password = @usuario_password, primera_vez = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 resumenModificaciones = resumenModificaciones + "\nContraseña";
@@ -335,7 +335,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             if (cambioInt(this.usuario_activo, cmbusuario_activo.SelectedIndex))
             {
                 cambiarIntUsuarios("usuario_activo", cmbusuario_activo.SelectedIndex);
-                resumenModificaciones = resumenModificaciones + "\nusuario_activo";
+                resumenModificaciones = resumenModificaciones + "\nHabilitado";
                 modificacion = true;
             }
 
@@ -359,16 +359,31 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 if (!txtCuit.Text.Equals("") && !SqlConnector.existeString(txtCuit.Text, "VADIUM.EMPRESA", "cuit") && txtCuit.Text.Length <= 50)
                 {
                     cambiarStringEmpresas("cuit", txtCuit.Text);
-                    resumenModificaciones = resumenModificaciones + "\ncuit";
+                    resumenModificaciones = resumenModificaciones + "\nCuit";
                     modificacion = true;
                 }
                 else
                 {
-                    //MessageBox.Show("cuit inválido.", "Error");
-                    resumenErrores = resumenErrores + "\ncuit (no ingresado o ya existente)";
+                    resumenErrores = resumenErrores + "\nCuit (no ingresado o ya existente)";
                     error = true;
                 }
             }
+
+            if (cambioString(this.mail, txtEmail.Text))
+            {
+                if (!txtEmail.Text.Equals(""))
+                {
+                    cambiarStringEmpresas("mail", txtEmail.Text);
+                    resumenModificaciones = resumenModificaciones + "\nE-mail";
+                    modificacion = true;
+                }
+                else
+                {
+                    resumenErrores = resumenErrores + "\nE-mail (no ingresado)";
+                    error = true;
+                }
+            }
+
 
             if (cambioString(this.telefono, txtTelefono.Text))
             {
@@ -406,13 +421,59 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             {
                 if (!txtDireccion.Text.Equals(""))
                 {
-                    cambiarStringEmpresas("direccion", txtDireccion.Text);
+                    cambiarStringEmpresas("calle", txtDireccion.Text);
                     resumenModificaciones = resumenModificaciones + "\nDirección";
                     modificacion = true;
                 }
                 else
                 {
-                    resumenErrores = resumenErrores + "\ndireccion (no ingresada)";
+                    resumenErrores = resumenErrores + "\nDireccion (no ingresada)";
+                    error = true;
+                }
+            }
+
+
+            if (cambioString(this.nroPiso, txtNroPiso.Text))
+            {
+                if (!txtNroPiso.Text.Equals(""))
+                {
+                    cambiarLongIntEmpresas("piso", Convert.ToInt64(txtNroPiso.Text));
+                    resumenModificaciones = resumenModificaciones + "\nPiso";
+                    modificacion = true;
+                }
+                else
+                {
+                    resumenErrores = resumenErrores + "\nPiso (no ingresado)";
+                    error = true;
+                }
+            }
+
+            if (cambioString(this.localidad, txtLocalidad.Text))
+            {
+                if (!txtLocalidad.Text.Equals(""))
+                {
+                    cambiarStringEmpresas("localidad", txtLocalidad.Text);
+                    resumenModificaciones = resumenModificaciones + "\nLocalidad";
+                    modificacion = true;
+                }
+                else
+                {
+                    resumenErrores = resumenErrores + "\nLocalidad (no ingresada)";
+                    error = true;
+                }
+            }
+
+            if (cambioString(this.departamento, txtDepartamento.Text))
+            {
+                if (!txtDepartamento.Text.Equals(""))
+                {
+                    cambiarStringEmpresas("depto", txtDepartamento.Text);
+                    resumenModificaciones = resumenModificaciones + "\nDepartamento";
+                    modificacion = true;
+                }
+                else
+                {
+                    resumenErrores = resumenErrores + "\nDepartamento (no ingresado)";
                     error = true;
                 }
             }
@@ -457,22 +518,6 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 }
             }
 
-            if (cambioString(this.mail, txtEmail.Text))
-            {
-                if (!txtEmail.Text.Equals(""))
-                {
-                    cambiarStringEmpresas("mail", txtEmail.Text);
-                    resumenModificaciones = resumenModificaciones + "\nE-mail";
-                    modificacion = true;
-                }
-                else
-                {
-                    resumenErrores = resumenErrores + "\nE-mail (no ingresado)";
-                    error = true;
-                }
-            }
-
-
             if (cambioInt(Dia, cmbDia.SelectedIndex) || cambioInt(Mes, cmbMes.SelectedIndex) || cambioInt(Ano, cmbAno.SelectedIndex))
             {
                 cambiarFecha("fechaCreacion", fecha(cmbDia.SelectedItem.ToString(), cmbMes.SelectedItem.ToString(), cmbAno.SelectedItem.ToString()));
@@ -498,7 +543,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         public Boolean usuario_usernameValido()
         {
-            if (!txtUsuario.Text.Equals("") && !SqlConnector.existeString(txtUsuario.Text, "VADIUM.USUARIO", "usuario_username"))
+            if (!txtUsername.Text.Equals("") && !SqlConnector.existeString(txtUsername.Text, "VADIUM.USUARIO", "usuario_username"))
             {
                 return true;
             }
@@ -521,10 +566,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         private void textboxNoNumerico_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar < 65 || e.KeyChar > 122)
-            {
-                e.Handled = true;
-            }
+
         }
 
         private void textboxcuit_KeyPress(object sender, KeyPressEventArgs e)

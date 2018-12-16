@@ -796,7 +796,7 @@ BEGIN
 END
 GO
 ---------------UBICACIONES------------------------------------------
-CREATE PROCEDURE [VADIUM].UBICACIONES_NO_VENDIDAS @publicacion_id int, @tipoUbicacionId int 
+CREATE PROCEDURE [VADIUM].UBICACIONES_NO_VENDIDAS @publicacion_id int = NULL, @tipoUbicacionId int = NULL
 AS
 BEGIN
 	SELECT ubi.ubicacion_id as Id, ubi.asiento as Asiento, ubi.fila as fila, ubi.sinNumerar as Sin_Numerar, ubi.precio as Precio, tu.descripcion as Tipo_ubicacion
@@ -880,52 +880,52 @@ GO
 
 ----- ADMIN ------
 
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'AdministrarClientes';
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'AdministrarEmpresas';
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'AdministrarGrados';	
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'AdministrarRoles';
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'AdministrarRubros';
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'AdministrarPuntos';
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'AdministrarCompras';		
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'EditarPublicacion';
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'GenerarPublicacion';
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'RendicionesPorComision';
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'HistorialClientes';	
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---@rol = 'Administrador', @func = 'ListadoEstadistico';		
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarClientes';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarEmpresas';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarGrados';	
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarRoles';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarRubros';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarPuntos';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'AdministrarCompras';		
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'EditarPublicacion';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'GenerarPublicacion';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'RendicionesPorComision';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'HistorialClientes';	
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @func = 'ListadoEstadistico';		
 			
 	
 
 
-------- Cliente -----
+----- Cliente -----
 
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---	@rol = 'Cliente', @func = 'EditarPublicacion';		
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---	@rol = 'Cliente', @func = 'GenerarPublicacion';	
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---	@rol = 'Cliente', @func = 'HistorialClientes';	
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---	@rol = 'Cliente', @func = 'ListadoEstadistico';		
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Cliente', @func = 'EditarPublicacion';		
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Cliente', @func = 'GenerarPublicacion';	
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Cliente', @func = 'HistorialClientes';	
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Cliente', @func = 'ListadoEstadistico';		
 		
-------- Empresas ----
+----- Empresas ----
 
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---	@rol = 'Empresa', @func = 'EditarPublicacion';		
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---	@rol = 'Empresa', @func = 'GenerarPublicacion';
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---	@rol = 'Empresa', @func = 'HistorialClientes';			
---EXEC VADIUM.AGREGAR_FUNCIONALIDAD
---	@rol = 'Empresa', @func = 'ListadoEstadistico';		
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Empresa', @func = 'EditarPublicacion';		
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Empresa', @func = 'GenerarPublicacion';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Empresa', @func = 'HistorialClientes';			
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+	@rol = 'Empresa', @func = 'ListadoEstadistico';		

@@ -17,7 +17,6 @@ namespace PalcoNet.Model
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             listaParametros.Add(new SqlParameter("@publicacion_id", PublicacionId));
             listaParametros.Add(new SqlParameter("@tipoUbicacionId", tipoUbicacionId));
-            
             DataTable table = SqlConnector.obtenerDataTable("VADIUM.UBICACIONES_NO_VENDIDAS","SP", listaParametros);
             return table;
         }
@@ -29,7 +28,9 @@ namespace PalcoNet.Model
             {
                 while (lector.Read())
                 {
-                    tipoUbicaciones.Add(new TipoUbicacion(Convert.ToInt32(lector["rubro_id"]), lector["descripcion"].ToString()));
+                    string val = lector["codigoTipoUbicacion"].ToString();
+                    val = lector["descripcion"].ToString();
+                    tipoUbicaciones.Add(new TipoUbicacion(Convert.ToInt32(lector["codigoTipoUbicacion"].ToString()), lector["descripcion"].ToString()));
                 }
             }
             SqlConnector.cerrarConexion();

@@ -181,7 +181,10 @@ namespace PalcoNet.Comprar
                 return;
             else
             {
-                int codigoPublicacion = Convert.ToInt32( Publicaciones_Datagrid.SelectedRows[0].Cells[0].ToString());
+                var row =  Publicaciones_Datagrid.SelectedRows[0];
+                var cell = row.Cells[0];
+                var val = cell.Value;
+                int codigoPublicacion = Convert.ToInt32( val);
                 frmDetallePublicacion detalleForm = new frmDetallePublicacion(codigoPublicacion);
                 detalleForm.ShowDialog();
                 cargarPublicaciones();

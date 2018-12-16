@@ -262,7 +262,7 @@ CREATE TABLE [VADIUM].RUBRO(
 )
 GO
 CREATE TABLE [VADIUM].GRADO( 
-	grado_id int PRIMARY KEY,
+	grado_id int PRIMARY KEY IDENTITY(1,1),
 	comision numeric(18,2),
 	descripcion nvarchar(255)
 )
@@ -431,9 +431,9 @@ BEGIN
 
 		
 	-- GRADO 
-	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(0,5,'BAJO')
-	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(1,10,'MEDIO')
-	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(2,15,'ALTO')
+	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(5,'BAJO')
+	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(10,'MEDIO')
+	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(15,'ALTO')
 
 	-- PREMIOS
 	INSERT INTO [VADIUM].PREMIO (puntos, descripcion, stock, fechaVencimiento) VALUES (100, ' voucher entrada gratis', 10, convert(datetime,'18-06-19 10:34:09 PM',5))

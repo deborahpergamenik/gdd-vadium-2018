@@ -38,9 +38,12 @@ namespace PalcoNet.Abm_Cliente
         public int Mes { get; set; }
         public int Ano { get; set; }
 
-        public frmModificarCliente(int _usuario_id)
+        public frmAbmCliente frmAbmCliente { get; set; }
+
+        public frmModificarCliente(int _usuario_id, frmAbmCliente _frmAbmCliente)
         {
             this.usuario_id = _usuario_id;
+            this.frmAbmCliente = _frmAbmCliente;
 
             InitializeComponent();
 
@@ -502,6 +505,7 @@ namespace PalcoNet.Abm_Cliente
 
             if (modificacion || error)
             {
+                frmAbmCliente.CargarDatos(string.Empty, string.Empty, string.Empty, string.Empty);
                 this.Close();
             }
         }

@@ -168,7 +168,7 @@ namespace PalcoNet.Login
                         form2.Show();
                         break;
                     case 3:
-                        frmGrado form3 = new frmGrado();
+                        frmGrado form3 = new frmGrado(this);
                         this.Hide();
                         form3.ShowDialog();
                         this.Show();

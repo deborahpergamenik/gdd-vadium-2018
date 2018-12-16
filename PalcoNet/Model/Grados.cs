@@ -14,7 +14,7 @@ namespace PalcoNet.Model
         {
             List<Grado> grados = new List<Grado>();
 
-            string commandText = "SELECT * FROM PalcoNet.GRADO";
+            string commandText = "SELECT * FROM VADIUM.GRADO";
 
             SqlDataReader lector = SqlConnector.ejecutarReader(commandText, SqlConnector.iniciarConexion());
 
@@ -23,8 +23,7 @@ namespace PalcoNet.Model
             {
                 while (lector.Read())
                 {
-                    Grado unGrado = new Grado((string)lector["descripcion"],
-                                                    (decimal)lector["comision"], (int)lector["grado_id"]);
+                    Grado unGrado = new Grado((int)lector["grado_id"],(decimal)lector["comision"], (string)lector["descripcion"]);
                     grados.Add(unGrado);
                 }
             }

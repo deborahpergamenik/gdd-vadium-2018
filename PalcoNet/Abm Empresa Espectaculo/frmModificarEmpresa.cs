@@ -36,10 +36,12 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         public int Mes { get; set; }
         public int Ano { get; set; }
 
+        public frmAbmEmpresa frmAbmEmpresa { get; set; }
 
-        public frmModificarEmpresa(int _usuario_id)
+        public frmModificarEmpresa(int _usuario_id, frmAbmEmpresa _frmAbmEmpresa)
         {
             this.usuario_id = _usuario_id;
+            this.frmAbmEmpresa = _frmAbmEmpresa;
 
             InitializeComponent();
             setearComboBoxes();
@@ -47,6 +49,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             cargarDatosEmpresa();
             cargarDatosViejos();
         }
+
 
         public void cargarDatosViejos()
         {
@@ -537,6 +540,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
             if (modificacion || error)
             {
+                frmAbmEmpresa.CargarDatos(string.Empty, string.Empty, string.Empty);
                 this.Close();
             }
         }

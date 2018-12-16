@@ -52,7 +52,7 @@ namespace PalcoNet.Model
 
                     publi.direccionEspectaculo = lector["direccionEspectaculo"].ToString();
 
-                    publi.GradoPublicacion = new Grado(lector["grado_descripcion"].ToString(),Convert.ToDecimal(lector["comision"]), Convert.ToInt32(lector["grado_id"]));
+                    //publi.GradoPublicacion = new Grado(lector["grado_descripcion"].ToString(),Convert.ToDecimal(lector["comision"]), Convert.ToInt32(lector["grado_id"]));
 
                     publi.empresaId = Convert.ToInt32(lector["empresa_id"]);
                     publi.usuario_activo = new Estado(Convert.ToInt32(lector["usuario_activo_id"]),lector["usuario_activo_descripcion"].ToString());

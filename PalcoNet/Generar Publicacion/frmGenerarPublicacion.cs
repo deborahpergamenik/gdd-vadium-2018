@@ -98,7 +98,7 @@ namespace PalcoNet.Generar_Publicacion
             List<ComboBoxItem> rubros = Rubros.obtenerRubros().Select(x => new ComboBoxItem { Text = x.Descripcion, Value = x.Id }).ToList();
             rubros.ForEach(x => cmbRubro.Items.Add(x));
 
-            List<ComboBoxItem> grados = Grados.ObtenerTodosLosGrados().Select(x => new ComboBoxItem { Text = x.TipoGrado, Value = x.id}).ToList();
+            List<ComboBoxItem> grados = Grados.ObtenerTodosLosGrados().Select(x => new ComboBoxItem { Text = x.Descripcion, Value = x.Id}).ToList();
             grados.ForEach(x => cmbGrado.Items.Add(x));
 
            

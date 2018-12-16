@@ -55,7 +55,7 @@ namespace PalcoNet.Abm_Cliente
         }
 
 
-        private void CargarDatos(string nombre, string apellido, string dni, string mail)
+        public void CargarDatos(string nombre, string apellido, string dni, string mail)
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@NOMBRE", nombre);
@@ -224,6 +224,8 @@ namespace PalcoNet.Abm_Cliente
                 cargarUsuario();
                 cargarCliente();
                 new frmConfirmacionCliente(this.usuario_username, this.passwordNoHash).Show();
+                CargarDatos(string.Empty, string.Empty, string.Empty, string.Empty);
+                dgResultados.Refresh();
             }
         }
 
@@ -388,7 +390,7 @@ namespace PalcoNet.Abm_Cliente
                 switch (e.ColumnIndex)
                 {
                     case 0:
-                        frmModificarCliente frmCliente = new frmModificarCliente(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[3].Value));
+                        frmModificarCliente frmCliente = new frmModificarCliente(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[3].Value), this);
                         frmCliente.Show();
                         break;
                     case 1:
@@ -397,6 +399,8 @@ namespace PalcoNet.Abm_Cliente
                         {
                             eliminarCliente(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[3].Value));
                         }
+                        CargarDatos(string.Empty, string.Empty, string.Empty, string.Empty);
+                        dgResultados.Refresh();
                         break;
                 }
             }

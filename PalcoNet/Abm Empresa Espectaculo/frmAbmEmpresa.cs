@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -257,6 +258,8 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 cargarUsuario();
                 cargarEmpresa();
                 new Abm_Cliente.frmConfirmacionCliente(this.usuario_username, this.passwordNoHash).Show(); //reutilizo el formulario de confirmación de ABM Clientes
+                CargarDatos(string.Empty, string.Empty, string.Empty);
+                dgResultados.Refresh();
             }
         }
         
@@ -308,7 +311,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             CargarDatos(txtFilterRazonSocial.Text, txtFilterCuit.Text, txtFilterEmail.Text);
         }
 
-        private void CargarDatos(string razonSocial, string cuit, string mail)
+        public void CargarDatos(string razonSocial, string cuit, string mail)
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@razonSocial", razonSocial);
@@ -363,7 +366,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 switch (e.ColumnIndex)
                 {
                     case 0:
-                        frmModificarEmpresa frmEmpresa = new frmModificarEmpresa(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[3].Value));
+                        frmModificarEmpresa frmEmpresa = new frmModificarEmpresa(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[3].Value), this);
                         frmEmpresa.Show();
                         break;
                     case 1:
@@ -372,8 +375,10 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                         {
                             eliminarEmpresa(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[3].Value));
                         }
+                        CargarDatos(string.Empty, string.Empty, string.Empty);
+                        dgResultados.Refresh();
                         break;
-                }
+                }         
             }
         }
 

@@ -94,26 +94,21 @@ GO
 IF OBJECT_ID('VADIUM.FUNCIONALIDAD') IS NOT NULL
 DROP TABLE [VADIUM].FUNCIONALIDAD
 GO
-
 IF OBJECT_ID('VADIUM.ITEMFACTURA') IS NOT NULL
 DROP TABLE [VADIUM].ITEMFACTURA
 GO
 IF OBJECT_ID('VADIUM.FACTURA') IS NOT NULL
 DROP TABLE [VADIUM].FACTURA
 GO
-
-
 IF OBJECT_ID('VADIUM.UBICACION') IS NOT NULL
 DROP TABLE [VADIUM].UBICACION
 GO
 IF OBJECT_ID('VADIUM.TIPOUBICACION') IS NOT NULL
 DROP TABLE [VADIUM].TIPOUBICACION
 GO
-
 IF OBJECT_ID('VADIUM.PUBLICACION') IS NOT NULL
 DROP TABLE [VADIUM].PUBLICACION
 GO
-
 IF OBJECT_ID('VADIUM.ESTADO') IS NOT NULL
 DROP TABLE [VADIUM].ESTADO
 GO
@@ -123,31 +118,27 @@ GO
 IF OBJECT_ID('VADIUM.GRADO') IS NOT NULL
 DROP TABLE [VADIUM].GRADO
 GO
-
 IF OBJECT_ID('VADIUM.PREMIO_POR_CLIENTE') IS NOT NULL
 DROP TABLE [VADIUM].PREMIO_POR_CLIENTE
 GO
 IF OBJECT_ID('VADIUM.PREMIO') IS NOT NULL
 DROP TABLE [VADIUM].PREMIO
 GO
-
-
+IF OBJECT_ID('VADIUM.COMPRA') IS NOT NULL
+DROP TABLE VADIUM.COMPRA
+GO
 IF OBJECT_ID('VADIUM.TARJETADECREDITO') IS NOT NULL
 DROP TABLE [VADIUM].TARJETADECREDITO
 GO
-
 IF OBJECT_ID('VADIUM.EMPRESA') IS NOT NULL
 DROP TABLE [VADIUM].EMPRESA
 GO
-
 IF OBJECT_ID('VADIUM.CLIENTE') IS NOT NULL
 DROP TABLE [VADIUM].CLIENTE
 GO
-
 IF OBJECT_ID('VADIUM.USUARIO') IS NOT NULL
 DROP TABLE [VADIUM].USUARIO
 GO
-
 IF OBJECT_ID('VADIUM.DIRECCION') IS NOT NULL
 DROP TABLE VADIUM.DIRECCION
 GO
@@ -296,20 +287,26 @@ CREATE TABLE [VADIUM].UBICACION(
 	sinNumerar bit, 
 	precio numeric(18,0),
 	codigoTipoUbicacion numeric(18,0),
-	codigoEspectaculo numeric(18,0)
-
+	codigoEspectaculo numeric(18,0),
+	compra_id int,
+)
+GO
+CREATE TABLE [VADIUM].COMPRA(
+	compra_id int PRIMARY KEY IDENTITY(1,1),
+	fecha_compra datetime,
+	id_cliente_comprador int,
+	medio_de_pago nvarchar(30),
 )
 GO
 CREATE TABLE [VADIUM].FACTURA(
+	empresa_id int,
 	factura_nro int PRIMARY KEY,
 	fecha datetime,
-	total numeric(18,2),
-	
+	total numeric(18,2),	
 )
 GO
 CREATE TABLE [VADIUM].ITEMFACTURA(
 	factura_nro int,
-	cliente_id int,
 	ubicacion_id int,
 	monto numeric(18,2),
 	cantidad numeric(18,2),
@@ -493,6 +490,15 @@ BEGIN
 	FROM gd_esquema.Maestra m 
 	GROUP BY m.Espectaculo_Estado
 	HAVING m.Espectaculo_Estado IS NOT NULL
+	------COMPRA-----
+	INSERT INTO [VADIUM].COMPRA(fecha_compra, id_cliente_comprador, medio_de_pago)
+	SELECT 
+			m.Factura_Fecha, 
+			(SELECT TOP 1 cli.cliente_id FROM CLIENTE cli WHERE cli.numeroDocumento = m.Cli_Dni), 
+			m.Forma_Pago_Desc
+	FROM gd_esquema.Maestra m 
+	GROUP BY m.Factura_Fecha, m.Cli_Dni, m.Forma_Pago_Desc,m.Factura_Nro
+	HAVING m.Factura_Nro IS NOT NULL
 	------PUBLICACION-----
 		INSERT INTO [VADIUM].PUBLICACION(codigoEspectaculo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id, grado_id)
 		SELECT m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, 
@@ -504,28 +510,32 @@ BEGIN
 		GROUP BY m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, m.Espec_Empresa_Mail, m.Espectaculo_Rubro_Descripcion, Espectaculo_Estado
 	HAVING m.Espectaculo_Cod IS NOT NULL
  ----------- UBICACION--------
-	INSERT INTO [VADIUM].UBICACION(fila, asiento, sinNumerar, precio, codigoTipoUbicacion, codigoEspectaculo)
+	INSERT INTO [VADIUM].UBICACION(fila, asiento, sinNumerar, precio, codigoTipoUbicacion, codigoEspectaculo,compra_id)
 		SELECT m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, 
 				(SELECT TOP 1 tipou.codigoTipoUbicacion FROM TIPOUBICACION tipou WHERE tipou.codigoTipoUbicacion = m.Ubicacion_Tipo_Codigo),
-				(SELECT TOP 1 publi.codigoEspectaculo FROM PUBLICACION publi WHERE publi.codigoEspectaculo = m.Espectaculo_Cod)
-	
+				(SELECT TOP 1 publi.codigoEspectaculo FROM PUBLICACION publi WHERE publi.codigoEspectaculo = m.Espectaculo_Cod),
+				null
+				--TODO, como hacemos para migra el id de las compras? pensemos que siempre que hay una factura asociada a una ubicaicon
+				--en la tabla maestra es xq hubo una compra
+
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, m.Ubicacion_Tipo_Codigo, m.Espectaculo_Cod
 		HAVING m.Ubicacion_Fila IS NOT NULL
 	---------FACTURA--------
-	INSERT INTO [VADIUM].FACTURA(factura_nro, fecha, total)
-		SELECT m.Factura_Nro, m.Factura_Fecha, m.Factura_Total
+	INSERT INTO [VADIUM].FACTURA(factura_nro, fecha, total, empresa_id)
+		SELECT m.Factura_Nro, m.Factura_Fecha, m.Factura_Total,
+		(SELECT TOP 1 emp.empresa_id FROM EMPRESA emp WHERE emp.mail = m.Espec_Empresa_Mail)
 		FROM gd_esquema.Maestra m 
-		GROUP BY m.Factura_Nro, m.Factura_Fecha, m.Factura_Total
+		GROUP BY m.Factura_Nro, m.Factura_Fecha, m.Factura_Total,Espec_Empresa_Mail
 		HAVING m.Factura_Nro IS NOT NULL
 		---------ITEMFACTURA--------
-	INSERT INTO [VADIUM].ITEMFACTURA(monto, cantidad, descripcion, factura_nro,ubicacion_id, cliente_id, pagoDescripcion)
+	INSERT INTO [VADIUM].ITEMFACTURA(monto, cantidad, descripcion, factura_nro,ubicacion_id, pagoDescripcion)
 		SELECT m.Item_Factura_Monto, m.Item_Factura_Cantidad, m.Item_Factura_Descripcion, 
 		(SELECT TOP 1 fac.factura_nro FROM FACTURA fac WHERE fac.factura_nro = m.Factura_Nro),
 		(SELECT TOP 1 ubi.ubicacion_id FROM UBICACION ubi 
 			WHERE ubi.fila = m.Ubicacion_Fila AND ubi.asiento =m.Ubicacion_Asiento AND ubi.sinNumerar = m.Ubicacion_Sin_numerar AND
-								 ubi.codigoTipoUbicacion = m.Ubicacion_Tipo_Codigo AND ubi.codigoEspectaculo = m.Espectaculo_Cod),
-		(SELECT TOP 1 cli.cliente_id  FROM CLIENTE cli WHERE cli.mail = m.Cli_Mail), m.Forma_Pago_Desc
+								 ubi.codigoTipoUbicacion = m.Ubicacion_Tipo_Codigo AND ubi.codigoEspectaculo = m.Espectaculo_Cod)
+		, m.Forma_Pago_Desc
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Item_Factura_Monto, m.Item_Factura_Cantidad, m.Item_Factura_Descripcion, m.Factura_Nro, m.Factura_Fecha, m.Factura_Total,
 		 m.Forma_Pago_Desc, m.Ubicacion_Fila,m.Ubicacion_Asiento,m.Ubicacion_Sin_numerar,m.Ubicacion_Tipo_Codigo,m.Espectaculo_Cod, m.Cli_Mail, m.Forma_Pago_Desc
@@ -552,13 +562,17 @@ ALTER TABLE [VADIUM].PUBLICACION ADD FOREIGN KEY (empresa_id) REFERENCES [VADIUM
 
 ALTER TABLE [VADIUM].UBICACION ADD FOREIGN KEY (codigoTipoUbicacion) REFERENCES [VADIUM].TIPOUBICACION
 ALTER TABLE [VADIUM].UBICACION ADD FOREIGN KEY (codigoEspectaculo) REFERENCES [VADIUM].PUBLICACION
+ALTER TABLE [VADIUM].UBICACION ADD FOREIGN KEY (compra_id) REFERENCES [VADIUM].COMPRA
 
 ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (factura_nro) REFERENCES [VADIUM].FACTURA
-ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (cliente_id) REFERENCES [VADIUM].CLIENTE
 ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (ubicacion_id) REFERENCES [VADIUM].UBICACION
 
 ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (cliente_id) REFERENCES [VADIUM].CLIENTE
 ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (premioId) REFERENCES [VADIUM].PREMIO
+
+ALTER TABLE [VADIUM].COMPRA ADD FOREIGN KEY (id_cliente_comprador) REFERENCES [VADIUM].CLIENTE
+
+ALTER TABLE [VADIUM].FACTURA ADD FOREIGN KEY (empresa_id) REFERENCES [VADIUM].EMPRESA
 GO
 
 

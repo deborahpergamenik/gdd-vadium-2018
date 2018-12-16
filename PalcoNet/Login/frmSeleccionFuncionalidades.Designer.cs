@@ -89,6 +89,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "frmSeleccionFuncionalidades";
             this.Text = "frmSeleccionFuncionalidades";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 

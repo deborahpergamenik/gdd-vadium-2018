@@ -154,7 +154,7 @@ namespace PalcoNet.Login
                 switch (seleccion.funcionalidad_id)
                 {
                     case -2:
-                        frmCambiarpassword formPass = new frmCambiarpassword(false);
+                        frmCambiarpassword formPass = new frmCambiarpassword();
                         formPass.Show();
                         break;
                     case 1:
@@ -168,7 +168,7 @@ namespace PalcoNet.Login
                         form2.Show();
                         break;
                     case 3:
-                        frmGrado form3 = new frmGrado();
+                        frmGrado form3 = new frmGrado(this);
                         this.Hide();
                         form3.ShowDialog();
                         this.Show();

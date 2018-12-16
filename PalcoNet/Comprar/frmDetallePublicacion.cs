@@ -21,50 +21,40 @@ namespace PalcoNet.Comprar
         {
             InitializeComponent();
             this.codPublicacionActual = codPublicacion;
+            
         }
 
         private void frmDetallePublicacion_Load(object sender, EventArgs e)
         {
             //COMBOBOX
-
-            SqlDataReader lectorCombo = SqlConnector.ObtenerDataReader("VADIUM.ObtenerTiposUbicaciones", "SP");
-            if (lectorCombo.HasRows)
-            {
-                lectorCombo.Read();
-                tiposUbicacion.Load(lectorCombo);
-                SqlConnector.cerrarConexion();
-            }
-
-            foreach (DataRow row in tiposUbicacion.Rows)
-                cmbTipo.Items.Add(row["descripcion"].ToString());
-
-
-            cargarUbicaciones(null);
+            dgvUbicaciones.DataSource = Ubicaciones.ObtenerUbicacionesLibresPorPublicacio(codPublicacionActual, null);
+            List<TipoUbicacion> tiposUbicaciones = Ubicaciones.ObtenerTipoDeUbicaciones();
+            tiposUbicaciones.ForEach(x => cmbTipo.Items.Add(new ComboBoxItem { Text = x.descripcion, Value = x.id }));
         }
 
 
-        private void cargarUbicaciones(int? tipoUbicacion)
-        {
-            //AGREGAR PARAMETROS QUE HAGAN FALTA PARA OBTENER LAS UBICACIONES
+        //private void cargarUbicaciones(int? tipoUbicacion)
+        //{
+        //    //AGREGAR PARAMETROS QUE HAGAN FALTA PARA OBTENER LAS UBICACIONES
 
-            List<SqlParameter> parametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(parametros, "@codigoPublicacion", codPublicacionActual);
-            SqlConnector.agregarParametro(parametros, "@tipoUbicacion", tipoUbicacion.Value);
-            SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.ObtenerUbicacionesNoVendidas", "SP", parametros);
+        //    List<SqlParameter> parametros = new List<SqlParameter>();
+        //    SqlConnector.agregarParametro(parametros, "@codigoPublicacion", codPublicacionActual);
+        //    SqlConnector.agregarParametro(parametros, "@tipoUbicacion", tipoUbicacion.Value);
+        //    SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.ObtenerUbicacionesNoVendidas", "SP", parametros);
 
-            if (lector.HasRows)
-            {
-                lector.Read();
-                ubicacionesDisponibles.Load(lector);
-                SqlConnector.cerrarConexion();
-                ubicacionesDisponibles.PrimaryKey = new DataColumn[] { ubicacionesDisponibles.Columns["nro_ubicacion"] };
-                dgvUbicaciones.DataSource = ubicacionesDisponibles;
-                dgvUbicaciones.Columns["nro_ubicacion"].Visible = false;
+        //    if (lector.HasRows)
+        //    {
+        //        lector.Read();
+        //        ubicacionesDisponibles.Load(lector);
+        //        SqlConnector.cerrarConexion();
+        //        ubicacionesDisponibles.PrimaryKey = new DataColumn[] { ubicacionesDisponibles.Columns["nro_ubicacion"] };
+        //        dgvUbicaciones.DataSource = ubicacionesDisponibles;
+        //        dgvUbicaciones.Columns["nro_ubicacion"].Visible = false;
 
-                ubicacionesSeleccionadas = ubicacionesDisponibles.Clone();
-                ubicacionesSeleccionadas.PrimaryKey = new DataColumn[] { ubicacionesSeleccionadas.Columns["nro_ubicacion"] };
-            }
-        }
+        //        ubicacionesSeleccionadas = ubicacionesDisponibles.Clone();
+        //        ubicacionesSeleccionadas.PrimaryKey = new DataColumn[] { ubicacionesSeleccionadas.Columns["nro_ubicacion"] };
+        //    }
+        //}
 
         private void dgvUbicaciones_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -81,7 +71,8 @@ namespace PalcoNet.Comprar
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            cargarUbicaciones(cmbTipo.SelectedIndex == -1 ? null : (Nullable<int>)tiposUbicacion.Rows[cmbTipo.SelectedIndex][0]);
+            int tipoUbi = Convert.ToInt32(((ComboBoxItem)cmbTipo.SelectedValue).Value);
+            dgvUbicaciones.DataSource = Ubicaciones.ObtenerUbicacionesLibresPorPublicacio(codPublicacionActual, tipoUbi);
         }
 
         private void btnComprar_Click(object sender, EventArgs e)
@@ -165,7 +156,7 @@ namespace PalcoNet.Comprar
             List<SqlParameter> parametrosGuardarTarjeta = new List<SqlParameter>();
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codCliente", "codigoDeCliente"); //traer codigo de cliente
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codTarjeta", codigoTarjeta);
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codPublicacion", publi.CodigoPublicacion);
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codPublicacion", codPublicacionActual);
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@ubicaciones", builder.ToString());
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@fechaActual", Configuration.getActualDate());
             SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.COMPRAR", "SP", parametrosGuardarTarjeta);

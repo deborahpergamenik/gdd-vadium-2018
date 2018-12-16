@@ -41,7 +41,7 @@
             // 
             // btnAceptar
             // 
-            this.btnAceptar.Location = new System.Drawing.Point(269, 187);
+            this.btnAceptar.Location = new System.Drawing.Point(324, 187);
             this.btnAceptar.Margin = new System.Windows.Forms.Padding(4);
             this.btnAceptar.Name = "btnAceptar";
             this.btnAceptar.Size = new System.Drawing.Size(107, 37);
@@ -60,7 +60,7 @@
             this.tGB.Margin = new System.Windows.Forms.Padding(4);
             this.tGB.Name = "tGB";
             this.tGB.Padding = new System.Windows.Forms.Padding(4);
-            this.tGB.Size = new System.Drawing.Size(363, 98);
+            this.tGB.Size = new System.Drawing.Size(418, 98);
             this.tGB.TabIndex = 10;
             this.tGB.TabStop = false;
             this.tGB.Text = "Datos de acceso";
@@ -73,7 +73,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(135, 17);
             this.label3.TabIndex = 2;
-            this.label3.Text = "nombre de Usuario:";
+            this.label3.Text = "Nombre de Usuario:";
             // 
             // txtpassword
             // 
@@ -82,7 +82,7 @@
             this.txtpassword.Multiline = true;
             this.txtpassword.Name = "txtpassword";
             this.txtpassword.ReadOnly = true;
-            this.txtpassword.Size = new System.Drawing.Size(199, 24);
+            this.txtpassword.Size = new System.Drawing.Size(259, 24);
             this.txtpassword.TabIndex = 1;
             // 
             // label4
@@ -102,7 +102,7 @@
             this.txtUsuario.Multiline = true;
             this.txtUsuario.Name = "txtUsuario";
             this.txtUsuario.ReadOnly = true;
-            this.txtUsuario.Size = new System.Drawing.Size(199, 24);
+            this.txtUsuario.Size = new System.Drawing.Size(259, 24);
             this.txtUsuario.TabIndex = 0;
             // 
             // label2
@@ -121,21 +121,21 @@
             this.label1.Location = new System.Drawing.Point(13, 9);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(256, 17);
+            this.label1.Size = new System.Drawing.Size(258, 17);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Alta de usuario realizada exitosamente.";
+            this.label1.Text = "Alta de Usuario realizada exitosamente.";
             // 
             // frmConfirmacionCliente
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(402, 237);
+            this.ClientSize = new System.Drawing.Size(444, 237);
             this.Controls.Add(this.btnAceptar);
             this.Controls.Add(this.tGB);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "frmConfirmacionCliente";
-            this.Text = "frmConfirmacionCliente";
+            this.Text = "frmConfirmacion";
             this.tGB.ResumeLayout(false);
             this.tGB.PerformLayout();
             this.ResumeLayout(false);

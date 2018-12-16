@@ -39,7 +39,7 @@ namespace PalcoNet.Registro_de_Usuario
 
                 List<SqlParameter> listaParametros = new List<SqlParameter>();
                 SqlConnector.agregarParametro(listaParametros, "@usuario_username", username);
-                SqlConnector.agregarParametro(listaParametros, "@usuario_password", passwordNoHash);
+                SqlConnector.agregarParametro(listaParametros, "@usuario_password", password);
                 SqlConnector.agregarParametro(listaParametros, "@usuario_intentosLogin", 0);
                 SqlConnector.agregarParametro(listaParametros, "@usuario_activo", 1);
                 SqlConnector.agregarParametro(listaParametros, "@primera_vez", 0);
@@ -62,7 +62,7 @@ namespace PalcoNet.Registro_de_Usuario
                 SqlConnector.agregarParametro(listaParametros3, "@cod_postal", cod_postal);
                 SqlConnector.agregarParametro(listaParametros3, "@mail", mail);
                 SqlConnector.agregarParametro(listaParametros3, "@fechaCreacion", fechaCreacion);
-                SqlConnector.agregarParametro(listaParametros3, "@piso", nroPiso);
+                SqlConnector.agregarParametro(listaParametros3, "@ciudad", ciudad);
                 SqlConnector.agregarParametro(listaParametros3, "@depto", departamento);
                 SqlConnector.agregarParametro(listaParametros3, "@localidad", localidad);
                
@@ -75,23 +75,23 @@ namespace PalcoNet.Registro_de_Usuario
                     SqlConnector.agregarParametro(listaParametros3, "@telefono", Convert.ToInt64(telefono));
                 }
                 
-                if (ciudad.Equals(""))
+                if (nroPiso.Equals(""))
                 {
-                    SqlConnector.agregarParametro(listaParametros3, "@ciudad", DBNull.Value);
+                    SqlConnector.agregarParametro(listaParametros3, "@piso", DBNull.Value);
                 }
                 else
                 {
-                    SqlConnector.agregarParametro(listaParametros3, "@ciudad", ciudad);
+                    SqlConnector.agregarParametro(listaParametros3, "@piso", nroPiso);
                 }
 
 
                 SqlConnector.ejecutarQuery("INSERT INTO VADIUM.EMPRESA (usuario_id,razonSocial,cuit,calle, cod_postal, mail, fechaCreacion, piso, depto ,localidad, telefono, ciudad)" +
-                    "VALUES(@usuario_id,@razonSocial,@cuit,@calle, @cod_postal, @mail, @fechaCreacion, @piso, @depto ,@localidad, @telefono, @ciudad)", listaParametros3, SqlConnector.iniciarConexion());
+                                           "VALUES(@usuario_id,@razonSocial,@cuit,@calle, @cod_postal, @mail, @fechaCreacion, @piso, @depto ,@localidad, @telefono, @ciudad)", listaParametros3, SqlConnector.iniciarConexion());
                 SqlConnector.cerrarConexion();
 
                 List<SqlParameter> listaParametros4 = new List<SqlParameter>();
-                SqlConnector.agregarParametro(listaParametros4, "@rol_id", "EMPRESA");
-                SqlDataReader lector1 = SqlConnector.ejecutarReader("SELECT rol_id FROM VADIUM.ROL WHERE rol_id = @rol_id", listaParametros4, SqlConnector.iniciarConexion());
+                SqlConnector.agregarParametro(listaParametros4, "@rol_nombre", "EMPRESA");
+                SqlDataReader lector1 = SqlConnector.ejecutarReader("SELECT rol_id FROM VADIUM.ROL WHERE rol_nombre = @rol_nombre", listaParametros4, SqlConnector.iniciarConexion());
                 lector1.Read();
                 int idRol = Convert.ToInt32(lector1["rol_id"]);
                 SqlConnector.cerrarConexion();
@@ -131,17 +131,17 @@ namespace PalcoNet.Registro_de_Usuario
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            if (!txtrazonSocial.Text.Equals("") && !txtcuit.Text.Equals("") && !txtdireccion.Text.Equals("") && !txtcod_postal.Text.Equals("") && !txtmail.Text.Equals(""))
+            if (!txtRazonSocial.Text.Equals("") && !txtCuit.Text.Equals("") && !txtDireccion.Text.Equals("") && !txtCodPostal.Text.Equals("") && !txtMail.Text.Equals(""))
             {
-                if (!SqlConnector.existeString(txtrazonSocial.Text, "VADIUM.EMPRESA", "Razon_Social"))
+                if (!SqlConnector.existeString(txtRazonSocial.Text, "VADIUM.EMPRESA", "razonSocial"))
                 {
-                    if (!SqlConnector.existeString(txtcuit.Text, "VADIUM.EMPRESA", "cuit"))
+                    if (!SqlConnector.existeString(txtCuit.Text, "VADIUM.EMPRESA", "cuit"))
                     {
-                        if (Interfaz.esNumerico(txttelefono.Text, System.Globalization.NumberStyles.Integer))
+                        if (Interfaz.esNumerico(txtTelefono.Text, System.Globalization.NumberStyles.Integer))
                         {
-                            if (!SqlConnector.existetelefono(Convert.ToInt32(txttelefono.Text)))
+                            if (!SqlConnector.existetelefono(Convert.ToInt32(txtTelefono.Text)))
                             {
-                                registrarEmpresa(username, password, txtrazonSocial.Text, txtcuit.Text, txttelefono.Text, txtdireccion.Text, txtcod_postal.Text, txtciudad.Text, txtmail.Text, txtLocalidad.Text,txtNroPiso.Text, txtDepartamento.Text, Configuration.getActualDate());
+                                registrarEmpresa(username, password, txtRazonSocial.Text, txtCuit.Text, txtTelefono.Text, txtDireccion.Text, txtCodPostal.Text, txtCiudad.Text, txtMail.Text, txtLocalidad.Text,txtNroPiso.Text, txtDepartamento.Text, Configuration.getActualDate());
                                 MessageBox.Show("Alta finalizada. Puede ingresar al sistema.", "Registro exitoso");
                                 frmLogin frmLogin = new frmLogin();
                                 this.Hide();
@@ -176,6 +176,22 @@ namespace PalcoNet.Registro_de_Usuario
         private void txtcuit_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void textboxNumerico_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void textboxNoNumerico_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar < 65 || e.KeyChar > 122)
             {
                 e.Handled = true;
             }

@@ -127,7 +127,6 @@
             this.txtApellido.Name = "txtApellido";
             this.txtApellido.Size = new System.Drawing.Size(191, 22);
             this.txtApellido.TabIndex = 2;
-            this.txtApellido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // txtNombre
             // 
@@ -137,7 +136,6 @@
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(191, 22);
             this.txtNombre.TabIndex = 1;
-            this.txtNombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // label13
             // 
@@ -153,7 +151,7 @@
             // 
             this.txtLocalidad.Location = new System.Drawing.Point(174, 151);
             this.txtLocalidad.Margin = new System.Windows.Forms.Padding(4);
-            this.txtLocalidad.MaxLength = 18;
+            this.txtLocalidad.MaxLength = 255;
             this.txtLocalidad.Name = "txtLocalidad";
             this.txtLocalidad.Size = new System.Drawing.Size(192, 22);
             this.txtLocalidad.TabIndex = 4;
@@ -369,7 +367,7 @@
             // 
             this.txtCUIL.Location = new System.Drawing.Point(535, 33);
             this.txtCUIL.Margin = new System.Windows.Forms.Padding(4);
-            this.txtCUIL.MaxLength = 18;
+            this.txtCUIL.MaxLength = 20;
             this.txtCUIL.Name = "txtCUIL";
             this.txtCUIL.Size = new System.Drawing.Size(178, 22);
             this.txtCUIL.TabIndex = 2;
@@ -409,7 +407,7 @@
             // 
             this.txtNumeroDocumento.Location = new System.Drawing.Point(294, 33);
             this.txtNumeroDocumento.Margin = new System.Windows.Forms.Padding(4);
-            this.txtNumeroDocumento.MaxLength = 18;
+            this.txtNumeroDocumento.MaxLength = 20;
             this.txtNumeroDocumento.Name = "txtNumeroDocumento";
             this.txtNumeroDocumento.Size = new System.Drawing.Size(158, 22);
             this.txtNumeroDocumento.TabIndex = 1;

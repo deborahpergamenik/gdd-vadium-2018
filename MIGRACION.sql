@@ -10,6 +10,9 @@ IF OBJECT_ID('VADIUM.AGREGAR_FUNCIONALIDAD') IS NOT NULL
 DROP PROCEDURE VADIUM.AGREGAR_FUNCIONALIDAD;
 GO
 
+IF OBJECT_ID('VADIUM.UBICACIONES_NO_VENDIDAS') IS NOT NULL
+DROP PROCEDURE VADIUM.UBICACIONES_NO_VENDIDAS;
+GO
 IF OBJECT_ID('VADIUM.VERIFICAR_USUARIO_PASSWORD') IS NOT NULL
 DROP PROCEDURE VADIUM.VERIFICAR_USUARIO_PASSWORD;
 GO
@@ -94,26 +97,24 @@ GO
 IF OBJECT_ID('VADIUM.FUNCIONALIDAD') IS NOT NULL
 DROP TABLE [VADIUM].FUNCIONALIDAD
 GO
-
 IF OBJECT_ID('VADIUM.ITEMFACTURA') IS NOT NULL
 DROP TABLE [VADIUM].ITEMFACTURA
 GO
 IF OBJECT_ID('VADIUM.FACTURA') IS NOT NULL
 DROP TABLE [VADIUM].FACTURA
 GO
-
-
+IF OBJECT_ID('VADIUM.COMPRA') IS NOT NULL
+DROP TABLE VADIUM.COMPRA
+GO
 IF OBJECT_ID('VADIUM.UBICACION') IS NOT NULL
 DROP TABLE [VADIUM].UBICACION
 GO
 IF OBJECT_ID('VADIUM.TIPOUBICACION') IS NOT NULL
 DROP TABLE [VADIUM].TIPOUBICACION
 GO
-
 IF OBJECT_ID('VADIUM.PUBLICACION') IS NOT NULL
 DROP TABLE [VADIUM].PUBLICACION
 GO
-
 IF OBJECT_ID('VADIUM.ESTADO') IS NOT NULL
 DROP TABLE [VADIUM].ESTADO
 GO
@@ -123,7 +124,6 @@ GO
 IF OBJECT_ID('VADIUM.GRADO') IS NOT NULL
 DROP TABLE [VADIUM].GRADO
 GO
-
 IF OBJECT_ID('VADIUM.PREMIO_POR_CLIENTE') IS NOT NULL
 DROP TABLE [VADIUM].PREMIO_POR_CLIENTE
 GO
@@ -131,23 +131,18 @@ IF OBJECT_ID('VADIUM.PREMIO') IS NOT NULL
 DROP TABLE [VADIUM].PREMIO
 GO
 
-
 IF OBJECT_ID('VADIUM.TARJETADECREDITO') IS NOT NULL
 DROP TABLE [VADIUM].TARJETADECREDITO
 GO
-
 IF OBJECT_ID('VADIUM.EMPRESA') IS NOT NULL
 DROP TABLE [VADIUM].EMPRESA
 GO
-
 IF OBJECT_ID('VADIUM.CLIENTE') IS NOT NULL
 DROP TABLE [VADIUM].CLIENTE
 GO
-
 IF OBJECT_ID('VADIUM.USUARIO') IS NOT NULL
 DROP TABLE [VADIUM].USUARIO
 GO
-
 IF OBJECT_ID('VADIUM.DIRECCION') IS NOT NULL
 DROP TABLE VADIUM.DIRECCION
 GO
@@ -198,24 +193,14 @@ CREATE TABLE [VADIUM].ROL_POR_FUNCIONALIDAD(
 	PRIMARY KEY(rol_id, funcionalidad_id)	
 )
 GO
---CREATE TABLE [VADIUM].DIRECCION(
---	direccion_id int PRIMARY KEY IDENTITY(1,1),
---	calle NVARCHAR(255),
---	piso NUMERIC(18,0),
---	depto NVARCHAR (255),
---	cod_postal nvarchar(255),
---	localidad nvarchar(255),
---	ciudad nvarchar(255)
 
---)
---GO
 CREATE TABLE [VADIUM].CLIENTE(
 	cliente_id int PRIMARY KEY IDENTITY(1,1),
 	usuario_id int,
 	nombre nvarchar(255),
 	apellido nvarchar(255),
 	tipoDocumento nvarchar(50),
-	numeroDocumento numeric(18,0),
+	numeroDocumento nvarchar(50),
 	CUIL nvarchar(20),
 	fechaNacimiento datetime,
 	fechaCreacion datetime,
@@ -262,7 +247,7 @@ CREATE TABLE [VADIUM].RUBRO(
 )
 GO
 CREATE TABLE [VADIUM].GRADO( 
-	grado_id int PRIMARY KEY,
+	grado_id int PRIMARY KEY IDENTITY(1,1),
 	comision numeric(18,2),
 	descripcion nvarchar(255)
 )
@@ -296,25 +281,32 @@ CREATE TABLE [VADIUM].UBICACION(
 	sinNumerar bit, 
 	precio numeric(18,0),
 	codigoTipoUbicacion numeric(18,0),
-	codigoEspectaculo numeric(18,0)
-
+	codigoEspectaculo numeric(18,0),
+	
+)
+GO
+CREATE TABLE [VADIUM].COMPRA(
+	compra_id int PRIMARY KEY IDENTITY(1,1),
+	fecha_compra datetime,
+	id_cliente_comprador int,
+	medio_de_pago nvarchar(30),
+	ubicacion_id int,
 )
 GO
 CREATE TABLE [VADIUM].FACTURA(
+	empresa_id int,
 	factura_nro int PRIMARY KEY,
 	fecha datetime,
-	total numeric(18,2),
-	
+	total numeric(18,2),	
 )
 GO
 CREATE TABLE [VADIUM].ITEMFACTURA(
 	factura_nro int,
-	cliente_id int,
 	ubicacion_id int,
 	monto numeric(18,2),
 	cantidad numeric(18,2),
-	descripcion nvarchar(60), 
-	pagoDescripcion nvarchar(255)
+	descripcion nvarchar(60),
+	compra_id int
 )
 GO
 CREATE TABLE [VADIUM].PREMIO(
@@ -429,11 +421,14 @@ BEGIN
 	VALUES (0,'admin','8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918',0,1,0); --pass admin en SHA256
 	SET IDENTITY_INSERT VADIUM.USUARIO OFF
 
-		
+	--RUBRO
+	INSERT INTO [VADIUM].RUBRO(descripcion) values('Ciencia ficcion')
+	INSERT INTO [VADIUM].RUBRO(descripcion) values('Comedia')
+	INSERT INTO [VADIUM].RUBRO(descripcion) values('Drama')
 	-- GRADO 
-	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(0,5,'BAJO')
-	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(1,10,'MEDIO')
-	INSERT INTO [VADIUM].GRADO(grado_id, comision,descripcion) values(2,15,'ALTO')
+	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(5,'BAJO')
+	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(10,'MEDIO')
+	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(15,'ALTO')
 
 	-- PREMIOS
 	INSERT INTO [VADIUM].PREMIO (puntos, descripcion, stock, fechaVencimiento) VALUES (100, ' voucher entrada gratis', 10, convert(datetime,'18-06-19 10:34:09 PM',5))
@@ -453,12 +448,7 @@ BEGIN
 	FROM gd_esquema.Maestra m
 	GROUP BY Ubicacion_Tipo_Codigo, Ubicacion_Tipo_Descripcion
 	HAVING m.Ubicacion_Tipo_Codigo IS NOT NULL
-	-------DIRECCIONES CLIENTE----
-	--INSERT INTO [VADIUM].DIRECCION(calle, piso, depto, cod_postal)
-	--SELECT  m.Cli_Dom_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
-	--FROM gd_esquema.Maestra m
-	--GROUP BY m.Cli_Dom_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal	
-	--HAVING m.Cli_Dom_Calle IS NOT NULL
+
 	-------Cliente------
 	INSERT INTO [VADIUM].Cliente (numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail, calle, piso, depto, cod_postal )
 	SELECT  m.Cli_Dni,'DNI' ,m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Mail,m.Cli_Dom_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
@@ -467,12 +457,6 @@ BEGIN
 	GROUP BY m.Cli_Mail, m.Cli_Dni, m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Dom_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
 	HAVING m.Cli_Mail IS NOT NULL
 
-	-------DIRECCIONES EMPRESA----
-	--INSERT INTO [VADIUM].DIRECCION(calle, piso, depto, cod_postal)
-	--SELECT  m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal
-	--FROM gd_esquema.Maestra m
-	--GROUP BY m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal	
-	--HAVING m.Espec_Empresa_Dom_Calle IS NOT NULL
 	-------EMPRESA------
 	INSERT INTO [VADIUM].EMPRESA(razonSocial, cuit, mail, fechaCreacion, calle, piso, depto, cod_postal )
 	SELECT  m.Espec_Empresa_Razon_Social, m.Espec_Empresa_Cuit, m.Espec_Empresa_Mail, m.Espec_Empresa_Fecha_Creacion,
@@ -493,13 +477,14 @@ BEGIN
 	FROM gd_esquema.Maestra m 
 	GROUP BY m.Espectaculo_Estado
 	HAVING m.Espectaculo_Estado IS NOT NULL
+
 	------PUBLICACION-----
 		INSERT INTO [VADIUM].PUBLICACION(codigoEspectaculo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id, grado_id)
 		SELECT m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, 
 				(SELECT TOP 1 emp.empresa_id FROM EMPRESA emp WHERE emp.mail = m.Espec_Empresa_Mail), 
-				(SELECT TOP 1 ru.rubro_id FROM RUBRO ru WHERE ru.descripcion = m.Espectaculo_Rubro_Descripcion),
+				(SELECT TOP 1 ru.rubro_id FROM RUBRO ru order by NEWID()),
 				(SELECT TOP 1 es.codigo FROM ESTADO es WHERE es.descripcion = m.Espectaculo_Estado),
-				 0
+				(SELECT TOP 1 gr.grado_id FROM VADIUM.GRADO gr order by newid())
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, m.Espec_Empresa_Mail, m.Espectaculo_Rubro_Descripcion, Espectaculo_Estado
 	HAVING m.Espectaculo_Cod IS NOT NULL
@@ -508,28 +493,45 @@ BEGIN
 		SELECT m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, 
 				(SELECT TOP 1 tipou.codigoTipoUbicacion FROM TIPOUBICACION tipou WHERE tipou.codigoTipoUbicacion = m.Ubicacion_Tipo_Codigo),
 				(SELECT TOP 1 publi.codigoEspectaculo FROM PUBLICACION publi WHERE publi.codigoEspectaculo = m.Espectaculo_Cod)
-	
+			
+				--TODO, como hacemos para migra el id de las compras? pensemos que siempre que hay una factura asociada a una ubicaicon
+				--en la tabla maestra es xq hubo una compra
+
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, m.Ubicacion_Tipo_Codigo, m.Espectaculo_Cod
 		HAVING m.Ubicacion_Fila IS NOT NULL
 	---------FACTURA--------
-	INSERT INTO [VADIUM].FACTURA(factura_nro, fecha, total)
-		SELECT m.Factura_Nro, m.Factura_Fecha, m.Factura_Total
+	INSERT INTO [VADIUM].FACTURA(factura_nro, fecha, total, empresa_id)
+		SELECT m.Factura_Nro, m.Factura_Fecha, m.Factura_Total,
+		(SELECT TOP 1 emp.empresa_id FROM EMPRESA emp WHERE emp.mail = m.Espec_Empresa_Mail)
 		FROM gd_esquema.Maestra m 
-		GROUP BY m.Factura_Nro, m.Factura_Fecha, m.Factura_Total
+		GROUP BY m.Factura_Nro, m.Factura_Fecha, m.Factura_Total,Espec_Empresa_Mail
 		HAVING m.Factura_Nro IS NOT NULL
 		---------ITEMFACTURA--------
-	INSERT INTO [VADIUM].ITEMFACTURA(monto, cantidad, descripcion, factura_nro,ubicacion_id, cliente_id, pagoDescripcion)
+	INSERT INTO [VADIUM].ITEMFACTURA(monto, cantidad, descripcion, factura_nro,ubicacion_id)
 		SELECT m.Item_Factura_Monto, m.Item_Factura_Cantidad, m.Item_Factura_Descripcion, 
 		(SELECT TOP 1 fac.factura_nro FROM FACTURA fac WHERE fac.factura_nro = m.Factura_Nro),
 		(SELECT TOP 1 ubi.ubicacion_id FROM UBICACION ubi 
 			WHERE ubi.fila = m.Ubicacion_Fila AND ubi.asiento =m.Ubicacion_Asiento AND ubi.sinNumerar = m.Ubicacion_Sin_numerar AND
-								 ubi.codigoTipoUbicacion = m.Ubicacion_Tipo_Codigo AND ubi.codigoEspectaculo = m.Espectaculo_Cod),
-		(SELECT TOP 1 cli.cliente_id  FROM CLIENTE cli WHERE cli.mail = m.Cli_Mail), m.Forma_Pago_Desc
+								 ubi.codigoTipoUbicacion = m.Ubicacion_Tipo_Codigo AND ubi.codigoEspectaculo = m.Espectaculo_Cod)
+		
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Item_Factura_Monto, m.Item_Factura_Cantidad, m.Item_Factura_Descripcion, m.Factura_Nro, m.Factura_Fecha, m.Factura_Total,
 		 m.Forma_Pago_Desc, m.Ubicacion_Fila,m.Ubicacion_Asiento,m.Ubicacion_Sin_numerar,m.Ubicacion_Tipo_Codigo,m.Espectaculo_Cod, m.Cli_Mail, m.Forma_Pago_Desc
 		HAVING m.Factura_Nro IS NOT NULL AND m.Cli_Mail IS NOT NULL
+
+			------COMPRA-----
+		INSERT INTO [VADIUM].COMPRA(fecha_compra, id_cliente_comprador, medio_de_pago, ubicacion_id)
+		SELECT 
+				m.Compra_Fecha, 
+				(SELECT TOP 1 cli.cliente_id FROM CLIENTE cli WHERE cli.mail = m.Cli_Mail), 
+				m.Forma_Pago_Desc,
+				(SELECT TOP 1 ubi.ubicacion_id FROM UBICACION ubi 
+			WHERE ubi.fila = m.Ubicacion_Fila AND ubi.asiento =m.Ubicacion_Asiento AND ubi.sinNumerar = m.Ubicacion_Sin_numerar AND
+								 ubi.codigoTipoUbicacion = m.Ubicacion_Tipo_Codigo AND ubi.codigoEspectaculo = m.Espectaculo_Cod)
+		FROM gd_esquema.Maestra m 
+		GROUP BY m.Compra_Fecha, m.Cli_Mail, m.Forma_Pago_Desc, m.Ubicacion_Fila,m.Ubicacion_Asiento,m.Ubicacion_Sin_numerar,m.Ubicacion_Tipo_Codigo,m.Espectaculo_Cod
+		HAVING m.Compra_Fecha IS NOT NULL AND m.Forma_Pago_Desc IS NOT NULL
 END
 GO
 
@@ -552,70 +554,74 @@ ALTER TABLE [VADIUM].PUBLICACION ADD FOREIGN KEY (empresa_id) REFERENCES [VADIUM
 
 ALTER TABLE [VADIUM].UBICACION ADD FOREIGN KEY (codigoTipoUbicacion) REFERENCES [VADIUM].TIPOUBICACION
 ALTER TABLE [VADIUM].UBICACION ADD FOREIGN KEY (codigoEspectaculo) REFERENCES [VADIUM].PUBLICACION
+ALTER TABLE [VADIUM].COMPRA ADD FOREIGN KEY (ubicacion_id) REFERENCES [VADIUM].UBICACION
 
 ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (factura_nro) REFERENCES [VADIUM].FACTURA
-ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (cliente_id) REFERENCES [VADIUM].CLIENTE
 ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (ubicacion_id) REFERENCES [VADIUM].UBICACION
 
 ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (cliente_id) REFERENCES [VADIUM].CLIENTE
 ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (premioId) REFERENCES [VADIUM].PREMIO
+
+ALTER TABLE [VADIUM].COMPRA ADD FOREIGN KEY (id_cliente_comprador) REFERENCES [VADIUM].CLIENTE
+
+ALTER TABLE [VADIUM].FACTURA ADD FOREIGN KEY (empresa_id) REFERENCES [VADIUM].EMPRESA
 GO
 
 
-------------------------------Estadisticas------------------------------
-CREATE PROCEDURE [VADIUM].MayorCantLocalidadesNoVendidos @year int, @month int, @grado int
+--------------------------------Estadisticas------------------------------
+--CREATE PROCEDURE [VADIUM].MayorCantLocalidadesNoVendidos @year int, @month int, @grado int
 
-AS
-BEGIN
-SELECT TOP 5 emp.razonSocial , COUNT(*) as cantidad
-FROM VADIUM.EMPRESA emp JOIN VADIUM.PUBLICACION pub ON(emp.empresa_id = pub.empresa_id )
-						JOIN VADIUM.UBICACION ubi ON (pub.codigoEspectaculo = ubi.codigoEspectaculo)
+--AS
+--BEGIN
+--SELECT TOP 5 emp.razonSocial , COUNT(*) as cantidad
+--FROM VADIUM.EMPRESA emp JOIN VADIUM.PUBLICACION pub ON(emp.empresa_id = pub.empresa_id )
+--						JOIN VADIUM.UBICACION ubi ON (pub.codigoEspectaculo = ubi.codigoEspectaculo)
 
-	WHERE ubicacion_id NOT IN (SELECT ubicacion_id FROM VADIUM.ITEMFACTURA item) AND
-			 (@year is null or year(pub.fecha) =  @year) AND
-			 (@month is null or (month(pub.fecha) > @month AND month(pub.fecha) < (@month + 2) )) AND
-			 (@grado is null or pub.grado_id = @grado)
-	GROUP BY emp.empresa_id, emp.razonSocial
-	ORDER BY COUNT(*) DESC
+--	WHERE ubicacion_id NOT IN (SELECT ubicacion_id FROM VADIUM.ITEMFACTURA item) AND
+--			 (@year is null or year(pub.fecha) =  @year) AND
+--			 (@month is null or (month(pub.fecha) > @month AND month(pub.fecha) < (@month + 2) )) AND
+--			 (@grado is null or pub.grado_id = @grado)
+--	GROUP BY emp.empresa_id, emp.razonSocial
+--	ORDER BY COUNT(*) DESC
 
-END
-GO
+--END
+--GO
 
 
-CREATE PROCEDURE [VADIUM].ClientesPuntosVencidos @year int, @month int
+--CREATE PROCEDURE [VADIUM].ClientesPuntosVencidos @year int, @month int
 
-AS
-BEGIN
-SELECT TOP 5 cli.mail , SUM(item.monto) as cantidad
-FROM VADIUM.CLIENTE cli  JOIN VADIUM.ITEMFACTURA item on (cli.cliente_id = item.cliente_id)
-						JOIN VADIUM.FACTURA fact on (item.factura_nro = fact.factura_nro)
-	WHERE    (@year is null or year(fact.fecha) =  @year -1) AND
-			 (@month is null or (month(fact.fecha) > @month AND month(fact.fecha) < (@month + 2) )) 
+--AS
+--BEGIN
+--SELECT TOP 5 cli.mail , SUM(item.monto) as cantidad
+--FROM VADIUM.CLIENTE cli  JOIN VADIUM.COMPRA item on (cli.cliente_id = item.cliente_id)
+--						JOIN VADIUM.FACTURA fact on (item.factura_nro = fact.factura_nro)
+--	WHERE    (@year is null or year(fact.fecha) =  @year -1) AND
+--			 (@month is null or (month(fact.fecha) > @month AND month(fact.fecha) < (@month + 2) )) 
 			 
-	GROUP BY cli.cliente_id, cli.mail
-	ORDER BY SUM(item.monto) DESC
+--	GROUP BY cli.cliente_id, cli.mail
+--	ORDER BY SUM(item.monto) DESC
 
-END
-GO
+--END
+--GO
 
-CREATE PROCEDURE [VADIUM].ClientesMayorCompras @year int, @month int
+--CREATE PROCEDURE [VADIUM].ClientesMayorCompras @year int, @month int
 
-AS
-BEGIN
-SELECT TOP 5 cli.mail, COUNT(DISTINCT pub.empresa_id)
-FROM VADIUM.CLIENTE cli  JOIN VADIUM.ITEMFACTURA item on (cli.cliente_id = item.cliente_id)
-					     JOIN VADIUM.FACTURA fact on (item.factura_nro = fact.factura_nro)
-						 JOIN VADIUM.UBICACION ubi on (item.ubicacion_id = ubi.ubicacion_id)
-						 JOIN VADIUM.PUBLICACION pub on (ubi.codigoEspectaculo = pub.codigoEspectaculo)
+--AS
+--BEGIN
+--SELECT TOP 5 cli.mail, COUNT(DISTINCT pub.empresa_id)
+--FROM VADIUM.CLIENTE cli  JOIN VADIUM.ITEMFACTURA item on (cli.cliente_id = item.clie)
+--					     JOIN VADIUM.FACTURA fact on (item.factura_nro = fact.factura_nro)
+--						 JOIN VADIUM.UBICACION ubi on (item.ubicacion_id = ubi.ubicacion_id)
+--						 JOIN VADIUM.PUBLICACION pub on (ubi.codigoEspectaculo = pub.codigoEspectaculo)
 
-	WHERE    (@year is null or year(fact.fecha) =  @year) AND
-			 (@month is null or (month(fact.fecha) > @month AND month(fact.fecha) < (@month + 2) )) 
+--	WHERE    (@year is null or year(fact.fecha) =  @year) AND
+--			 (@month is null or (month(fact.fecha) > @month AND month(fact.fecha) < (@month + 2) )) 
 			 
-	GROUP BY cli.mail
-	ORDER BY COUNT(DISTINCT pub.empresa_id) DESC
+--	GROUP BY cli.mail
+--	ORDER BY COUNT(DISTINCT pub.empresa_id) DESC
 
-END
-GO
+--END
+--GO
 --------------------------ROLES-----------------------------------
 
 ---------------------------LOGIN------------------------------------
@@ -680,7 +686,7 @@ END CATCH
 GO
 ---------------------------CLIENTE -----------------------------------
 
-CREATE	 PROCEDURE [VADIUM].LISTADO_SELECCION_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI numeric(18), @mail nvarchar(255)
+CREATE	 PROCEDURE [VADIUM].LISTADO_SELECCION_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI NVARCHAR(50), @mail nvarchar(255)
 AS
 BEGIN TRY
 	SELECT *
@@ -688,14 +694,14 @@ BEGIN TRY
 	WHERE
 	(@NOMBRE = '' OR @NOMBRE is null OR  lower(cli.nombre) LIKE '%' + lower(@NOMBRE) + '%') AND
 	(@APELLIDO = '' OR @APELLIDO is null OR lower(cli.apellido) LIKE '%' + lower(@APELLIDO) + '%') AND
-	(@DNI = '' OR @DNI is null OR cli.numeroDocumento = @DNI) AND
+	(@DNI = '' OR @DNI is null OR lower(cli.numeroDocumento) LIKE '%' + lower(@DNI) + '%') AND
 	(@mail = '' OR @mail is null OR lower(cli.mail) LIKE '%' + lower(@mail) + '%');
 END TRY
 BEGIN CATCH
   SELECT 'ERROR', ERROR_MESSAGE()
 END CATCH
 GO
-CREATE	 PROCEDURE [VADIUM].OBTENER_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI numeric(18), @mail nvarchar(255)
+CREATE	 PROCEDURE [VADIUM].OBTENER_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI NVARCHAR(50), @mail nvarchar(255)
 AS
 BEGIN TRY
 	SELECT *
@@ -703,7 +709,7 @@ BEGIN TRY
 	WHERE
 	(@NOMBRE = '' OR @NOMBRE is null OR  lower(cli.nombre) LIKE '%' + lower(@NOMBRE) + '%') AND
 	(@APELLIDO = '' OR @APELLIDO is null OR lower(cli.apellido) LIKE '%' + lower(@APELLIDO) + '%') AND
-	(@DNI = '' OR @DNI is null OR cli.numeroDocumento = @DNI) AND
+	(@DNI = '' OR @DNI is null OR lower(cli.numeroDocumento) LIKE '%' + lower(@DNI) + '%') AND
 	(@mail = '' OR @mail is null OR lower(cli.mail) LIKE '%' + lower(@mail) + '%');
 END TRY
 BEGIN CATCH
@@ -714,13 +720,13 @@ CREATE PROCEDURE [VADIUM].HistorialCliente @clienteId int
 AS
 BEGIN
 
-SELECT pub.descripcion as Espectaculo, item.monto as Precio, ubi.fila, ubi.asiento, tu.descripcion as TipoUbicacion, pub.fecha as FechaEspectaculo, item.pagoDescripcion as medioPago
-FROM VADIUM.ITEMFACTURA item JOIN VADIUM.UBICACION ubi ON (item.ubicacion_id = ubi.ubicacion_id)
+SELECT pub.descripcion as Espectaculo, ubi.fila, ubi.asiento, tu.descripcion as TipoUbicacion, pub.fecha as FechaEspectaculo, compra.medio_de_pago as medioPago
+FROM VADIUM.COMPRA compra JOIN VADIUM.UBICACION ubi ON (compra.ubicacion_id = ubi.ubicacion_id)
 							 JOIN VADIUM.TIPOUBICACION tu ON (ubi.codigoTipoUbicacion = tu.codigoTipoUbicacion)
 						     JOIN VADIUM.PUBLICACION pub ON (ubi.codigoEspectaculo = pub.codigoEspectaculo)
 							 --JOIN VADIUM.FACTURA fac ON (item.factura_nro = fac.factura_nro)
 
-WHERE item.cliente_id = @clienteId
+WHERE compra.id_cliente_comprador = @clienteId
 
 END
 GO
@@ -728,7 +734,7 @@ GO
 ---------------------------EMPRESA -----------------------------------
 
 
-CREATE	 PROCEDURE [VADIUM].LISTADO_SELECCION_EMPRESA @razonSocial NVARCHAR(255),@CUIT NVARCHAR(255),@mail numeric(18)
+CREATE PROCEDURE [VADIUM].LISTADO_SELECCION_EMPRESA @razonSocial NVARCHAR(255),@CUIT NVARCHAR(255),@mail NVARCHAR(255)
 AS
 BEGIN TRY
 	SELECT *
@@ -736,44 +742,42 @@ BEGIN TRY
 	WHERE
 	(@razonSocial = '' OR @razonSocial is null OR  lower(emp.razonSocial) LIKE '%' + lower(@razonSocial) + '%') AND	
 	(@mail = '' OR @mail is null OR lower(emp.mail) LIKE '%' + lower(@mail) + '%')AND
-	(@CUIT = '' OR @CUIT is null OR emp.cuit = @CUIT) ;
+	(@CUIT = '' OR @CUIT is null OR lower(emp.cuit) LIKE '%' + lower(@CUIT) + '%' ) ;
 END TRY
 BEGIN CATCH
   SELECT 'ERROR', ERROR_MESSAGE()
 END CATCH
 GO
-
-
 ------------------- Canje de puntos ----------------------------------
 
-CREATE PROCEDURE [VADIUM].puntajeCliente  @cliente int, @fechaActual datetime
+--CREATE PROCEDURE [VADIUM].puntajeCliente  @cliente int, @fechaActual datetime
 
-AS
-BEGIN
-
-
-SELECT sum(item.monto) as puntos
-FROM VADIUM.ITEMFACTURA item JOIN VADIUM.FACTURA fact ON (item.factura_nro = fact.factura_nro)
-	WHERE dateadd(yy,1, fact.fecha) > @fechaActual AND item.cliente_id = @cliente
-group by item.cliente_id
-END
-GO
-
-CREATE PROCEDURE [VADIUM].CanjearPremio  @id_Cliente int, @premioId int ,  @fechaActual datetime
-
-AS
-BEGIN
-
-DECLARE @puntos int
-
-SELECT TOP 1 @puntos = puntos from VADIUM.PREMIO pr WHERE pr.premioId = @premioId
-
-INSERT INTO VADIUM.PREMIO_POR_CLIENTE(cliente_id, premioId, fecha,puntos) VALUES (@id_Cliente,@premioId, @fechaActual, @puntos )
+--AS
+--BEGIN
 
 
+--SELECT sum(item.monto) as puntos
+--FROM VADIUM.ITEMFACTURA item JOIN VADIUM.FACTURA fact ON (item.factura_nro = fact.factura_nro)
+--	WHERE dateadd(yy,1, fact.fecha) > @fechaActual AND item.cliente_id = @cliente
+--group by item.cliente_id
+--END
+--GO
 
-END
-GO
+--CREATE PROCEDURE [VADIUM].CanjearPremio  @id_Cliente int, @premioId int ,  @fechaActual datetime
+
+--AS
+--BEGIN
+
+--DECLARE @puntos int
+
+--SELECT TOP 1 @puntos = puntos from VADIUM.PREMIO pr WHERE pr.premioId = @premioId
+
+--INSERT INTO VADIUM.PREMIO_POR_CLIENTE(cliente_id, premioId, fecha,puntos) VALUES (@id_Cliente,@premioId, @fechaActual, @puntos )
+
+
+
+--END
+--GO
 ----------------Publicaciones--------------------------------------
 CREATE PROCEDURE [VADIUM].ObtenerPublicaciones @desde datetime, @hasta datetime, @rubro nvarchar(255), @descripcion nvarchar(255)
 AS 
@@ -789,6 +793,18 @@ BEGIN
 		 (@hasta IS NULL OR @hasta < pub.fecha) AND
 		 (@rubro = '' OR @rubro is null OR  lower(rub.descripcion) LIKE '%' + lower(@rubro) + '%') AND
 		 (@descripcion = '' OR @descripcion is null OR  lower(pub.descripcion) LIKE '%' + lower(@descripcion) + '%') 
+END
+GO
+---------------UBICACIONES------------------------------------------
+CREATE PROCEDURE [VADIUM].UBICACIONES_NO_VENDIDAS @publicacion_id int, @tipoUbicacionId int 
+AS
+BEGIN
+	SELECT ubi.ubicacion_id as Id, ubi.asiento as Asiento, ubi.fila as fila, ubi.sinNumerar as Sin_Numerar, ubi.precio as Precio, tu.descripcion as Tipo_ubicacion
+	FROM VADIUM.UBICACION ubi JOIN VADIUM.TIPOUBICACION tu ON (ubi.codigoTipoUbicacion = tu.codigoTipoUbicacion)
+	
+	WHERE (@publicacion_id IS NULL OR ubi.codigoEspectaculo = @publicacion_id) AND 
+		  (@tipoUbicacionId IS NULL OR tu.codigoTipoUbicacion = @tipoUbicacionId) AND 
+	 NOT EXISTS   (SELECT com.ubicacion_id  FROM VADIUM.COMPRA com WHERE com.ubicacion_id = ubi.ubicacion_id)
 END
 GO
 ---------------GRADO DE PUBLICACION-----------------------------------
@@ -864,52 +880,52 @@ GO
 
 ----- ADMIN ------
 
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarClientes';
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarEmpresas';
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarGrados';	
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarRoles';
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarRubros';
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarPuntos';
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarCompras';		
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'EditarPublicacion';
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'GenerarPublicacion';
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'RendicionesPorComision';
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'HistorialClientes';	
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'ListadoEstadistico';		
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'AdministrarClientes';
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'AdministrarEmpresas';
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'AdministrarGrados';	
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'AdministrarRoles';
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'AdministrarRubros';
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'AdministrarPuntos';
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'AdministrarCompras';		
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'EditarPublicacion';
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'GenerarPublicacion';
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'RendicionesPorComision';
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'HistorialClientes';	
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--@rol = 'Administrador', @func = 'ListadoEstadistico';		
 			
 	
 
 
------ Cliente -----
+------- Cliente -----
 
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'EditarPublicacion';		
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'GenerarPublicacion';	
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'HistorialClientes';	
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'ListadoEstadistico';		
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--	@rol = 'Cliente', @func = 'EditarPublicacion';		
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--	@rol = 'Cliente', @func = 'GenerarPublicacion';	
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--	@rol = 'Cliente', @func = 'HistorialClientes';	
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--	@rol = 'Cliente', @func = 'ListadoEstadistico';		
 		
------ Empresas ----
+------- Empresas ----
 
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'EditarPublicacion';		
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'GenerarPublicacion';
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'HistorialClientes';			
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'ListadoEstadistico';		
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--	@rol = 'Empresa', @func = 'EditarPublicacion';		
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--	@rol = 'Empresa', @func = 'GenerarPublicacion';
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--	@rol = 'Empresa', @func = 'HistorialClientes';			
+--EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+--	@rol = 'Empresa', @func = 'ListadoEstadistico';		

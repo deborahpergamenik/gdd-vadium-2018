@@ -141,7 +141,7 @@ namespace PalcoNet.Model
             SqlConnector.agregarParametro(parametros, "@rol_id", rol_id);
             SqlConnector.agregarParametro(parametros, "@usuario_id", idUser);
 
-            int resultado = SqlConnector.ejecutarQuery("INSERT INTO VADIUM.ROL_POR_USUARIO (usuario_id, rol_id) VALUES ( @usuario_id ,  @rol_id )", parametros, SqlConnector.iniciarConexion());
+            int resultado = SqlConnector.ejecutarQuery("INSERT INTO VADIUM.ROL_POR_USUARIO (rol_id, usuario_id) VALUES ( @rol_id,  @usuario_id )", parametros, SqlConnector.iniciarConexion());
 
             if (resultado == -1)
                 MessageBox.Show("Falló al insertar Usuarios por Rol", "Fail!", MessageBoxButtons.OK, MessageBoxIcon.Error);

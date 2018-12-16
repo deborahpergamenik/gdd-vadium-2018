@@ -29,6 +29,13 @@ namespace PalcoNet.Model
 
     public class TipoUbicacion
     {
+       
+        public TipoUbicacion(int cod, string desc)
+        {
+            // TODO: Complete member initialization
+            this.id = cod;
+            this.descripcion = desc;
+        }
         public int id { get; set; }
         public string descripcion { get; set; }
 

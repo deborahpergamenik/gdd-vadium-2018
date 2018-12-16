@@ -10,22 +10,17 @@ namespace PalcoNet.Model
 {
     public class Grado
     {
-        
 
-        public string TipoGrado { get; set; }
+        public int? Id { get; set; }
         public decimal Comision { get; set; }
-        public int? id { get; set; }
-        public Grado(string grado, decimal comision, int? id)
+        public string Descripcion { get; set; }
+
+        public Grado(int? _id, decimal _comision, string _descripcion)
         {
-            this.TipoGrado = grado;
-            this.Comision = comision;
-            this.id = id;
+            this.Id = _id;
+            this.Comision = _comision;
+            this.Descripcion = _descripcion;    
         }
-
-
-
-        
-
 
     }
 }

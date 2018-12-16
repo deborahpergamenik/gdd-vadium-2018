@@ -33,7 +33,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cmbusuario_activo = new System.Windows.Forms.ComboBox();
             this.txtpassword = new System.Windows.Forms.TextBox();
-            this.txtUsuario = new System.Windows.Forms.TextBox();
+            this.txtUsername = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -47,7 +47,7 @@
             this.label13 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.txtLocalidad = new System.Windows.Forms.TextBox();
-            this.cmbtipoDocumentoumento = new System.Windows.Forms.ComboBox();
+            this.cmbTipoDocumento = new System.Windows.Forms.ComboBox();
             this.txtNumeroDocumento = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.ASDASD = new System.Windows.Forms.Label();
@@ -97,7 +97,7 @@
             // 
             this.groupBox1.Controls.Add(this.cmbusuario_activo);
             this.groupBox1.Controls.Add(this.txtpassword);
-            this.groupBox1.Controls.Add(this.txtUsuario);
+            this.groupBox1.Controls.Add(this.txtUsername);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
@@ -114,10 +114,10 @@
             // 
             this.cmbusuario_activo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbusuario_activo.FormattingEnabled = true;
-            this.cmbusuario_activo.Location = new System.Drawing.Point(658, 29);
+            this.cmbusuario_activo.Location = new System.Drawing.Point(677, 29);
             this.cmbusuario_activo.Margin = new System.Windows.Forms.Padding(4);
             this.cmbusuario_activo.Name = "cmbusuario_activo";
-            this.cmbusuario_activo.Size = new System.Drawing.Size(116, 24);
+            this.cmbusuario_activo.Size = new System.Drawing.Size(97, 24);
             this.cmbusuario_activo.TabIndex = 2;
             // 
             // txtpassword
@@ -130,14 +130,14 @@
             this.txtpassword.TabIndex = 1;
             this.txtpassword.UseSystemPasswordChar = true;
             // 
-            // txtUsuario
+            // txtUsername
             // 
-            this.txtUsuario.Location = new System.Drawing.Point(155, 31);
-            this.txtUsuario.Margin = new System.Windows.Forms.Padding(4);
-            this.txtUsuario.MaxLength = 255;
-            this.txtUsuario.Name = "txtUsuario";
-            this.txtUsuario.Size = new System.Drawing.Size(148, 22);
-            this.txtUsuario.TabIndex = 0;
+            this.txtUsername.Location = new System.Drawing.Point(155, 31);
+            this.txtUsername.Margin = new System.Windows.Forms.Padding(4);
+            this.txtUsername.MaxLength = 255;
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.Size = new System.Drawing.Size(148, 22);
+            this.txtUsername.TabIndex = 0;
             // 
             // label4
             // 
@@ -145,9 +145,9 @@
             this.label4.Location = new System.Drawing.Point(598, 32);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(52, 17);
+            this.label4.Size = new System.Drawing.Size(71, 17);
             this.label4.TabIndex = 3;
-            this.label4.Text = "Estado";
+            this.label4.Text = "Habilitado";
             // 
             // label2
             // 
@@ -181,7 +181,7 @@
             this.groupBox3.Controls.Add(this.label13);
             this.groupBox3.Controls.Add(this.label23);
             this.groupBox3.Controls.Add(this.txtLocalidad);
-            this.groupBox3.Controls.Add(this.cmbtipoDocumentoumento);
+            this.groupBox3.Controls.Add(this.cmbTipoDocumento);
             this.groupBox3.Controls.Add(this.txtNumeroDocumento);
             this.groupBox3.Controls.Add(this.label14);
             this.groupBox3.Controls.Add(this.ASDASD);
@@ -233,6 +233,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.Color.Red;
             this.label12.Location = new System.Drawing.Point(8, 305);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
@@ -298,15 +299,15 @@
             this.txtLocalidad.Size = new System.Drawing.Size(262, 22);
             this.txtLocalidad.TabIndex = 3;
             // 
-            // cmbtipoDocumentoumento
+            // cmbTipoDocumento
             // 
-            this.cmbtipoDocumentoumento.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbtipoDocumentoumento.FormattingEnabled = true;
-            this.cmbtipoDocumentoumento.Location = new System.Drawing.Point(104, 41);
-            this.cmbtipoDocumentoumento.Margin = new System.Windows.Forms.Padding(4);
-            this.cmbtipoDocumentoumento.Name = "cmbtipoDocumentoumento";
-            this.cmbtipoDocumentoumento.Size = new System.Drawing.Size(94, 24);
-            this.cmbtipoDocumentoumento.TabIndex = 0;
+            this.cmbTipoDocumento.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTipoDocumento.FormattingEnabled = true;
+            this.cmbTipoDocumento.Location = new System.Drawing.Point(104, 41);
+            this.cmbTipoDocumento.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbTipoDocumento.Name = "cmbTipoDocumento";
+            this.cmbTipoDocumento.Size = new System.Drawing.Size(94, 24);
+            this.cmbTipoDocumento.TabIndex = 0;
             // 
             // txtNumeroDocumento
             // 
@@ -346,6 +347,7 @@
             this.txtNroPiso.Name = "txtNroPiso";
             this.txtNroPiso.Size = new System.Drawing.Size(233, 22);
             this.txtNroPiso.TabIndex = 9;
+            this.txtNroPiso.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
             // txtDepartamento
             // 
@@ -454,7 +456,6 @@
             this.txtnombre.Name = "txtnombre";
             this.txtnombre.Size = new System.Drawing.Size(262, 22);
             this.txtnombre.TabIndex = 0;
-            this.txtnombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // txtcod_postal
             // 
@@ -474,7 +475,6 @@
             this.txtapellido.Name = "txtapellido";
             this.txtapellido.Size = new System.Drawing.Size(233, 22);
             this.txtapellido.TabIndex = 1;
-            this.txtapellido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNoNumerico_KeyPress);
             // 
             // txtdireccion
             // 
@@ -519,7 +519,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox cmbusuario_activo;
         private System.Windows.Forms.TextBox txtpassword;
-        private System.Windows.Forms.TextBox txtUsuario;
+        private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
@@ -533,7 +533,7 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox txtLocalidad;
-        private System.Windows.Forms.ComboBox cmbtipoDocumentoumento;
+        private System.Windows.Forms.ComboBox cmbTipoDocumento;
         private System.Windows.Forms.TextBox txtNumeroDocumento;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label ASDASD;

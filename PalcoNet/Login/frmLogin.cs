@@ -74,44 +74,23 @@ namespace PalcoNet
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Usuario o contraseña incorrecta, le quedan " + (CANTIDAD_MAXIMA_usuario_intentosLogin - usuarioLogin.usuario_intentosLoginFallidos()).ToString() + " usuario_intentosLogin", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    MessageBox.Show("Usuario o contraseña incorrecta, le quedan " + (CANTIDAD_MAXIMA_usuario_intentosLogin - usuarioLogin.usuario_intentosLoginFallidos()).ToString() + " intentos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 }
                             }
                         }
                         else
                         {
-                            if (pVez == 2)
-                            {
-                                if (usuarioLogin.verificarContraseniaSinHash(txtpassword.Text))
-                                {
-                                    frmCambiarpassword frmpassword = new frmCambiarpassword(true);
-                                    frmpassword.Show();
-                                }
-                                else
-                                {
-                                    usuarioLogin.sumarIntentoFallido();
-                                    if (usuarioLogin.cantidadusuario_intentosLoginFallidos() == CANTIDAD_MAXIMA_usuario_intentosLogin)
-                                    {
-                                        usuarioLogin.inhabilitarUsuario();
-                                        MessageBox.Show("Usuario inhabilitado.", "Error");
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show("Usuario o contraseña incorrecta, le quedan " + (CANTIDAD_MAXIMA_usuario_intentosLogin - usuarioLogin.usuario_intentosLoginFallidos()).ToString() + " usuario_intentosLogin", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    }
-                                }
-                            }
                             if (pVez == 1)
                             {
-                                frmCambiarpassword frmpassword = new frmCambiarpassword(false);
-                                frmpassword.Show();
+                                frmCambiarpassword frmPassword = new frmCambiarpassword();
+                                frmPassword.Show();
                             }
                         }
                     }
                     else
                     {
                         //viendo la causa de la inhabiltacion
-
+                        MessageBox.Show("Usuario inhabilitado.", "Error");
                     }
                 }
                 else

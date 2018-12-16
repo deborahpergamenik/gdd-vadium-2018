@@ -234,6 +234,7 @@
     <Compile Include="Model\Rubros.cs" />
     <Compile Include="Model\Tarjeta.cs" />
     <Compile Include="Model\Ubicacion.cs" />
+    <Compile Include="Model\Ubicaciones.cs" />
     <Compile Include="Model\UserInstance.cs" />
     <Compile Include="Model\Usuario.cs" />
     <Compile Include="Program.cs" />

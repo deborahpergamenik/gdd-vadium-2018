@@ -1,4 +1,5 @@
 ﻿using PalcoNet.Common;
+using PalcoNet.Login;
 using PalcoNet.Model;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -24,39 +26,26 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         public string razonSocial { get; set; }
         public string cuit { get; set; }
-        public int telefono { get; set; }
+        public long telefono { get; set; }
         public string direccion { get; set; }
         public string cod_postal { get; set; }
         public string ciudad { get; set; }
         public string mail { get; set; }
-        public string departamentro { get; set; }
+        public string departamento { get; set; }
         public string nroPiso { get; set; }
         public string localidad { get; set; }
         public DateTime fechaCreacion { get; set; }
         public string passwordNoHash { get; set; }
 
-        public Login.frmSeleccionFuncionalidades frmSeleccionFuncionalidades { get; set; }
+        public frmSeleccionFuncionalidades frmSeleccionFuncionalidades { get; set; }
 
         public frmAbmEmpresa(Login.frmSeleccionFuncionalidades _frmSeleccionFuncionalidades)
         {
             this.frmSeleccionFuncionalidades = _frmSeleccionFuncionalidades;
             InitializeComponent();
             formatearDataGrid();
+            CargarDatos(string.Empty, string.Empty, string.Empty);
         }
-
-        public class ResultadoEmpresa
-        {
-            public int usuario_id { get; set; }
-            public string razonSocial { get; set; }
-
-            public ResultadoEmpresa(int _usuario_id, string _razonSocial)
-            {
-                usuario_id = _usuario_id;
-                razonSocial = _razonSocial;
-            }
-        }
-
-        public List<ResultadoEmpresa> resultados = new List<ResultadoEmpresa>();
 
         public Boolean campoVacio(TextBox textbox)
         {
@@ -93,7 +82,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
                             if (!campoVacio(txtTelefono))
                             {
-                                this.telefono = Convert.ToInt32(txtTelefono.Text);
+                                this.telefono = Convert.ToInt64(txtTelefono.Text);
                             }
                             else
                             {
@@ -116,7 +105,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                             this.mail = txtMail.Text;
                             this.localidad = txtLocalidad.Text;
                             this.nroPiso = txtNroPiso.Text;
-                            this.departamentro = txtDepartamento.Text;
+                            this.departamento = txtDepartamento.Text;
                             this.fechaCreacion = Configuration.getActualDate();
 
                             return true;
@@ -158,7 +147,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         public string randomUser()
         {
-            string random = "PalcoNet_" + randomString(10);
+            string random = "PalcoNet_Empresa_" + randomString(10);
             if (!SqlConnector.existeString(random, "VADIUM.USUARIO", "usuario_username"))
             {
                 return random;
@@ -190,64 +179,69 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         public void cargarUsuario()
         {
+            UTF8Encoding encoderHash = new UTF8Encoding();
+            SHA256Managed hasher = new SHA256Managed();
+            byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passwordNoHash));
+            string password = bytesDeHasheoToString(bytesDeHasheo);
+
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario_username);
-            SqlConnector.agregarParametro(listaParametros, "@password", this.password);
+            SqlConnector.agregarParametro(listaParametros, "@usuario_password", this.password);
             SqlConnector.agregarParametro(listaParametros, "@usuario_intentosLogin", this.usuario_intentosLogin);
             SqlConnector.agregarParametro(listaParametros, "@usuario_activo", this.usuario_activo);
             SqlConnector.agregarParametro(listaParametros, "@primera_vez", this.primera_vez);
-            SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO VALUES (@usuario_username, @password, @usuario_intentosLogin, @Habilitado, @primera_vez, 0)", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.ejecutarQuery("INSERT INTO VADIUM.USUARIO (usuario_username, usuario_password, usuario_intentosLogin, usuario_activo, primera_vez) VALUES (@usuario_username, @usuario_password, @usuario_intentosLogin, @usuario_activo, @primera_vez)", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
         }
 
         public void cargarEmpresa()
         {
-            List<SqlParameter> listaParametros2 = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros2, "@usuario_username", this.usuario_username);
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = @usuario_username", listaParametros2, SqlConnector.iniciarConexion());
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario_username);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = @usuario_username", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
             int idUser = Convert.ToInt32(lector["usuario_id"]);
             SqlConnector.cerrarConexion();
 
-            List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@usuario_id", idUser);
-            SqlConnector.agregarParametro(listaParametros, "@razonSocial", this.razonSocial);
-            SqlConnector.agregarParametro(listaParametros, "@cuit", this.cuit);
+            
+            List<SqlParameter> listaParametros2 = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros2, "@usuario_id", idUser);
+            SqlConnector.agregarParametro(listaParametros2, "@razonSocial", this.razonSocial);
+            SqlConnector.agregarParametro(listaParametros2, "@cuit", this.cuit);
+            SqlConnector.agregarParametro(listaParametros2, "@calle", this.direccion);
+            SqlConnector.agregarParametro(listaParametros2, "@cod_postal", this.cod_postal);
+            SqlConnector.agregarParametro(listaParametros2, "@mail", this.mail);
+            SqlConnector.agregarParametro(listaParametros2, "@fechaCreacion", this.fechaCreacion);
+            SqlConnector.agregarParametro(listaParametros2, "@ciudad", this.ciudad);
+            SqlConnector.agregarParametro(listaParametros2, "@depto", this.departamento);
+            SqlConnector.agregarParametro(listaParametros2, "@localidad", this.localidad);
 
-            if (this.telefono == -1)
+            if (this.telefono.Equals(""))
             {
-                SqlConnector.agregarParametro(listaParametros, "@telefono", DBNull.Value);
+                SqlConnector.agregarParametro(listaParametros2, "@telefono", DBNull.Value);
             }
             else
             {
-                SqlConnector.agregarParametro(listaParametros, "@telefono", this.telefono);
+                SqlConnector.agregarParametro(listaParametros2, "@telefono", Convert.ToInt64(this.telefono));
             }
 
-            SqlConnector.agregarParametro(listaParametros, "@direccion", this.direccion);
-            SqlConnector.agregarParametro(listaParametros, "@cod_postal", this.cod_postal);
-
-            if (this.ciudad.Equals(""))
+            if (this.nroPiso.Equals(""))
             {
-                SqlConnector.agregarParametro(listaParametros, "@ciudad", DBNull.Value);
+                SqlConnector.agregarParametro(listaParametros2, "@piso", DBNull.Value);
             }
             else
             {
-                SqlConnector.agregarParametro(listaParametros, "@ciudad", this.ciudad);
+                SqlConnector.agregarParametro(listaParametros2, "@piso", this.nroPiso);
             }
 
-            SqlConnector.agregarParametro(listaParametros, "@mail", this.mail);    
-            SqlConnector.agregarParametro(listaParametros, "@fechaCreacion", this.fechaCreacion);
 
-            SqlConnector.agregarParametro(listaParametros, "@Localidad", this.localidad);
-            SqlConnector.agregarParametro(listaParametros, "@NroPiso", this.nroPiso);
-            SqlConnector.agregarParametro(listaParametros, "@departamento", this.departamentro);
-
-            SqlConnector.ejecutarQuery("INSERT INTO VADIUM.EMPRESA VALUES (@usuario_id, @razonSocial, @cuit, @telefono, @direccion, @cod_postal, @ciudad, @mail, @fechaCreacion, @Localidad, @NroPiso, @ Departamento)", listaParametros, SqlConnector.iniciarConexion());
+            SqlConnector.ejecutarQuery("INSERT INTO VADIUM.EMPRESA (usuario_id,razonSocial,cuit,calle, cod_postal, mail, fechaCreacion, piso, depto ,localidad, telefono, ciudad)" +
+                                       "VALUES(@usuario_id,@razonSocial,@cuit,@calle, @cod_postal, @mail, @fechaCreacion, @piso, @depto ,@localidad, @telefono, @ciudad)", listaParametros2, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
+
 
             //Obteniendo la rol_id del cliente
             int rol_id = Rol.obtenerID("Empresa");
-
             Roles.AgregarRolEnUsuario(idUser, rol_id);
         }
 
@@ -263,7 +257,9 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             {
                 cargarUsuario();
                 cargarEmpresa();
-                new Abm_Cliente.frmConfirmacionCliente(this.usuario_username, this.passwordNoHash).Show();
+                new Abm_Cliente.frmConfirmacionCliente(this.usuario_username, this.passwordNoHash).Show(); //reutilizo el formulario de confirmación de ABM Clientes
+                CargarDatos(string.Empty, string.Empty, string.Empty);
+                dgResultados.Refresh();
             }
         }
         
@@ -312,14 +308,17 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         private void btnBusqueda_Click(object sender, EventArgs e)
         {
+            CargarDatos(txtFilterRazonSocial.Text, txtFilterCuit.Text, txtFilterEmail.Text);
+        }
+
+        public void CargarDatos(string razonSocial, string cuit, string mail)
+        {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario_username);
+            SqlConnector.agregarParametro(listaParametros, "@razonSocial", razonSocial);
+            SqlConnector.agregarParametro(listaParametros, "@CUIT", cuit);
+            SqlConnector.agregarParametro(listaParametros, "@mail", mail);
 
-            SqlConnector.agregarParametro(listaParametros, "@razonSocial", txtFilterRazonSocial.Text);
-            SqlConnector.agregarParametro(listaParametros, "@telefono", txtFilterTelefono.Text);
-            SqlConnector.agregarParametro(listaParametros, "@mail", txtFilterEmail.Text);
 
-            //revisar query
             String commandtext = "VADIUM.LISTADO_SELECCION_EMPRESA";
             DataTable table = SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
             if (table.Rows.Count > 0 && table.Rows[0].ItemArray[0].ToString() == "ERROR")
@@ -335,20 +334,10 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         public void formatearDataGrid()
         {
-            int widthrazonSocial = 227;
             int widthBotones = 85;
 
-            dgResultados.DataSource = dgResultados;
             dgResultados.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgResultados.RowHeadersVisible = false;
-
-            DataGridViewColumn col_idUser = dgResultados.Columns[0];
-            col_idUser.Visible = false;
-
-            DataGridViewColumn col_razonSocial = dgResultados.Columns[1];
-            col_razonSocial.Resizable = DataGridViewTriState.False;
-            col_razonSocial.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col_razonSocial.Width = widthrazonSocial;
 
             DataGridViewButtonColumn botonesModificar = new DataGridViewButtonColumn();
             botonesModificar.HeaderText = "";
@@ -370,31 +359,36 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             dgResultados.Columns.Add(botonesEliminar);
         }
 
+        private void dgResultados_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgResultados.Rows[e.RowIndex].Cells[3].Value.ToString() != "")
+            {
+                switch (e.ColumnIndex)
+                {
+                    case 0:
+                        frmModificarEmpresa frmEmpresa = new frmModificarEmpresa(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[3].Value), this);
+                        frmEmpresa.Show();
+                        break;
+                    case 1:
+                        DialogResult result = MessageBox.Show("Se inhabilitará a la empresa " + Convert.ToString(dgResultados.Rows[e.RowIndex].Cells[5].Value) + ".\n\n¿Está seguro?", "Confirmación", MessageBoxButtons.YesNoCancel);
+                        if (result == DialogResult.Yes)
+                        {
+                            eliminarEmpresa(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[3].Value));
+                        }
+                        CargarDatos(string.Empty, string.Empty, string.Empty);
+                        dgResultados.Refresh();
+                        break;
+                }         
+            }
+        }
+
         public void eliminarEmpresa(int id)
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@usuario_id", id);
             SqlConnector.ejecutarQuery("UPDATE VADIUM.USUARIO SET usuario_activo = 0 WHERE usuario_id = @usuario_id", listaParametros, SqlConnector.iniciarConexion());
             SqlConnector.cerrarConexion();
-            MessageBox.Show("Usuario inusuario_activo.");
-        }
-
-        private void dgResultados_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            switch (e.ColumnIndex)
-            {
-                case 0:
-                    frmModificarEmpresa frmEmpresa = new frmModificarEmpresa(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value));
-                    frmEmpresa.Show();
-                    break;
-                case 1:
-                    DialogResult result = MessageBox.Show("Se inhabilitará a la empresa " + Convert.ToString(dgResultados.Rows[e.RowIndex].Cells[3].Value) + ".\n\n¿Está seguro?", "Confirmación", MessageBoxButtons.YesNoCancel);
-                    if (result == DialogResult.Yes)
-                    {
-                        eliminarEmpresa(Convert.ToInt32(dgResultados.Rows[e.RowIndex].Cells[2].Value));
-                    }
-                    break;
-            }
+            MessageBox.Show("Usuario inhabilitado.");
         }
 
 

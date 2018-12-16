@@ -15,24 +15,24 @@ namespace PalcoNet.Comprar
         DataTable ubicacionesDisponibles = new DataTable();
         DataTable tiposUbicacion = new DataTable();
         DataTable ubicacionesSeleccionadas = new DataTable();
-        Publicacion publi;
+        int codPublicacionActual = 0;
 
-        public frmDetallePublicacion(Publicacion unaPublicacion)
+        public frmDetallePublicacion(int codPublicacion)
         {
             InitializeComponent();
-            publi = unaPublicacion;
+            this.codPublicacionActual = codPublicacion;
         }
 
         private void frmDetallePublicacion_Load(object sender, EventArgs e)
         {
             //COMBOBOX
+
             SqlDataReader lectorCombo = SqlConnector.ObtenerDataReader("VADIUM.ObtenerTiposUbicaciones", "SP");
             if (lectorCombo.HasRows)
             {
                 lectorCombo.Read();
                 tiposUbicacion.Load(lectorCombo);
                 SqlConnector.cerrarConexion();
-                dgvUbicaciones.DataSource = tiposUbicacion;
             }
 
             foreach (DataRow row in tiposUbicacion.Rows)
@@ -43,17 +43,14 @@ namespace PalcoNet.Comprar
         }
 
 
-        private void cargarUbicaciones(Nullable<int> tipoUbicacion)
+        private void cargarUbicaciones(int? tipoUbicacion)
         {
             //AGREGAR PARAMETROS QUE HAGAN FALTA PARA OBTENER LAS UBICACIONES
 
             List<SqlParameter> parametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(parametros, "@codigoPublicacion", publi.CodigoPublicacion);
-            if (!tipoUbicacion.HasValue)
-                SqlConnector.agregarParametro(parametros, "@tipoUbicacion", DBNull.Value);
-            else
-                SqlConnector.agregarParametro(parametros, "@tipoUbicacion", tipoUbicacion.Value);
-            SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.ObtenerUbicaciones", "SP", parametros);
+            SqlConnector.agregarParametro(parametros, "@codigoPublicacion", codPublicacionActual);
+            SqlConnector.agregarParametro(parametros, "@tipoUbicacion", tipoUbicacion.Value);
+            SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.ObtenerUbicacionesNoVendidas", "SP", parametros);
 
             if (lector.HasRows)
             {

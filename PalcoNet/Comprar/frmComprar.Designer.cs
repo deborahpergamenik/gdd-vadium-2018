@@ -57,10 +57,10 @@
             // btnAtras
             // 
             this.btnAtras.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnAtras.Location = new System.Drawing.Point(14, 619);
+            this.btnAtras.Location = new System.Drawing.Point(422, 769);
             this.btnAtras.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnAtras.Name = "btnAtras";
-            this.btnAtras.Size = new System.Drawing.Size(118, 39);
+            this.btnAtras.Size = new System.Drawing.Size(124, 47);
             this.btnAtras.TabIndex = 20;
             this.btnAtras.Text = "Atras";
             this.btnAtras.UseVisualStyleBackColor = true;
@@ -87,7 +87,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox1.Size = new System.Drawing.Size(1005, 180);
+            this.groupBox1.Size = new System.Drawing.Size(1953, 180);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filtros:";
@@ -97,7 +97,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(709, 6);
+            this.label2.Location = new System.Drawing.Point(1352, 3);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(185, 20);
             this.label2.TabIndex = 45;
@@ -107,16 +107,16 @@
             // 
             this.lstRubros.FormattingEnabled = true;
             this.lstRubros.ItemHeight = 20;
-            this.lstRubros.Location = new System.Drawing.Point(713, 29);
+            this.lstRubros.Location = new System.Drawing.Point(1346, 26);
             this.lstRubros.Name = "lstRubros";
-            this.lstRubros.Size = new System.Drawing.Size(129, 144);
+            this.lstRubros.Size = new System.Drawing.Size(191, 144);
             this.lstRubros.TabIndex = 44;
             this.lstRubros.SelectedIndexChanged += new System.EventHandler(this.lstRubros_SelectedIndexChanged);
             // 
             // cmbRubros
             // 
             this.cmbRubros.FormattingEnabled = true;
-            this.cmbRubros.Location = new System.Drawing.Point(366, 58);
+            this.cmbRubros.Location = new System.Drawing.Point(897, 72);
             this.cmbRubros.Name = "cmbRubros";
             this.cmbRubros.Size = new System.Drawing.Size(336, 28);
             this.cmbRubros.TabIndex = 43;
@@ -125,7 +125,7 @@
             // chkHasta
             // 
             this.chkHasta.AutoSize = true;
-            this.chkHasta.Location = new System.Drawing.Point(325, 139);
+            this.chkHasta.Location = new System.Drawing.Point(328, 151);
             this.chkHasta.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkHasta.Name = "chkHasta";
             this.chkHasta.Size = new System.Drawing.Size(22, 21);
@@ -141,10 +141,11 @@
             this.chkDesde.Size = new System.Drawing.Size(22, 21);
             this.chkDesde.TabIndex = 41;
             this.chkDesde.UseVisualStyleBackColor = true;
+            this.chkDesde.CheckedChanged += new System.EventHandler(this.chkDesde_CheckedChanged);
             // 
             // dateTimePickerHasta
             // 
-            this.dateTimePickerHasta.Location = new System.Drawing.Point(16, 132);
+            this.dateTimePickerHasta.Location = new System.Drawing.Point(19, 144);
             this.dateTimePickerHasta.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dateTimePickerHasta.Name = "dateTimePickerHasta";
             this.dateTimePickerHasta.Size = new System.Drawing.Size(298, 26);
@@ -154,7 +155,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(363, 24);
+            this.label5.Location = new System.Drawing.Point(894, 38);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(73, 20);
             this.label5.TabIndex = 27;
@@ -171,7 +172,7 @@
             // btnReset
             // 
             this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReset.Location = new System.Drawing.Point(873, 34);
+            this.btnReset.Location = new System.Drawing.Point(1676, 23);
             this.btnReset.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(115, 44);
@@ -183,7 +184,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(363, 89);
+            this.label1.Location = new System.Drawing.Point(458, 45);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(99, 20);
@@ -193,7 +194,7 @@
             // btnBuscar
             // 
             this.btnBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBuscar.Location = new System.Drawing.Point(873, 100);
+            this.btnBuscar.Location = new System.Drawing.Point(1676, 89);
             this.btnBuscar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnBuscar.Name = "btnBuscar";
             this.btnBuscar.Size = new System.Drawing.Size(115, 60);
@@ -204,7 +205,7 @@
             // 
             // txtDescripcion
             // 
-            this.txtDescripcion.Location = new System.Drawing.Point(367, 116);
+            this.txtDescripcion.Location = new System.Drawing.Point(462, 72);
             this.txtDescripcion.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtDescripcion.Multiline = true;
             this.txtDescripcion.Name = "txtDescripcion";
@@ -214,7 +215,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 100);
+            this.label4.Location = new System.Drawing.Point(18, 112);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(54, 20);
@@ -234,10 +235,10 @@
             // btnAbrirPublicacion
             // 
             this.btnAbrirPublicacion.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAbrirPublicacion.Location = new System.Drawing.Point(816, 619);
+            this.btnAbrirPublicacion.Location = new System.Drawing.Point(1240, 769);
             this.btnAbrirPublicacion.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnAbrirPublicacion.Name = "btnAbrirPublicacion";
-            this.btnAbrirPublicacion.Size = new System.Drawing.Size(202, 48);
+            this.btnAbrirPublicacion.Size = new System.Drawing.Size(207, 47);
             this.btnAbrirPublicacion.TabIndex = 18;
             this.btnAbrirPublicacion.Text = "Abrir Publicacion";
             this.btnAbrirPublicacion.UseVisualStyleBackColor = true;
@@ -246,10 +247,10 @@
             // btnUltimaPag
             // 
             this.btnUltimaPag.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUltimaPag.Location = new System.Drawing.Point(528, 629);
+            this.btnUltimaPag.Location = new System.Drawing.Point(969, 769);
             this.btnUltimaPag.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnUltimaPag.Name = "btnUltimaPag";
-            this.btnUltimaPag.Size = new System.Drawing.Size(84, 29);
+            this.btnUltimaPag.Size = new System.Drawing.Size(126, 47);
             this.btnUltimaPag.TabIndex = 17;
             this.btnUltimaPag.Text = "Ultima";
             this.btnUltimaPag.UseVisualStyleBackColor = true;
@@ -258,10 +259,10 @@
             // btnPrimerPag
             // 
             this.btnPrimerPag.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPrimerPag.Location = new System.Drawing.Point(380, 629);
+            this.btnPrimerPag.Location = new System.Drawing.Point(743, 769);
             this.btnPrimerPag.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnPrimerPag.Name = "btnPrimerPag";
-            this.btnPrimerPag.Size = new System.Drawing.Size(84, 29);
+            this.btnPrimerPag.Size = new System.Drawing.Size(84, 47);
             this.btnPrimerPag.TabIndex = 14;
             this.btnPrimerPag.Text = "Primera";
             this.btnPrimerPag.UseVisualStyleBackColor = true;
@@ -269,10 +270,10 @@
             // 
             // btnSiguientePag
             // 
-            this.btnSiguientePag.Location = new System.Drawing.Point(500, 629);
+            this.btnSiguientePag.Location = new System.Drawing.Point(910, 769);
             this.btnSiguientePag.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnSiguientePag.Name = "btnSiguientePag";
-            this.btnSiguientePag.Size = new System.Drawing.Size(21, 29);
+            this.btnSiguientePag.Size = new System.Drawing.Size(39, 47);
             this.btnSiguientePag.TabIndex = 16;
             this.btnSiguientePag.Text = ">";
             this.btnSiguientePag.UseVisualStyleBackColor = true;
@@ -280,10 +281,10 @@
             // 
             // btnAnteriorPag
             // 
-            this.btnAnteriorPag.Location = new System.Drawing.Point(471, 629);
+            this.btnAnteriorPag.Location = new System.Drawing.Point(861, 769);
             this.btnAnteriorPag.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnAnteriorPag.Name = "btnAnteriorPag";
-            this.btnAnteriorPag.Size = new System.Drawing.Size(21, 29);
+            this.btnAnteriorPag.Size = new System.Drawing.Size(43, 47);
             this.btnAnteriorPag.TabIndex = 15;
             this.btnAnteriorPag.Text = "<";
             this.btnAnteriorPag.UseVisualStyleBackColor = true;
@@ -305,7 +306,7 @@
             this.Publicaciones_Datagrid.Name = "Publicaciones_Datagrid";
             this.Publicaciones_Datagrid.ReadOnly = true;
             this.Publicaciones_Datagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Publicaciones_Datagrid.Size = new System.Drawing.Size(1004, 391);
+            this.Publicaciones_Datagrid.Size = new System.Drawing.Size(1953, 551);
             this.Publicaciones_Datagrid.TabIndex = 13;
             this.Publicaciones_Datagrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Publicaciones_Datagrid_CellContentClick);
             // 
@@ -313,7 +314,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1065, 688);
+            this.ClientSize = new System.Drawing.Size(2007, 846);
             this.Controls.Add(this.btnAtras);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnAbrirPublicacion);

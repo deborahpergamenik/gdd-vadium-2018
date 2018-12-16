@@ -31,29 +31,29 @@ namespace PalcoNet.Comprar
             this.frmSeleccionFuncionalidades = _frmSeleccionFuncionalidades;
             paginaActual = 0;
           
-            //contarPublicaciones();
+            contarPublicaciones();
             cargarPublicaciones();
             cargarRubros();
 
 
             if (!chkDesde.Checked)
             {
-                dateTimePickerDesde.CustomFormat = " ";
+                //dateTimePickerDesde.CustomFormat = " ";
                 dateTimePickerDesde.Format = DateTimePickerFormat.Custom;
             }
             else
             {
-                dateTimePickerDesde.CustomFormat = null;
+                //dateTimePickerDesde.CustomFormat = null;
                 dateTimePickerDesde.Format = DateTimePickerFormat.Long;
             }
             if (!chkHasta.Checked)
             {
-                dateTimePickerHasta.CustomFormat = " ";
+                //dateTimePickerHasta.CustomFormat = " ";
                 dateTimePickerHasta.Format = DateTimePickerFormat.Custom;
             }
             else
             {
-                dateTimePickerHasta.CustomFormat = null;
+                //dateTimePickerHasta.CustomFormat = null;
                 dateTimePickerHasta.Format = DateTimePickerFormat.Long;
             }
         }
@@ -109,8 +109,12 @@ namespace PalcoNet.Comprar
                 btnAnteriorPag.Enabled = true;
                 btnPrimerPag.Enabled = true;
             }
-
             Publicaciones_Datagrid.DataSource = Publicaciones.obtenerPublicaiones(desde, hasta, rubros, descripcion, start, finish);
+     
+
+
+
+
             //Publicaciones_Datagrid.MaxRecords = 10;
             //List<Publicacion> listaPublicaciones = Publicaciones.obtenerPublicacionesPaginadas(desde, hasta,rubro,descripcion,start,finish );
             //Publicaciones_Datagrid1.DataSource = listaPublicaciones;
@@ -132,6 +136,7 @@ namespace PalcoNet.Comprar
         private void btnSiguientePag_Click(object sender, EventArgs e)
         {
             paginaActual = paginaActual + 1;
+            
             cargarPublicaciones();
 
         }
@@ -140,48 +145,35 @@ namespace PalcoNet.Comprar
         {
 
             paginaActual = paginaActual - 1;
+            contarPublicaciones();
             cargarPublicaciones();
         }
 
         private void btnPrimerPag_Click(object sender, EventArgs e)
         {
             paginaActual = 0;
+            contarPublicaciones();
             cargarPublicaciones();
         }
 
         private void btnUltimaPag_Click(object sender, EventArgs e)
         {
             paginaActual = ultimaPagina;
+            contarPublicaciones();
             cargarPublicaciones();
         }
 
 
-        //private void contarPublicaciones()
-        //{
-        //    string commandtext = "SELECT COUNT (*) AS cant from VADIUM.PUBLICACION AS p " +
-        //                         "JOIN VADIUM.usuario_activo ep ON e.codigo = p.usuario_activo_id ";
-        //    if (filtroRubros)
-        //        commandtext += "JOIN VADIUM.RUBRO_PUBLICACION rp ON p.codigoEspectaculo = rp.codigoEspectaculo ";
+        private void contarPublicaciones()
+        {
+            cantPublicacionesTotal = Publicaciones.getTotal(rubros, descripcion, start, finish);;
+            ultimaPagina = cantPublicacionesTotal / cantPublicacionesPorPagina;
 
-        //    commandtext += "WHERE e.Descripcion != 'Finalizada' ";
+            if (ultimaPagina < 1)
+                ultimaPagina = 0;
+            
 
-        //    if (filtro != "")
-        //        commandtext += " AND " + filtro;
-
-        //    SqlDataReader reader = SqlConnector.ejecutarReader(commandtext, SqlConnector.iniciarConexion());
-
-        //    if (reader.HasRows)
-        //    {
-        //        reader.Read();
-        //        cantPublicacionesTotal = Convert.ToInt32(reader["cant"]);
-        //        ultimaPagina = cantPublicacionesTotal / cantPublicacionesPorPagina;
-
-        //        if (ultimaPagina < 1)
-        //            ultimaPagina = 0;
-        //    }
-
-        //    SqlConnector.cerrarConexion();
-        //}
+        }
 
         private void btnAbrirPublicacion_Click(object sender, EventArgs e)
         {
@@ -189,8 +181,8 @@ namespace PalcoNet.Comprar
                 return;
             else
             {
-                Publicacion unaPublicacion = Publicaciones_Datagrid.CurrentRow.DataBoundItem as Publicacion;
-                frmDetallePublicacion detalleForm = new frmDetallePublicacion(unaPublicacion);
+                int codigoPublicacion = Convert.ToInt32( Publicaciones_Datagrid.SelectedRows[0].Cells[0].ToString());
+                frmDetallePublicacion detalleForm = new frmDetallePublicacion(codigoPublicacion);
                 detalleForm.ShowDialog();
                 cargarPublicaciones();
             }
@@ -234,6 +226,7 @@ namespace PalcoNet.Comprar
             {
                 rubros.Add((int)item.Value);
             }
+            contarPublicaciones();
             cargarPublicaciones();
         }
 
@@ -248,7 +241,7 @@ namespace PalcoNet.Comprar
 
             paginaActual = 0;
             
-            //contarPublicaciones();
+            contarPublicaciones();
             cargarPublicaciones();
 
         }
@@ -284,6 +277,11 @@ namespace PalcoNet.Comprar
         {
             int select = lstRubros.SelectedIndex;
             lstRubros.Items.Remove(select);
+        }
+
+        private void chkDesde_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

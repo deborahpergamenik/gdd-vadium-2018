@@ -63,12 +63,12 @@ namespace PalcoNet.Model
             SqlConnector.cerrarConexion();
             return publicaciones;
         }
-
+         
         public static DataTable obtenerPublicaiones(int start, int finish, List<int> rubros, string desc, DateTime? desde, DateTime? hasta)
         {
             try{
                 string query = obtenerQuerySinFiltros();
-                string filtros = armarquery(start, finish, rubros, desc, desde, hasta);
+                string filtros = armarquery( rubros, desc, desde, hasta);
 
                 if (!String.IsNullOrEmpty(filtros))
                 {
@@ -78,6 +78,8 @@ namespace PalcoNet.Model
                 int cant = finish - start;
                 query = agregarPaginacion(query, start, cant);
                 DataTable table = SqlConnector.obtenerDataTable(query, "T");
+               
+                SqlConnector.cerrarConexion();
                 return table;
             }
             catch(Exception e)
@@ -85,11 +87,41 @@ namespace PalcoNet.Model
                 return null;
             }
         }
+
+        private static int getTotalRows(string filtros)
+        {
+            int cantidad = 0;
+           string principalquery =  "SELECT COUNT(*) as cantidad " +
+                    "FROM VADIUM.PUBLICACION pub JOIN VADIUM.ESTADO es ON (pub.estado_id = es.codigo) " +
+                                       "JOIN VADIUM.RUBRO rub ON (pub.rubro_id = rub.rubro_id) " +
+                                       "JOIN VADIUM.GRADO gr ON (pub.grado_id = gr.grado_id)";
+           if (!String.IsNullOrEmpty(filtros))
+           {
+               principalquery = principalquery + " WHERE " + filtros;
+           }
+            SqlDataReader lector = SqlConnector.ObtenerDataReader(principalquery, "T");
+            
+            if (lector.HasRows)
+            {
+                while (lector.Read())
+                {
+                    string var = lector.GetName(0);
+                    var val = lector[0];
+                    if (lector[0] != null)
+                    {
+                        string lect = lector[0].ToString();
+                        cantidad = Convert.ToInt32(lect);
+                    }
+                }
+            }
+            SqlConnector.cerrarConexion();
+            return cantidad;
+        }
         private static string agregarPaginacion(string query, int start, int cant)
         {
             string paginacion = "offset " + start + " rows fetch next " + cant + " rows only";
             query = query + " " + paginacion;
-            return paginacion;
+            return query;
         }
         private static string AgregarOrderBy(string query)
         {
@@ -102,11 +134,11 @@ namespace PalcoNet.Model
             return "SELECT pub.codigoEspectaculo, pub.descripcion,pub.fecha, pub.fechaVencimiento, rub.rubro_id, rub.descripcion as rubro_descripcion, " +
                     "pub.direccion as direccionEspectaculo, gr.descripcion as grado_descripcion, gr.comision as comision, gr.grado_id as grado_id, " +
                     "pub.empresa_id, es.codigo as estado_id, es.descripcion as estado_descripcion " +
-                     "FROM VADIUM.PUBLICACION pub JOIN ESTADO es ON (pub.estado_id = es.codigo) " +
-                                        "JOIN RUBRO rub ON (pub.rubro_id = rub.rubro_id) " +
-                                        "JOIN GRADO gr ON (pub.grado_id = gr.grado_id)";
+                     "FROM VADIUM.PUBLICACION pub JOIN VADIUM.ESTADO es ON (pub.estado_id = es.codigo) " +
+                                        "JOIN VADIUM.RUBRO rub ON (pub.rubro_id = rub.rubro_id) " +
+                                        "JOIN VADIUM.GRADO gr ON (pub.grado_id = gr.grado_id)";
         }
-        private static string armarquery(int start, int finish, List<int> rubros, string desc, DateTime? desde, DateTime? hasta)
+        private static string armarquery( List<int> rubros, string desc, DateTime? desde, DateTime? hasta)
         {
             string filtro = "";
             filtro += filtrosRubro(rubros);
@@ -116,7 +148,7 @@ namespace PalcoNet.Model
             {
                 if (filtro != "")
                     filtro += " AND ";
-                filtro += " p.descripcion LIKE  '%" + desc + "%' ";
+                filtro += " pub.descripcion LIKE  '%" + desc + "%' ";
             }
 
 
@@ -125,14 +157,14 @@ namespace PalcoNet.Model
                 if (!string.IsNullOrEmpty(filtro))
                     filtro += " AND ";
 
-                filtro += " p.fecha >= " + desde;
+                filtro += " pub.fecha >= '" + ((DateTime)desde).ToString("yyyy-MM-dd HH:mm:ss")+"'";
             }
 
             if (hasta!= null)
             {
                 if (!string.IsNullOrEmpty(filtro))
                     filtro += " AND ";
-                filtro += " p.fecha <= " + hasta;
+                filtro += " pub.fecha <= '" + ((DateTime)hasta).ToString("yyyy-MM-dd HH:mm:ss") + "'";
             }
 
             return filtro;
@@ -150,13 +182,22 @@ namespace PalcoNet.Model
                         filtro += " (";
                     else filtro += " or ";
 
-                    filtro = filtro + "r.rubro_id = " + rubros[i];
+                    filtro = filtro + "rub.rubro_id = " + rubros[i];
 
                     if (i == rubros.Count - 1)
                         filtro += " ) ";
                 }
             }
             return filtro;
+        }
+
+        internal static int getTotal(List<int> rubros, string descripcion, DateTime? start, DateTime? finish)
+        {
+           
+            string filtros = armarquery( rubros, descripcion, start, finish);
+
+            int countTotalRows = getTotalRows(filtros);
+            return countTotalRows;
         }
     }
 }

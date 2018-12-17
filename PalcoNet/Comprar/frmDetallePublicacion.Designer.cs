@@ -35,16 +35,15 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnAtras = new System.Windows.Forms.Button();
             this.dgvUbicaciones = new System.Windows.Forms.DataGridView();
-            this.Comprar = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUbicaciones)).BeginInit();
             this.SuspendLayout();
             // 
             // btnComprar
             // 
-            this.btnComprar.Location = new System.Drawing.Point(796, 324);
-            this.btnComprar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnComprar.Location = new System.Drawing.Point(1334, 603);
+            this.btnComprar.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnComprar.Name = "btnComprar";
-            this.btnComprar.Size = new System.Drawing.Size(105, 35);
+            this.btnComprar.Size = new System.Drawing.Size(118, 44);
             this.btnComprar.TabIndex = 19;
             this.btnComprar.Text = "Comprar";
             this.btnComprar.UseVisualStyleBackColor = true;
@@ -52,10 +51,10 @@
             // 
             // btnBuscar
             // 
-            this.btnBuscar.Location = new System.Drawing.Point(796, 27);
-            this.btnBuscar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnBuscar.Location = new System.Drawing.Point(1334, 39);
+            this.btnBuscar.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(105, 29);
+            this.btnBuscar.Size = new System.Drawing.Size(118, 36);
             this.btnBuscar.TabIndex = 17;
             this.btnBuscar.Text = "Buscar";
             this.btnBuscar.UseVisualStyleBackColor = true;
@@ -64,10 +63,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 9);
+            this.label2.Location = new System.Drawing.Point(15, 11);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(102, 17);
+            this.label2.Size = new System.Drawing.Size(113, 20);
             this.label2.TabIndex = 16;
             this.label2.Text = "Tipo Ubicacion";
             // 
@@ -75,28 +74,28 @@
             // 
             this.cmbTipo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTipo.FormattingEnabled = true;
-            this.cmbTipo.Location = new System.Drawing.Point(13, 31);
-            this.cmbTipo.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbTipo.Location = new System.Drawing.Point(15, 39);
+            this.cmbTipo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbTipo.Name = "cmbTipo";
-            this.cmbTipo.Size = new System.Drawing.Size(160, 24);
+            this.cmbTipo.Size = new System.Drawing.Size(180, 28);
             this.cmbTipo.TabIndex = 15;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 61);
+            this.label1.Location = new System.Drawing.Point(10, 76);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(160, 17);
+            this.label1.Size = new System.Drawing.Size(179, 20);
             this.label1.TabIndex = 13;
             this.label1.Text = "Ubicaciones disponibles";
             // 
             // btnAtras
             // 
-            this.btnAtras.Location = new System.Drawing.Point(13, 324);
-            this.btnAtras.Margin = new System.Windows.Forms.Padding(4);
+            this.btnAtras.Location = new System.Drawing.Point(36, 603);
+            this.btnAtras.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnAtras.Name = "btnAtras";
-            this.btnAtras.Size = new System.Drawing.Size(105, 35);
+            this.btnAtras.Size = new System.Drawing.Size(118, 44);
             this.btnAtras.TabIndex = 20;
             this.btnAtras.Text = "Atras";
             this.btnAtras.UseVisualStyleBackColor = true;
@@ -104,30 +103,19 @@
             // 
             // dgvUbicaciones
             // 
-            this.dgvUbicaciones.AllowUserToAddRows = false;
-            this.dgvUbicaciones.AllowUserToDeleteRows = false;
             this.dgvUbicaciones.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvUbicaciones.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Comprar});
-            this.dgvUbicaciones.Location = new System.Drawing.Point(12, 82);
-            this.dgvUbicaciones.Margin = new System.Windows.Forms.Padding(4);
+            this.dgvUbicaciones.Location = new System.Drawing.Point(14, 117);
             this.dgvUbicaciones.Name = "dgvUbicaciones";
-            this.dgvUbicaciones.Size = new System.Drawing.Size(888, 235);
+            this.dgvUbicaciones.RowTemplate.Height = 28;
+            this.dgvUbicaciones.Size = new System.Drawing.Size(1438, 466);
             this.dgvUbicaciones.TabIndex = 21;
-            this.dgvUbicaciones.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUbicaciones_CellContentClick);
-            // 
-            // Comprar
-            // 
-            this.Comprar.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Comprar.HeaderText = "Seleccionar";
-            this.Comprar.Name = "Comprar";
-            this.Comprar.Width = 88;
+            this.dgvUbicaciones.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUbicaciones_CellContentClick_1);
             // 
             // frmDetallePublicacion
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(928, 383);
+            this.ClientSize = new System.Drawing.Size(1504, 667);
             this.Controls.Add(this.dgvUbicaciones);
             this.Controls.Add(this.btnAtras);
             this.Controls.Add(this.btnComprar);
@@ -135,6 +123,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.cmbTipo);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmDetallePublicacion";
             this.Text = "frmDetallePublicacion";
             this.Load += new System.EventHandler(this.frmDetallePublicacion_Load);
@@ -153,6 +142,5 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnAtras;
         private System.Windows.Forms.DataGridView dgvUbicaciones;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Comprar;
     }
 }

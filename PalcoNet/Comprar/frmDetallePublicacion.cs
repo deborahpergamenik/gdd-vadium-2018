@@ -14,7 +14,7 @@ namespace PalcoNet.Comprar
     {
         DataTable ubicacionesDisponibles = new DataTable();
         DataTable tiposUbicacion = new DataTable();
-        DataTable ubicacionesSeleccionadas = new DataTable();
+        List<int> ubicacionesSeleccionadas = new List<int>();
         int codPublicacionActual = 0;
 
         public frmDetallePublicacion(int codPublicacion)
@@ -58,14 +58,7 @@ namespace PalcoNet.Comprar
 
         private void dgvUbicaciones_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 0)
-            {
-                if (dgvUbicaciones[e.ColumnIndex, e.RowIndex].Value == null ? false : (bool)dgvUbicaciones[e.ColumnIndex, e.RowIndex].Value)
-                    ubicacionesSeleccionadas.Rows.Remove(ubicacionesSeleccionadas.Rows.Find(dgvUbicaciones["nro_ubicacion", e.RowIndex].Value));
-                else
-                    ubicacionesSeleccionadas.ImportRow(ubicacionesSeleccionadas.Rows[e.RowIndex]);
-
-            }
+          
         }
 
 
@@ -78,21 +71,36 @@ namespace PalcoNet.Comprar
         private void btnComprar_Click(object sender, EventArgs e)
         {
             string codigoTarjeta;
-            if (ubicacionesSeleccionadas.Rows.Count == 0)
+            var val = dgvUbicaciones.SelectedRows[0].Cells[0].Value;
+            if (val == null)
             {
                 MessageBox.Show("No se seleccionaron ubicaciones para comprar");
             }
-            else if (!String.IsNullOrWhiteSpace((codigoTarjeta = chequearTarjeta())) &&
-            MessageBox.Show("Desea confirmar la compra?", "Confirmacion", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                generarCompra(codigoTarjeta);
-                ubicacionesSeleccionadas.Clear();
-                ubicacionesDisponibles.Clear();
-            }
             else
             {
-                MessageBox.Show("Compra cancelada");
+                var dialog = MessageBox.Show("Desea pagar con tarjeta?", "Confirmacion", MessageBoxButtons.YesNoCancel);
+                if (dialog == DialogResult.Yes)
+                {
+                    if (!String.IsNullOrWhiteSpace((codigoTarjeta = chequearTarjeta())) &&
+               MessageBox.Show("Desea confirmar la compra?", "Confirmacion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        int ubi = Convert.ToInt32(val);
+                        generarCompra(codigoTarjeta, ubi);
+                        ubicacionesSeleccionadas.Clear();
+                        ubicacionesDisponibles.Clear();
+                    }
+
+                }
+                else if(dialog == DialogResult.No)
+                {
+                    int ubi = Convert.ToInt32(val);
+                    generarCompra("Efectivo", ubi);
+                    ubicacionesSeleccionadas.Clear();
+                    ubicacionesDisponibles.Clear();
+                }
+                
             }
+           
         }
 
 
@@ -147,17 +155,13 @@ namespace PalcoNet.Comprar
             return salida.ToString();
         }
 
-        private void generarCompra(string codigoTarjeta)
+        private void generarCompra(string codigoTarjeta, int ubicacion)
         {
-            StringBuilder builder = new StringBuilder();
-            foreach (DataRow row in ubicacionesSeleccionadas.Rows)
-                builder.AppendFormat("{0} ", row["nro_ubicacion"].ToString());
 
             List<SqlParameter> parametrosGuardarTarjeta = new List<SqlParameter>();
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codCliente", "codigoDeCliente"); //traer codigo de cliente
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codTarjeta", codigoTarjeta);
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codPublicacion", codPublicacionActual);
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@ubicaciones", builder.ToString());
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@ubicacion",ubicacion);
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@fechaActual", Configuration.getActualDate());
             SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.COMPRAR", "SP", parametrosGuardarTarjeta);
         }
@@ -165,6 +169,11 @@ namespace PalcoNet.Comprar
         private void btnAtras_Click(object sender, EventArgs e)
         {
             this.Hide();
+        }
+
+        private void dgvUbicaciones_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

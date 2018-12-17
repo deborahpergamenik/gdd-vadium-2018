@@ -37,5 +37,12 @@ namespace PalcoNet.Model
 
             return tipoUbicaciones;
         }
+        public static void comprarUbicaciones (List<int> ubicaciones, int compraId)
+        {
+            string filtro = Configuration.createFilter(ubicaciones, "ubi.ubicacion_id");
+            SqlDataReader lector = SqlConnector.ejecutarReader("UPDATE VADIUM.UBICAION ubi SET compra_id = " + compraId + " WHERE " + filtro , SqlConnector.iniciarConexion());
+        }
+       
+        
     }
 }

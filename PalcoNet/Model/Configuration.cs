@@ -22,6 +22,28 @@ namespace PalcoNet.Model
         {
             return ((DateTime)getActualDate()).ToString("yyyy-MM-dd HH:mm:ss");
         }
+        public static string  createFilter(List<int> values, string variable)
+        {
+
+            string filtro = " ";
+            if (values != null)
+            {
+                for (int i = 0; i < values.Count; i++)
+                {
+
+                    if (i == 0)
+                        filtro += " ( ";
+                    else filtro += " or ";
+
+                    filtro = filtro + variable + "  = " + values[i] + " ";
+
+                    if (i == values.Count - 1)
+                        filtro += " ) ";
+                }
+            }
+            return filtro;
+
+        }
     }
    
 }

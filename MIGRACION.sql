@@ -821,13 +821,13 @@ BEGIN
 END
 GO
 ------------------COMPRAR-------------------------------------------
-CREATE PROCEDURE [VADIUM].COMPRAR @codCliente int, @FormaPago nvarchar(255), @ubicacion int, @fecha datetime
+CREATE PROCEDURE [VADIUM].COMPRAR @codCliente int, @FormaPago nvarchar(255), @fecha datetime, @monto numeric(18,0), @cantidad int, @new_identity INT = NULL OUTPUT
 AS
 BEGIN
 
 	INSERT INTO VADIUM.COMPRA (id_cliente_comprador, medio_de_pago, fecha_compra)
 	VALUES(@codCliente, @FormaPago, @fecha)
-	
+	SET @new_identity = SCOPE_IDENTITY();
 
 END
 GO

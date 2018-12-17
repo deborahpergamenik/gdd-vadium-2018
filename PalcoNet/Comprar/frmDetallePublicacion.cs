@@ -143,15 +143,23 @@ namespace PalcoNet.Comprar
 
         private void generarCompra(string codigoTarjeta)
         {
-            var ss = dgvUbicaciones.SelectedRows;
+            double montoTotal = Convert.ToDouble(lblPrecio.Text);
+            int cantidad = ubicacionesSeleccionadas.Count;
             
-
             List<SqlParameter> parametrosGuardarTarjeta = new List<SqlParameter>();
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codCliente", "codigoDeCliente"); //traer codigo de cliente
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codTarjeta", codigoTarjeta);
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@ubicaciones", ss);
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@fechaActual", Configuration.getActualDate());
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codCliente", UserInstance.getUserInstance().clienteId); //traer codigo de cliente
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@FormaPago", codigoTarjeta);
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, " @fecha", Configuration.getActualDate());
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, " @monto", montoTotal);
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, " @cantidad", cantidad);
             SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.COMPRAR", "SP", parametrosGuardarTarjeta);
+            int? val = null;
+            if (lector.HasRows)
+            {
+                lector.Read();
+                var obj = lector["@new_identity"];
+                val = Convert.ToInt32(obj) ;
+            }
         }
 
         private void btnAtras_Click(object sender, EventArgs e)

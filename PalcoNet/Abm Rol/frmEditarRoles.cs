@@ -24,10 +24,10 @@ namespace PalcoNet.Abm_Rol
             InitializeComponent();
             if (modo == "nuevo")
             {
-                List<Funcionalidad> lista = Funcionalidades.obtenerFuncionalidades(SqlConnector.iniciarConexion(), 0); //0 son todas
+                List<Funcionalidad> lista = Funcionalidades.obtenerFuncionalidades(SqlConnector.iniciarConexion(), 0); 
 
-                chkListFuncionalidades.DisplayMember = "nombre";
-                chkListFuncionalidades.ValueMember = "ID_Funcionalidad";
+                chkListFuncionalidades.DisplayMember = "Descripcion";
+                chkListFuncionalidades.ValueMember = "Id";
                 cargarCheckboxList(lista);
 
                 chkusuario_activo.Enabled = false;
@@ -52,8 +52,8 @@ namespace PalcoNet.Abm_Rol
                 txtnombre.SelectAll();
                 nombreAux = unRol.nombre;
 
-                chkListFuncionalidades.DisplayMember = "nombre";
-                chkListFuncionalidades.ValueMember = "ID_Funcionalidad";
+                chkListFuncionalidades.DisplayMember = "Descripcion";
+                chkListFuncionalidades.ValueMember = "Id";
 
                 cargarCheckboxList(listaTodasLasFunc);
                 actualizarCheckboxList(listaFuncQueTiene);

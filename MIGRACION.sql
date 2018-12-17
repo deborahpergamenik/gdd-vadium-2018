@@ -2,14 +2,18 @@ USE GD2C2018
 GO
 
 -------------------------------DROP PROCEDURES-------------------
-
-IF OBJECT_ID('VADIUM.AGREGAR_ROL') IS NOT NULL
-DROP PROCEDURE VADIUM.AGREGAR_ROL;
+IF OBJECT_ID('VADIUM.QUITAR_FUNCIONALIDAD') IS NOT NULL
+DROP PROCEDURE VADIUM.QUITAR_FUNCIONALIDAD;
+GO
+IF OBJECT_ID('VADIUM.AGREGAR_ROL_NUEVO') IS NOT NULL
+DROP PROCEDURE VADIUM.AGREGAR_ROL_NUEVO;
+GO
+IF OBJECT_ID('VADIUM.AGREGAR_ROL_USUARIO') IS NOT NULL
+DROP PROCEDURE VADIUM.AGREGAR_ROL_USUARIO;
 GO
 IF OBJECT_ID('VADIUM.AGREGAR_FUNCIONALIDAD') IS NOT NULL
 DROP PROCEDURE VADIUM.AGREGAR_FUNCIONALIDAD;
 GO
-
 IF OBJECT_ID('VADIUM.UBICACIONES_NO_VENDIDAS') IS NOT NULL
 DROP PROCEDURE VADIUM.UBICACIONES_NO_VENDIDAS;
 GO
@@ -158,9 +162,9 @@ CREATE SCHEMA [VADIUM]
 GO
 ------------------------------CRATE TABLES---------------------------------
 CREATE TABLE [VADIUM].ROL(
-	rol_id int PRIMARY KEY,
+	rol_id int PRIMARY KEY IDENTITY(0,1),
 	rol_habilitado bit DEFAULT 1, 
-	rol_nombre nvarchar(255) UNIQUE not null
+	rol_nombre nvarchar(255) UNIQUE NOT NULL
 )
 GO
 
@@ -395,9 +399,9 @@ BEGIN
 
 
 	-- ROL 
-	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(0,'Administrador',1)
-	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(1,'Cliente',1)
-	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(2,'Empresa',1)
+	INSERT INTO [VADIUM].ROL (rol_nombre,rol_habilitado) values('Administrador',1)
+	INSERT INTO [VADIUM].ROL (rol_nombre,rol_habilitado) values('Cliente',1)
+	INSERT INTO [VADIUM].ROL (rol_nombre,rol_habilitado) values('Empresa',1)
 
 
 	/* FUNCIONALIDADES */
@@ -848,7 +852,7 @@ GO
 
 	-------------------- SP agregar ROL al USUARIO ------------------------
 
-	CREATE PROCEDURE VADIUM.AGREGAR_ROL(@iduser int, @idrol int) AS
+	CREATE PROCEDURE VADIUM.AGREGAR_ROL_USUARIO(@iduser int, @idrol int) AS
 	BEGIN
 		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
 			VALUES ((SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_id = @iduser),
@@ -857,12 +861,34 @@ GO
 	GO
 
 
+	-------------------- SP agregar ROL a la base ------------------------
+
+	CREATE PROCEDURE VADIUM.AGREGAR_ROL_NUEVO(@rol_nombre nvarchar(255), @ret numeric (18,0) output)
+	AS BEGIN
+		INSERT INTO VADIUM.ROL(rol_nombre, rol_habilitado) VALUES (@rol_nombre, 1)
+		SET @ret = SCOPE_IDENTITY()
+	END
+	GO
+
+
 	--------------------- SP Agregar FUNCIONALIDAD al ROL --------------------------
-	CREATE PROCEDURE VADIUM.AGREGAR_FUNCIONALIDAD(@rol nvarchar(255), @func nvarchar(255)) AS
+	CREATE PROCEDURE VADIUM.AGREGAR_FUNCIONALIDAD(@rol nvarchar(255), @funcionalidad nvarchar(255)) AS
 	BEGIN
 		INSERT INTO VADIUM.ROL_POR_FUNCIONALIDAD(rol_id, funcionalidad_id)
 			VALUES ((SELECT rol_id FROM VADIUM.ROL WHERE rol_nombre = @rol),
-					(SELECT funcionalidad_id FROM VADIUM.FUNCIONALIDAD WHERE funcionalidad_descripcion = @func))
+					(SELECT funcionalidad_id FROM VADIUM.FUNCIONALIDAD WHERE funcionalidad_descripcion = @funcionalidad))
+	END
+	GO
+
+
+	--------------------- SP Quitar FUNCIONALIDAD al ROL --------------------------
+	CREATE PROCEDURE VADIUM.QUITAR_FUNCIONALIDAD(@rol nvarchar(255), @funcionalidad nvarchar(255)) AS
+	BEGIN
+		DELETE FROM VADIUM.ROL_POR_FUNCIONALIDAD
+			WHERE 
+				(SELECT rol_id FROM VADIUM.ROL WHERE rol_nombre = @rol) = VADIUM.ROL_POR_FUNCIONALIDAD.rol_id
+				AND
+				(SELECT funcionalidad_id FROM VADIUM.FUNCIONALIDAD WHERE funcionalidad_descripcion = @funcionalidad ) = VADIUM.ROL_POR_FUNCIONALIDAD.funcionalidad_id
 	END
 	GO
 
@@ -874,36 +900,36 @@ EXECUTE VADIUM.PR_MIGRACION;
 
 --------------Asignacion de Funcionalidades-------------------
 
-EXEC VADIUM.AGREGAR_ROL
+EXEC VADIUM.AGREGAR_ROL_USUARIO
 	@iduser = 0, @idrol = 0;
 GO
 
 ----- ADMIN ------
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarClientes';
+@rol = 'Administrador', @funcionalidad = 'AdministrarClientes';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarEmpresas';
+@rol = 'Administrador', @funcionalidad = 'AdministrarEmpresas';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarGrados';	
+@rol = 'Administrador', @funcionalidad = 'AdministrarGrados';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarRoles';
+@rol = 'Administrador', @funcionalidad = 'AdministrarRoles';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarRubros';
+@rol = 'Administrador', @funcionalidad = 'AdministrarRubros';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarPuntos';
+@rol = 'Administrador', @funcionalidad = 'AdministrarPuntos';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarCompras';		
+@rol = 'Administrador', @funcionalidad = 'AdministrarCompras';		
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'EditarPublicacion';
+@rol = 'Administrador', @funcionalidad = 'EditarPublicacion';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'GenerarPublicacion';
+@rol = 'Administrador', @funcionalidad = 'GenerarPublicacion';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'RendicionesPorComision';
+@rol = 'Administrador', @funcionalidad = 'RendicionesPorComision';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'HistorialClientes';	
+@rol = 'Administrador', @funcionalidad = 'HistorialClientes';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'ListadoEstadistico';		
+@rol = 'Administrador', @funcionalidad = 'ListadoEstadistico';		
 			
 	
 
@@ -911,21 +937,21 @@ EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 ----- Cliente -----
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'EditarPublicacion';		
+	@rol = 'Cliente', @funcionalidad = 'EditarPublicacion';		
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'GenerarPublicacion';	
+	@rol = 'Cliente', @funcionalidad = 'GenerarPublicacion';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'HistorialClientes';	
+	@rol = 'Cliente', @funcionalidad = 'HistorialClientes';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'ListadoEstadistico';		
+	@rol = 'Cliente', @funcionalidad = 'ListadoEstadistico';		
 		
 ----- Empresas ----
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'EditarPublicacion';		
+	@rol = 'Empresa', @funcionalidad = 'EditarPublicacion';		
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'GenerarPublicacion';
+	@rol = 'Empresa', @funcionalidad = 'GenerarPublicacion';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'HistorialClientes';			
+	@rol = 'Empresa', @funcionalidad = 'HistorialClientes';			
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'ListadoEstadistico';		
+	@rol = 'Empresa', @funcionalidad = 'ListadoEstadistico';		

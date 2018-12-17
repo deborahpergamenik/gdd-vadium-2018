@@ -52,7 +52,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(391, 265);
+            this.groupBox1.Size = new System.Drawing.Size(378, 265);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Seleccione las funcionalidades:";
@@ -65,14 +65,14 @@
             this.nombre_Label.Name = "nombre_Label";
             this.nombre_Label.Size = new System.Drawing.Size(58, 17);
             this.nombre_Label.TabIndex = 0;
-            this.nombre_Label.Text = "nombre";
+            this.nombre_Label.Text = "Nombre";
             // 
             // txtnombre
             // 
             this.txtnombre.Location = new System.Drawing.Point(127, 41);
             this.txtnombre.Margin = new System.Windows.Forms.Padding(4);
             this.txtnombre.Name = "txtnombre";
-            this.txtnombre.Size = new System.Drawing.Size(241, 22);
+            this.txtnombre.Size = new System.Drawing.Size(230, 22);
             this.txtnombre.TabIndex = 1;
             // 
             // chkListFuncionalidades
@@ -81,7 +81,7 @@
             this.chkListFuncionalidades.Location = new System.Drawing.Point(127, 86);
             this.chkListFuncionalidades.Margin = new System.Windows.Forms.Padding(4);
             this.chkListFuncionalidades.Name = "chkListFuncionalidades";
-            this.chkListFuncionalidades.Size = new System.Drawing.Size(241, 123);
+            this.chkListFuncionalidades.Size = new System.Drawing.Size(230, 123);
             this.chkListFuncionalidades.TabIndex = 2;
             // 
             // chkusuario_activo
@@ -110,13 +110,13 @@
             this.Habilitado_Label.Location = new System.Drawing.Point(8, 226);
             this.Habilitado_Label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Habilitado_Label.Name = "Habilitado_Label";
-            this.Habilitado_Label.Size = new System.Drawing.Size(52, 17);
+            this.Habilitado_Label.Size = new System.Drawing.Size(71, 17);
             this.Habilitado_Label.TabIndex = 4;
-            this.Habilitado_Label.Text = "usuario_activo";
+            this.Habilitado_Label.Text = "Habilitado";
             // 
             // btnGuardar
             // 
-            this.btnGuardar.Location = new System.Drawing.Point(304, 296);
+            this.btnGuardar.Location = new System.Drawing.Point(291, 286);
             this.btnGuardar.Margin = new System.Windows.Forms.Padding(4);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(100, 28);
@@ -128,7 +128,7 @@
             // btnCancelar
             // 
             this.btnCancelar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancelar.Location = new System.Drawing.Point(196, 296);
+            this.btnCancelar.Location = new System.Drawing.Point(183, 286);
             this.btnCancelar.Margin = new System.Windows.Forms.Padding(4);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(100, 28);
@@ -141,7 +141,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(418, 339);
+            this.ClientSize = new System.Drawing.Size(407, 339);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.btnCancelar);

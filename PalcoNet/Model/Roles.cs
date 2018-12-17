@@ -20,7 +20,7 @@ namespace PalcoNet.Model
             {
                 while (lector.Read())
                 {
-                    Rol unRol = new Rol((int)(decimal)lector["rol_id"], (string)lector["nombre"], (bool)lector["usuario_activo"]);
+                    Rol unRol = new Rol((int)lector["rol_id"], (string)lector["rol_nombre"], (bool)lector["rol_habilitado"]);
                     roles.Add(unRol);
                 }
             }
@@ -32,18 +32,18 @@ namespace PalcoNet.Model
             try
             {
                 List<SqlParameter> ListaParametros = new List<SqlParameter>();
-                ListaParametros.Add(new SqlParameter("@nombreRol", nombre));
+                ListaParametros.Add(new SqlParameter("@rol_nombre", nombre));
                 SqlParameter paramRet = new SqlParameter("@ret", System.Data.SqlDbType.Decimal);
                 paramRet.Direction = System.Data.ParameterDirection.Output;
                 ListaParametros.Add(paramRet);
 
                 //insert, devuelve ret = id rol insertado
-                //TODO : Mega fino.. hacer que agregarRolNuevo haga primero select para ver si ya existe luego
+                //TODO : Mega fino.. hacer que AGREGAR_ROL_NUEVO haga primero select para ver si ya existe luego
                 // el insert, como esta ahora NO inserta si ya existe, pero el identity suma +1 y queda "feo"
                 // no afecta en nada, pero bueno, belleza. 
                 // ej: inserta: id 4, nombre Rol1 SUCCES, inserta Rol1 de nuevo FAIL, no inserta, pero identity+1
                 // inserta Rol22 SUCCES, pero queda id 6. 
-                int ret = (int)SqlConnector.ExecStoredProcedure("PalcoNet.agregarRolNuevo", ListaParametros);
+                int ret = (int)SqlConnector.ExecStoredProcedure("VADIUM.AGREGAR_ROL_NUEVO", ListaParametros);
                 SqlConnector.cerrarConexion();
 
                 if (ret != 0)
@@ -57,17 +57,19 @@ namespace PalcoNet.Model
                 }
                 else { return false; }
             }
-            catch { return false; }
+            catch(Exception ex) {
+                return false;
+            }
         }
 
         public static void updatearRol(string nombre, List<Funcionalidad> listaNuevasFunc, bool estaChecked, int rol_id)
         {
             List<SqlParameter> ListaParametros = new List<SqlParameter>();
             ListaParametros.Add(new SqlParameter("@rol_id", rol_id));
-            ListaParametros.Add(new SqlParameter("@nombreRol", nombre));
-            ListaParametros.Add(new SqlParameter("@usuario_activo", estaChecked));
+            ListaParametros.Add(new SqlParameter("@rol_nombre", nombre));
+            ListaParametros.Add(new SqlParameter("@rol_habilitado", estaChecked));
 
-            int ret = SqlConnector.ejecutarQuery("UPDATE VADIUM.ROL SET rol_nombre = @nombreRol, usuario_activo = @usuario_activo WHERE rol_id = @rol_id", ListaParametros, SqlConnector.iniciarConexion());
+            int ret = SqlConnector.ejecutarQuery("UPDATE VADIUM.ROL SET rol_nombre = @rol_nombre, rol_habilitado = @rol_habilitado WHERE rol_id = @rol_id", ListaParametros, SqlConnector.iniciarConexion());
             if (ret == -1)
                 MessageBox.Show("Falló al actualizar el rol", "Fail!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             SqlConnector.cerrarConexion();
@@ -77,7 +79,7 @@ namespace PalcoNet.Model
         {
             List<SqlParameter> parametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(parametros, "@rol_id", rol_id);
-            int resultado = SqlConnector.ejecutarQuery("UPDATE VADIUM.ROL SET usuario_activo = 0 WHERE rol_id = @rol_id", parametros, SqlConnector.iniciarConexion());
+            int resultado = SqlConnector.ejecutarQuery("UPDATE VADIUM.ROL SET rol_habilitado = 0 WHERE rol_id = @rol_id", parametros, SqlConnector.iniciarConexion());
 
             if (resultado == -1)
                 MessageBox.Show("Falló al actualizar el rol", "Fail!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -101,7 +103,7 @@ namespace PalcoNet.Model
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@usuario_id", idUser);
 
-            SqlDataReader lectorRolesUsuario = SqlConnector.ejecutarReader("SELECT r.rol_id, rol_nombre, usuario_activo " +
+            SqlDataReader lectorRolesUsuario = SqlConnector.ejecutarReader("SELECT r.rol_id, r.rol_nombre, r.rol_habilitado " +
                                                                     "FROM VADIUM.ROL r " +
                                                                     "JOIN VADIUM.ROL_POR_USUARIO ru ON r.rol_id = ru.rol_id " +
                                                                     "WHERE ru.usuario_id = @usuario_id",
@@ -111,8 +113,8 @@ namespace PalcoNet.Model
                 while (lectorRolesUsuario.Read())
                 {
                     Rol nuevoRol = new Rol(Convert.ToInt32(lectorRolesUsuario["rol_id"]),
-                                           Convert.ToString(lectorRolesUsuario["nombre"]),
-                                           Convert.ToBoolean(lectorRolesUsuario["usuario_activo"])
+                                           Convert.ToString(lectorRolesUsuario["rol_nombre"]),
+                                           Convert.ToBoolean(lectorRolesUsuario["rol_habilitado"])
                                            );
                     roles.Add(nuevoRol);
                 }

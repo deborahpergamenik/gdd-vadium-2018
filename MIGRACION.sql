@@ -2,14 +2,25 @@ USE GD2C2018
 GO
 
 -------------------------------DROP PROCEDURES-------------------
-
+IF OBJECT_ID('VADIUM.QUITAR_FUNCIONALIDAD') IS NOT NULL
+DROP PROCEDURE VADIUM.QUITAR_FUNCIONALIDAD;
+GO
 IF OBJECT_ID('VADIUM.AGREGAR_ROL') IS NOT NULL
 DROP PROCEDURE VADIUM.AGREGAR_ROL;
 GO
+IF OBJECT_ID('VADIUM.AGREGAR_ROL_NUEVO') IS NOT NULL
+DROP PROCEDURE VADIUM.AGREGAR_ROL_NUEVO;
+GO
+IF OBJECT_ID('VADIUM.AGREGAR_ROL_USUARIO') IS NOT NULL
+DROP PROCEDURE VADIUM.AGREGAR_ROL_USUARIO;
+GO
+IF OBJECT_ID('VADIUM.COMPRAR') IS NOT NULL
+DROP PROCEDURE VADIUM.COMPRAR;
+GO
+
 IF OBJECT_ID('VADIUM.AGREGAR_FUNCIONALIDAD') IS NOT NULL
 DROP PROCEDURE VADIUM.AGREGAR_FUNCIONALIDAD;
 GO
-
 IF OBJECT_ID('VADIUM.UBICACIONES_NO_VENDIDAS') IS NOT NULL
 DROP PROCEDURE VADIUM.UBICACIONES_NO_VENDIDAS;
 GO
@@ -103,11 +114,12 @@ GO
 IF OBJECT_ID('VADIUM.FACTURA') IS NOT NULL
 DROP TABLE [VADIUM].FACTURA
 GO
-IF OBJECT_ID('VADIUM.COMPRA') IS NOT NULL
-DROP TABLE VADIUM.COMPRA
-GO
+
 IF OBJECT_ID('VADIUM.UBICACION') IS NOT NULL
 DROP TABLE [VADIUM].UBICACION
+GO
+IF OBJECT_ID('VADIUM.COMPRA') IS NOT NULL
+DROP TABLE VADIUM.COMPRA
 GO
 IF OBJECT_ID('VADIUM.TIPOUBICACION') IS NOT NULL
 DROP TABLE [VADIUM].TIPOUBICACION
@@ -158,9 +170,9 @@ CREATE SCHEMA [VADIUM]
 GO
 ------------------------------CRATE TABLES---------------------------------
 CREATE TABLE [VADIUM].ROL(
-	rol_id int PRIMARY KEY,
+	rol_id int PRIMARY KEY IDENTITY(0,1),
 	rol_habilitado bit DEFAULT 1, 
-	rol_nombre nvarchar(255) UNIQUE not null
+	rol_nombre nvarchar(255) UNIQUE NOT NULL
 )
 GO
 
@@ -282,6 +294,7 @@ CREATE TABLE [VADIUM].UBICACION(
 	precio numeric(18,0),
 	codigoTipoUbicacion numeric(18,0),
 	codigoEspectaculo numeric(18,0),
+	compra_id int,
 	
 )
 GO
@@ -289,8 +302,9 @@ CREATE TABLE [VADIUM].COMPRA(
 	compra_id int PRIMARY KEY IDENTITY(1,1),
 	fecha_compra datetime,
 	id_cliente_comprador int,
+	cantidad int,
+	monto numeric(18,0),
 	medio_de_pago nvarchar(30),
-	ubicacion_id int,
 )
 GO
 CREATE TABLE [VADIUM].FACTURA(
@@ -395,9 +409,9 @@ BEGIN
 
 
 	-- ROL 
-	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(0,'Administrador',1)
-	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(1,'Cliente',1)
-	INSERT INTO [VADIUM].ROL (rol_id,rol_nombre,rol_habilitado) values(2,'Empresa',1)
+	INSERT INTO [VADIUM].ROL (rol_nombre,rol_habilitado) values('Administrador',1)
+	INSERT INTO [VADIUM].ROL (rol_nombre,rol_habilitado) values('Cliente',1)
+	INSERT INTO [VADIUM].ROL (rol_nombre,rol_habilitado) values('Empresa',1)
 
 
 	/* FUNCIONALIDADES */
@@ -488,18 +502,30 @@ BEGIN
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, m.Espec_Empresa_Mail, m.Espectaculo_Rubro_Descripcion, Espectaculo_Estado
 	HAVING m.Espectaculo_Cod IS NOT NULL
+		------COMPRA-----
+		INSERT INTO [VADIUM].COMPRA(fecha_compra, id_cliente_comprador, medio_de_pago,cantidad, monto )
+		SELECT 
+				m.Compra_Fecha, 
+				(SELECT TOP 1 cli.cliente_id FROM CLIENTE cli WHERE cli.mail = m.Cli_Mail), 
+				m.Forma_Pago_Desc, sum(m.Compra_Cantidad), SUM(m.Ubicacion_Precio)
+				
+		FROM gd_esquema.Maestra m 
+		GROUP BY m.Compra_Fecha, m.Cli_Mail, m.Forma_Pago_Desc, m.Espectaculo_Cod
+		HAVING m.Compra_Fecha IS NOT NULL AND m.Forma_Pago_Desc IS NOT NULL
  ----------- UBICACION--------
-	INSERT INTO [VADIUM].UBICACION(fila, asiento, sinNumerar, precio, codigoTipoUbicacion, codigoEspectaculo)
+	INSERT INTO [VADIUM].UBICACION(fila, asiento, sinNumerar, precio, codigoTipoUbicacion, codigoEspectaculo, compra_id)
 		SELECT m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, 
 				(SELECT TOP 1 tipou.codigoTipoUbicacion FROM TIPOUBICACION tipou WHERE tipou.codigoTipoUbicacion = m.Ubicacion_Tipo_Codigo),
-				(SELECT TOP 1 publi.codigoEspectaculo FROM PUBLICACION publi WHERE publi.codigoEspectaculo = m.Espectaculo_Cod)
-			
+				(SELECT TOP 1 publi.codigoEspectaculo FROM PUBLICACION publi WHERE publi.codigoEspectaculo = m.Espectaculo_Cod),
+			    (SELECT TOP 1 com.compra_id FROM COMPRA com WHERE com.fecha_compra = m.Compra_Fecha AND 
+						com.id_cliente_comprador = (SELECT TOP 1 cli.cliente_id FROM VADIUM.CLIENTE cli WHERE cli.mail = m.Cli_Mail ) )
 				--TODO, como hacemos para migra el id de las compras? pensemos que siempre que hay una factura asociada a una ubicaicon
 				--en la tabla maestra es xq hubo una compra
 
 		FROM gd_esquema.Maestra m 
-		GROUP BY m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, m.Ubicacion_Tipo_Codigo, m.Espectaculo_Cod
+		GROUP BY m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, m.Ubicacion_Tipo_Codigo, m.Espectaculo_Cod, m.Compra_Fecha, m.Cli_Mail
 		HAVING m.Ubicacion_Fila IS NOT NULL
+		
 	---------FACTURA--------
 	INSERT INTO [VADIUM].FACTURA(factura_nro, fecha, total, empresa_id)
 		SELECT m.Factura_Nro, m.Factura_Fecha, m.Factura_Total,
@@ -520,18 +546,7 @@ BEGIN
 		 m.Forma_Pago_Desc, m.Ubicacion_Fila,m.Ubicacion_Asiento,m.Ubicacion_Sin_numerar,m.Ubicacion_Tipo_Codigo,m.Espectaculo_Cod, m.Cli_Mail, m.Forma_Pago_Desc
 		HAVING m.Factura_Nro IS NOT NULL AND m.Cli_Mail IS NOT NULL
 
-			------COMPRA-----
-		INSERT INTO [VADIUM].COMPRA(fecha_compra, id_cliente_comprador, medio_de_pago, ubicacion_id)
-		SELECT 
-				m.Compra_Fecha, 
-				(SELECT TOP 1 cli.cliente_id FROM CLIENTE cli WHERE cli.mail = m.Cli_Mail), 
-				m.Forma_Pago_Desc,
-				(SELECT TOP 1 ubi.ubicacion_id FROM UBICACION ubi 
-			WHERE ubi.fila = m.Ubicacion_Fila AND ubi.asiento =m.Ubicacion_Asiento AND ubi.sinNumerar = m.Ubicacion_Sin_numerar AND
-								 ubi.codigoTipoUbicacion = m.Ubicacion_Tipo_Codigo AND ubi.codigoEspectaculo = m.Espectaculo_Cod)
-		FROM gd_esquema.Maestra m 
-		GROUP BY m.Compra_Fecha, m.Cli_Mail, m.Forma_Pago_Desc, m.Ubicacion_Fila,m.Ubicacion_Asiento,m.Ubicacion_Sin_numerar,m.Ubicacion_Tipo_Codigo,m.Espectaculo_Cod
-		HAVING m.Compra_Fecha IS NOT NULL AND m.Forma_Pago_Desc IS NOT NULL
+		
 END
 GO
 
@@ -542,10 +557,8 @@ ALTER TABLE [VADIUM].ROL_POR_USUARIO ADD FOREIGN KEY (usuario_id) REFERENCES [VA
 ALTER TABLE [VADIUM].ROL_POR_FUNCIONALIDAD ADD FOREIGN KEY (rol_id) REFERENCES [VADIUM].ROL
 ALTER TABLE [VADIUM].ROL_POR_FUNCIONALIDAD ADD FOREIGN KEY (funcionalidad_id) REFERENCES [VADIUM].FUNCIONALIDAD
 ALTER TABLE [VADIUM].CLIENTE ADD FOREIGN KEY (usuario_id) REFERENCES [VADIUM].USUARIO
---ALTER TABLE [VADIUM].CLIENTE ADD FOREIGN KEY (direccion_id) REFERENCES [VADIUM].DIRECCION
 ALTER TABLE [VADIUM].TARJETADECREDITO ADD FOREIGN KEY (cliente_id) REFERENCES [VADIUM].CLIENTE
 ALTER TABLE [VADIUM].EMPRESA ADD FOREIGN KEY (usuario_id) REFERENCES [VADIUM].USUARIO
---ALTER TABLE [VADIUM].EMPRESA ADD FOREIGN KEY (direccion_id) REFERENCES [VADIUM].DIRECCION
 
 ALTER TABLE [VADIUM].PUBLICACION ADD FOREIGN KEY (estado_id) REFERENCES [VADIUM].ESTADO
 ALTER TABLE [VADIUM].PUBLICACION ADD FOREIGN KEY (rubro_id) REFERENCES [VADIUM].RUBRO
@@ -554,7 +567,7 @@ ALTER TABLE [VADIUM].PUBLICACION ADD FOREIGN KEY (empresa_id) REFERENCES [VADIUM
 
 ALTER TABLE [VADIUM].UBICACION ADD FOREIGN KEY (codigoTipoUbicacion) REFERENCES [VADIUM].TIPOUBICACION
 ALTER TABLE [VADIUM].UBICACION ADD FOREIGN KEY (codigoEspectaculo) REFERENCES [VADIUM].PUBLICACION
-ALTER TABLE [VADIUM].COMPRA ADD FOREIGN KEY (ubicacion_id) REFERENCES [VADIUM].UBICACION
+ALTER TABLE [VADIUM].UBICACION ADD FOREIGN KEY (compra_id) REFERENCES [VADIUM].COMPRA
 
 ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (factura_nro) REFERENCES [VADIUM].FACTURA
 ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (ubicacion_id) REFERENCES [VADIUM].UBICACION
@@ -721,7 +734,7 @@ AS
 BEGIN
 
 SELECT pub.descripcion as Espectaculo, ubi.fila, ubi.asiento, tu.descripcion as TipoUbicacion, pub.fecha as FechaEspectaculo, compra.medio_de_pago as medioPago
-FROM VADIUM.COMPRA compra JOIN VADIUM.UBICACION ubi ON (compra.ubicacion_id = ubi.ubicacion_id)
+FROM VADIUM.COMPRA compra JOIN VADIUM.UBICACION ubi ON (compra.compra_id = ubi.compra_id)
 							 JOIN VADIUM.TIPOUBICACION tu ON (ubi.codigoTipoUbicacion = tu.codigoTipoUbicacion)
 						     JOIN VADIUM.PUBLICACION pub ON (ubi.codigoEspectaculo = pub.codigoEspectaculo)
 							 --JOIN VADIUM.FACTURA fac ON (item.factura_nro = fac.factura_nro)
@@ -804,7 +817,18 @@ BEGIN
 	
 	WHERE (@publicacion_id IS NULL OR ubi.codigoEspectaculo = @publicacion_id) AND 
 		  (@tipoUbicacionId IS NULL OR tu.codigoTipoUbicacion = @tipoUbicacionId) AND 
-	 NOT EXISTS   (SELECT com.ubicacion_id  FROM VADIUM.COMPRA com WHERE com.ubicacion_id = ubi.ubicacion_id)
+			ubi.compra_id IS NULL
+END
+GO
+------------------COMPRAR-------------------------------------------
+CREATE PROCEDURE [VADIUM].COMPRAR @codCliente int, @FormaPago nvarchar(255), @ubicacion int, @fecha datetime
+AS
+BEGIN
+
+	INSERT INTO VADIUM.COMPRA (id_cliente_comprador, medio_de_pago, fecha_compra)
+	VALUES(@codCliente, @FormaPago, @fecha)
+	
+
 END
 GO
 ---------------GRADO DE PUBLICACION-----------------------------------
@@ -848,7 +872,7 @@ GO
 
 	-------------------- SP agregar ROL al USUARIO ------------------------
 
-	CREATE PROCEDURE VADIUM.AGREGAR_ROL(@iduser int, @idrol int) AS
+	CREATE PROCEDURE VADIUM.AGREGAR_ROL_USUARIO(@iduser int, @idrol int) AS
 	BEGIN
 		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
 			VALUES ((SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_id = @iduser),
@@ -857,12 +881,34 @@ GO
 	GO
 
 
+	-------------------- SP agregar ROL a la base ------------------------
+
+	CREATE PROCEDURE VADIUM.AGREGAR_ROL_NUEVO(@rol_nombre nvarchar(255), @ret numeric (18,0) output)
+	AS BEGIN
+		INSERT INTO VADIUM.ROL(rol_nombre, rol_habilitado) VALUES (@rol_nombre, 1)
+		SET @ret = SCOPE_IDENTITY()
+	END
+	GO
+
+
 	--------------------- SP Agregar FUNCIONALIDAD al ROL --------------------------
-	CREATE PROCEDURE VADIUM.AGREGAR_FUNCIONALIDAD(@rol nvarchar(255), @func nvarchar(255)) AS
+	CREATE PROCEDURE VADIUM.AGREGAR_FUNCIONALIDAD(@rol nvarchar(255), @funcionalidad nvarchar(255)) AS
 	BEGIN
 		INSERT INTO VADIUM.ROL_POR_FUNCIONALIDAD(rol_id, funcionalidad_id)
 			VALUES ((SELECT rol_id FROM VADIUM.ROL WHERE rol_nombre = @rol),
-					(SELECT funcionalidad_id FROM VADIUM.FUNCIONALIDAD WHERE funcionalidad_descripcion = @func))
+					(SELECT funcionalidad_id FROM VADIUM.FUNCIONALIDAD WHERE funcionalidad_descripcion = @funcionalidad))
+	END
+	GO
+
+
+	--------------------- SP Quitar FUNCIONALIDAD al ROL --------------------------
+	CREATE PROCEDURE VADIUM.QUITAR_FUNCIONALIDAD(@rol nvarchar(255), @funcionalidad nvarchar(255)) AS
+	BEGIN
+		DELETE FROM VADIUM.ROL_POR_FUNCIONALIDAD
+			WHERE 
+				(SELECT rol_id FROM VADIUM.ROL WHERE rol_nombre = @rol) = VADIUM.ROL_POR_FUNCIONALIDAD.rol_id
+				AND
+				(SELECT funcionalidad_id FROM VADIUM.FUNCIONALIDAD WHERE funcionalidad_descripcion = @funcionalidad ) = VADIUM.ROL_POR_FUNCIONALIDAD.funcionalidad_id
 	END
 	GO
 
@@ -874,36 +920,36 @@ EXECUTE VADIUM.PR_MIGRACION;
 
 --------------Asignacion de Funcionalidades-------------------
 
-EXEC VADIUM.AGREGAR_ROL
+EXEC VADIUM.AGREGAR_ROL_USUARIO
 	@iduser = 0, @idrol = 0;
 GO
 
 ----- ADMIN ------
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarClientes';
+@rol = 'Administrador', @funcionalidad = 'AdministrarClientes';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarEmpresas';
+@rol = 'Administrador', @funcionalidad = 'AdministrarEmpresas';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarGrados';	
+@rol = 'Administrador', @funcionalidad = 'AdministrarGrados';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarRoles';
+@rol = 'Administrador', @funcionalidad = 'AdministrarRoles';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarRubros';
+@rol = 'Administrador', @funcionalidad = 'AdministrarRubros';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarPuntos';
+@rol = 'Administrador', @funcionalidad = 'AdministrarPuntos';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'AdministrarCompras';		
+@rol = 'Administrador', @funcionalidad = 'AdministrarCompras';		
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'EditarPublicacion';
+@rol = 'Administrador', @funcionalidad = 'EditarPublicacion';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'GenerarPublicacion';
+@rol = 'Administrador', @funcionalidad = 'GenerarPublicacion';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'RendicionesPorComision';
+@rol = 'Administrador', @funcionalidad = 'RendicionesPorComision';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'HistorialClientes';	
+@rol = 'Administrador', @funcionalidad = 'HistorialClientes';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @func = 'ListadoEstadistico';		
+@rol = 'Administrador', @funcionalidad = 'ListadoEstadistico';		
 			
 	
 
@@ -911,21 +957,21 @@ EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 ----- Cliente -----
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'EditarPublicacion';		
+	@rol = 'Cliente', @funcionalidad = 'EditarPublicacion';		
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'GenerarPublicacion';	
+	@rol = 'Cliente', @funcionalidad = 'GenerarPublicacion';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'HistorialClientes';	
+	@rol = 'Cliente', @funcionalidad = 'HistorialClientes';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @func = 'ListadoEstadistico';		
+	@rol = 'Cliente', @funcionalidad = 'ListadoEstadistico';		
 		
 ----- Empresas ----
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'EditarPublicacion';		
+	@rol = 'Empresa', @funcionalidad = 'EditarPublicacion';		
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'GenerarPublicacion';
+	@rol = 'Empresa', @funcionalidad = 'GenerarPublicacion';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'HistorialClientes';			
+	@rol = 'Empresa', @funcionalidad = 'HistorialClientes';			
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @func = 'ListadoEstadistico';		
+	@rol = 'Empresa', @funcionalidad = 'ListadoEstadistico';		

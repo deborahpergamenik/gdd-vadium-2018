@@ -24,8 +24,8 @@ namespace PalcoNet.Abm_Rol
             usuario_id = _usuario_id;
             usuarionombre = _usuarionombre;
 
-            cblRoles.DisplayMember = "rol_nombre";
-            cblRoles.ValueMember = "rol_id";
+            cblRoles.DisplayMember = "nombre";
+            cblRoles.ValueMember = "Id";
 
             todosLosRoles = Roles.obtenerRoles();
             rolesUsuario = Roles.obtenerRolesUsuario(usuario_id);

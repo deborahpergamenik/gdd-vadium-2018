@@ -38,5 +38,10 @@ namespace PalcoNet.Abm_Rol
                 rolesUsuarioDlg.ShowDialog();
             }
         }
+
+        private void frmAsignarRolesUsuario_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

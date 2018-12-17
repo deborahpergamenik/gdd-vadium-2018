@@ -43,7 +43,7 @@
             // btnCancelar
             // 
             this.btnCancelar.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnCancelar.Location = new System.Drawing.Point(157, 285);
+            this.btnCancelar.Location = new System.Drawing.Point(153, 301);
             this.btnCancelar.Margin = new System.Windows.Forms.Padding(4);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(100, 28);
@@ -54,7 +54,7 @@
             // 
             // btnGuardar
             // 
-            this.btnGuardar.Location = new System.Drawing.Point(265, 285);
+            this.btnGuardar.Location = new System.Drawing.Point(261, 301);
             this.btnGuardar.Margin = new System.Windows.Forms.Padding(4);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(100, 28);
@@ -75,7 +75,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(352, 265);
+            this.groupBox1.Size = new System.Drawing.Size(363, 265);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Asigne los roles al Usuario:";
@@ -89,7 +89,7 @@
             this.lblUsername.Name = "lblUsername";
             this.lblUsername.Size = new System.Drawing.Size(115, 17);
             this.lblUsername.TabIndex = 8;
-            this.lblUsername.Text = "nombre Usuario:";
+            this.lblUsername.Text = "Nombre Usuario:";
             // 
             // txtUsuarionombre
             // 
@@ -97,7 +97,7 @@
             this.txtUsuarionombre.Margin = new System.Windows.Forms.Padding(4);
             this.txtUsuarionombre.Name = "txtUsuarionombre";
             this.txtUsuarionombre.ReadOnly = true;
-            this.txtUsuarionombre.Size = new System.Drawing.Size(203, 22);
+            this.txtUsuarionombre.Size = new System.Drawing.Size(217, 22);
             this.txtUsuarionombre.TabIndex = 9;
             // 
             // lblIdUser
@@ -117,7 +117,7 @@
             this.txtusuario_id.Margin = new System.Windows.Forms.Padding(4);
             this.txtusuario_id.Name = "txtusuario_id";
             this.txtusuario_id.ReadOnly = true;
-            this.txtusuario_id.Size = new System.Drawing.Size(241, 22);
+            this.txtusuario_id.Size = new System.Drawing.Size(255, 22);
             this.txtusuario_id.TabIndex = 5;
             // 
             // cblRoles
@@ -126,7 +126,7 @@
             this.cblRoles.Location = new System.Drawing.Point(93, 111);
             this.cblRoles.Margin = new System.Windows.Forms.Padding(4);
             this.cblRoles.Name = "cblRoles";
-            this.cblRoles.Size = new System.Drawing.Size(241, 123);
+            this.cblRoles.Size = new System.Drawing.Size(255, 140);
             this.cblRoles.TabIndex = 1;
             // 
             // lblRoles
@@ -144,7 +144,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(382, 326);
+            this.ClientSize = new System.Drawing.Size(386, 342);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.groupBox1);

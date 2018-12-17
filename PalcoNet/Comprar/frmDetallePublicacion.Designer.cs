@@ -35,6 +35,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnAtras = new System.Windows.Forms.Button();
             this.dgvUbicaciones = new System.Windows.Forms.DataGridView();
+            this.Seleccionar = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblPrecio = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUbicaciones)).BeginInit();
             this.SuspendLayout();
             // 
@@ -104,6 +107,8 @@
             // dgvUbicaciones
             // 
             this.dgvUbicaciones.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvUbicaciones.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Seleccionar});
             this.dgvUbicaciones.Location = new System.Drawing.Point(14, 117);
             this.dgvUbicaciones.Name = "dgvUbicaciones";
             this.dgvUbicaciones.RowTemplate.Height = 28;
@@ -111,11 +116,37 @@
             this.dgvUbicaciones.TabIndex = 21;
             this.dgvUbicaciones.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUbicaciones_CellContentClick_1);
             // 
+            // Seleccionar
+            // 
+            this.Seleccionar.HeaderText = "Seleccionar";
+            this.Seleccionar.Name = "Seleccionar";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(309, 76);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(109, 20);
+            this.label3.TabIndex = 22;
+            this.label3.Text = "Precio total:  $";
+            // 
+            // lblPrecio
+            // 
+            this.lblPrecio.AutoSize = true;
+            this.lblPrecio.Location = new System.Drawing.Point(399, 76);
+            this.lblPrecio.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPrecio.Name = "lblPrecio";
+            this.lblPrecio.Size = new System.Drawing.Size(0, 20);
+            this.lblPrecio.TabIndex = 23;
+            // 
             // frmDetallePublicacion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1504, 667);
+            this.Controls.Add(this.lblPrecio);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.dgvUbicaciones);
             this.Controls.Add(this.btnAtras);
             this.Controls.Add(this.btnComprar);
@@ -142,5 +173,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnAtras;
         private System.Windows.Forms.DataGridView dgvUbicaciones;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Seleccionar;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblPrecio;
     }
 }

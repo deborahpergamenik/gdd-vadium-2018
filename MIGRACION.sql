@@ -211,7 +211,7 @@ CREATE TABLE [VADIUM].CLIENTE(
 	CUIL nvarchar(20),
 	fechaNacimiento datetime,
 	fechaCreacion datetime,
-	tarjetaCredito numeric(18,0),
+	tarjetaCredito nvarchar (255),
 	mail nvarchar(255),
 	telefono nvarchar(255),
 	calle NVARCHAR(255),
@@ -223,13 +223,14 @@ CREATE TABLE [VADIUM].CLIENTE(
 ) 
 GO
 CREATE TABLE [VADIUM].TARJETADECREDITO(
-	NroTarjeta numeric(18,0) PRIMARY KEY IDENTITY(1,1),
+	tarjeta_id int PRIMARY KEY IDENTITY(0,1),
+	nroTarjeta nvarchar (255),
 	banco nvarchar(127),
-	codSeguridad int,
+	codSeguridad nvarchar(3),
 	tipo nvarchar(255),
 	cliente_id int,
-	fechaExpedicion datetime,
-	fechaVencimiento datetime,
+	mesVencimiento nvarchar(10),
+	anioVencimiento nvarchar(10),
 )
 GO
 CREATE TABLE [VADIUM].EMPRESA(
@@ -435,7 +436,7 @@ BEGIN
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('RendicionesPorComision');
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('HistorialClientes');
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('ListadoEstadistico');
-
+	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('TarjetaDeCredito');
 
 	SET IDENTITY_INSERT VADIUM.USUARIO ON
 	INSERT INTO VADIUM.USUARIO(usuario_id,usuario_username,usuario_password,usuario_intentosLogin,usuario_activo,primera_vez) 
@@ -968,7 +969,9 @@ EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 	@rol = 'Cliente', @funcionalidad = 'HistorialClientes';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @funcionalidad = 'ListadoEstadistico';		
+	@rol = 'Cliente', @funcionalidad = 'ListadoEstadistico';
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Cliente', @funcionalidad = 'TarjetaDeCredito';		
 		
 ----- Empresas ----
 

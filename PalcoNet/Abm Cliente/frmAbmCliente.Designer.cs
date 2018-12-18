@@ -42,6 +42,9 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnAsociarTarjeta = new System.Windows.Forms.Button();
+            this.mskNumeroTarjeta = new System.Windows.Forms.MaskedTextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtCUIL = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
@@ -211,7 +214,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.ForeColor = System.Drawing.Color.Red;
-            this.label12.Location = new System.Drawing.Point(1154, 41);
+            this.label12.Location = new System.Drawing.Point(8, 226);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(159, 17);
@@ -220,6 +223,9 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btnAsociarTarjeta);
+            this.groupBox3.Controls.Add(this.mskNumeroTarjeta);
+            this.groupBox3.Controls.Add(this.label7);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.txtCUIL);
             this.groupBox3.Controls.Add(this.label12);
@@ -254,10 +260,40 @@
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox3.Size = new System.Drawing.Size(1332, 258);
+            this.groupBox3.Size = new System.Drawing.Size(1332, 255);
             this.groupBox3.TabIndex = 36;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Nuevo Cliente";
+            // 
+            // btnAsociarTarjeta
+            // 
+            this.btnAsociarTarjeta.Location = new System.Drawing.Point(1165, 38);
+            this.btnAsociarTarjeta.Margin = new System.Windows.Forms.Padding(4);
+            this.btnAsociarTarjeta.Name = "btnAsociarTarjeta";
+            this.btnAsociarTarjeta.Size = new System.Drawing.Size(148, 29);
+            this.btnAsociarTarjeta.TabIndex = 44;
+            this.btnAsociarTarjeta.Text = "Asociar Tarjeta";
+            this.btnAsociarTarjeta.UseVisualStyleBackColor = true;
+            this.btnAsociarTarjeta.Click += new System.EventHandler(this.btnAsociarTarjeta_Click);
+            // 
+            // mskNumeroTarjeta
+            // 
+            this.mskNumeroTarjeta.Enabled = false;
+            this.mskNumeroTarjeta.Location = new System.Drawing.Point(1000, 41);
+            this.mskNumeroTarjeta.Mask = "0000-0000-0000-0000";
+            this.mskNumeroTarjeta.Name = "mskNumeroTarjeta";
+            this.mskNumeroTarjeta.Size = new System.Drawing.Size(158, 22);
+            this.mskNumeroTarjeta.TabIndex = 43;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(822, 44);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(169, 17);
+            this.label7.TabIndex = 42;
+            this.label7.Text = "Número Tarjeta Asociada";
             // 
             // label1
             // 
@@ -310,7 +346,7 @@
             // 
             // btnRegistrarse
             // 
-            this.btnRegistrarse.Location = new System.Drawing.Point(1157, 205);
+            this.btnRegistrarse.Location = new System.Drawing.Point(1157, 196);
             this.btnRegistrarse.Margin = new System.Windows.Forms.Padding(4);
             this.btnRegistrarse.Name = "btnRegistrarse";
             this.btnRegistrarse.Size = new System.Drawing.Size(156, 37);
@@ -623,5 +659,8 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.DataGridView dgResultados;
         private System.Windows.Forms.TextBox txtNroPiso;
+        private System.Windows.Forms.Button btnAsociarTarjeta;
+        private System.Windows.Forms.MaskedTextBox mskNumeroTarjeta;
+        private System.Windows.Forms.Label label7;
     }
 }

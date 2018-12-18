@@ -1,4 +1,5 @@
-﻿using PalcoNet.Model;
+﻿using PalcoNet.Common;
+using PalcoNet.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,74 +14,119 @@ namespace PalcoNet.Abm_Cliente
 {
     public partial class frmAgregarTarjetaDeCredito : Form
     {
-        Tarjeta tarjeta;
-        public frmAgregarTarjetaDeCredito(Tarjeta _tarjeta)
+        public string numeroTarjeta { get; set; }
+        public string banco { get; set; }
+        public string codigoSeguridad { get; set; }
+        public string tipo { get; set; }
+        public int cliente_id { get; set; }
+        public string mesVencimiento { get; set; }
+        public string anioVencimiento { get; set; }
+        public frmAbmCliente frmAbmCliente { get; set; }
+
+        public frmAgregarTarjetaDeCredito(frmAbmCliente _frmAbmCliente)
         {
+            this.frmAbmCliente = _frmAbmCliente;
             InitializeComponent();
-            tarjeta = _tarjeta;
+            setearComboBoxes();
         }
 
-        private void frmAgregarTarjetaDeCredito_Load(object sender, EventArgs e)
+        public void setearComboBoxes()
         {
-            txtNumeroTarjeta.Text = tarjeta.Numero;
-            txtCodigoSeguridad.Text = tarjeta.CodigoSeguridad;
-            foreach (int Anio in Enumerable.Range(Configuration.getActualDate().Year, 12))
-                cmbAnio.Items.Add(Anio);
+            llenarCmbMes();
+            llenarCmbAno();
+            llenarCmbTipos();
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        public void llenarCmbMes()
         {
-            bool tarjetaValida = true;
-            if (cmbMes.SelectedIndex == -1 || cmbAnio.SelectedIndex == -1)
+            int i;
+            for (i = 01; i <= 12; i++)
             {
-                MessageBox.Show("La fecha de vencimiento no puede estar vacia");
-                tarjetaValida = false;
-            }
-            else if (Configuration.getActualDate().Year == int.Parse(cmbAnio.SelectedItem.ToString()) &&
-                Configuration.getActualDate().Month > byte.Parse(cmbMes.SelectedItem.ToString()))
-            {
-                MessageBox.Show("La fecha de vencimiento no puede ser anterior a la fecha de hoy");
-                tarjetaValida = false;
-            }
-            if (String.IsNullOrWhiteSpace(txtNumeroTarjeta.Text))
-            {
-                MessageBox.Show("El numero de tarjeta no puede estar vacio");
-                tarjetaValida = false;
-            }
-            else if (!chequearSoloNumeros(txtNumeroTarjeta.Text))
-            {
-                MessageBox.Show("El numero de tarjeta debe estar compuesto de numeros");
-                tarjetaValida = false;
-            }
-            if (String.IsNullOrWhiteSpace(txtCodigoSeguridad.Text))
-            {
-                MessageBox.Show("El codigo de seguridad no puede estar vacio");
-                tarjetaValida = false;
-            }
-            else if (!chequearSoloNumeros(txtCodigoSeguridad.Text))
-            {
-                MessageBox.Show("El codigo de seguridad debe estar compuesto de numeros");
-                tarjetaValida = false;
-            }
-            else if (txtCodigoSeguridad.Text.Length > 4)
-            {
-                MessageBox.Show("El codigo de seguridad no puede tener más de cuatro digitos");
-                tarjetaValida = false;
-            }
-            if (tarjetaValida)
-            {
-                tarjeta.CodigoSeguridad = txtCodigoSeguridad.Text;
-                tarjeta.Numero = txtNumeroTarjeta.Text;
-                tarjeta.Mes = byte.Parse(cmbMes.SelectedItem.ToString());
-                tarjeta.Anio = int.Parse(cmbAnio.SelectedItem.ToString());
-                DialogResult = DialogResult.OK;
+                this.cmbMes.Items.Add(i.ToString());
             }
         }
 
-
-        public static bool chequearSoloNumeros(String text)
+        public void llenarCmbAno()
         {
-            return text.All(c => 57 >= c && c >= 48);
+            int i;
+            for (i = 2018; i <= 2030; i++)
+            {
+                this.cmbAno.Items.Add(i.ToString());
+            }
+        }
+
+        public void llenarCmbTipos()
+        {
+            this.cmbTipo.Items.Add("VISA");
+            this.cmbTipo.Items.Add("MASTER CARD");
+            this.cmbTipo.Items.Add("AMERICAN EXPRESS");
+        }
+
+        private void btnAsociarTarjeta_Click(object sender, EventArgs e)
+        {
+            if (chequearCampos())
+            {
+                Tarjeta tarjeta = new Tarjeta(null, this.numeroTarjeta, this.banco, this.codigoSeguridad, this.tipo, 0, this.mesVencimiento, this.anioVencimiento);
+                frmAbmCliente.tarjetaAsociada = tarjeta;
+                MessageBox.Show("Asociación de tarjeta realizada con éxito.", "Asociación tarjeta exitoso");
+                cmbTipo.SelectedIndex = -1;
+                mskNumeroTarjeta.Text = "";
+                mskCodSeguridad.Text = "";
+                cmbMes.SelectedIndex = -1;
+                cmbAno.SelectedIndex = -1;
+                this.Hide();
+                frmAbmCliente.Show();
+            }
+            else
+            {
+                MessageBox.Show("Error en la asociación de la tarjeta", "Error");
+            }
+        }
+
+        public Boolean chequearCampos()
+        {
+            if (!campoVacio(mskNumeroTarjeta) && !campoVacio(mskCodSeguridad) && !(cmbMes.SelectedIndex == -1) && !(cmbAno.SelectedIndex == -1) && !(cmbTipo.SelectedIndex == -1))
+            {
+                if (mskNumeroTarjeta.MaskCompleted && mskCodSeguridad.MaskCompleted)
+                {
+                    if (!SqlConnector.existeString(mskNumeroTarjeta.Text, "VADIUM.TARJETADECREDITO", "nroTarjeta"))
+                    {
+                        this.numeroTarjeta = mskNumeroTarjeta.Text;
+                        this.banco = txtBanco.Text;
+                        this.codigoSeguridad = mskCodSeguridad.Text;
+                        this.tipo = cmbTipo.SelectedItem.ToString();
+                        this.mesVencimiento = cmbMes.SelectedItem.ToString();
+                        this.anioVencimiento = cmbAno.SelectedItem.ToString();
+                        return true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("El número de tarjeta ingresada ya existente", "Error");
+                        return false;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Número de Tarjeta y Codigo de Seguridad deben estar completos", "Error");
+                    return false;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Debe ingresar los campos solicitados.", "Error");
+                return false;
+            }
+        }
+
+        public Boolean campoVacio(MaskedTextBox textbox)
+        {
+            return textbox.Text.Equals("");
+        }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            frmAbmCliente.Show();
         }
     }
 }

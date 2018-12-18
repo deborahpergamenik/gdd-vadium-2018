@@ -3,6 +3,7 @@ using PalcoNet.Abm_Empresa_Espectaculo;
 using PalcoNet.Abm_Grado;
 using PalcoNet.Abm_Rol;
 using PalcoNet.Abm_Rubro;
+using PalcoNet.Abm_Tarjeta_Credito;
 using PalcoNet.Canje_Puntos;
 using PalcoNet.Common;
 using PalcoNet.Comprar;
@@ -137,6 +138,11 @@ namespace PalcoNet.Login
                     {
                         cmbFuncionalidades.Items.Add(new itemComboBox("Listado Estadístico", rolActual.Funcionalidades[i].Id));
                     }
+
+                    if (rolActual.Funcionalidades[i].Id == 13)
+                    {
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Tarjeta de Crédito", rolActual.Funcionalidades[i].Id));
+                    }
                 }
             }
         }
@@ -225,6 +231,11 @@ namespace PalcoNet.Login
                         frmListadoEstadistico form12 = new frmListadoEstadistico();
                         this.Hide();
                         form12.Show();
+                        break;
+                    case 13:
+                        frmAbmTarjetaDeCredito form13 = new frmAbmTarjetaDeCredito(this,(int)UserInstance.getUserInstance().clienteId);
+                        this.Hide();
+                        form13.Show();
                         break;
                 }
             }

@@ -17,6 +17,9 @@ namespace PalcoNet.Abm_Cliente
 {
     public partial class frmAbmCliente : Form
     {
+        public int usuarioId { get; set; }
+        public int clienteId { get; set; }
+
         public string usuario_username { get; set; }
         public string password { get; set; }
         public int usuario_intentosLogin { get; set; }
@@ -38,6 +41,8 @@ namespace PalcoNet.Abm_Cliente
         public DateTime fechaNacimiento { get; set; }
 
         public string passwordNoHash { get; set; }
+
+        public Tarjeta tarjetaAsociada = null;
 
         public frmSeleccionFuncionalidades frmSeleccionFuncionalidades { get; set; }
 
@@ -110,7 +115,7 @@ namespace PalcoNet.Abm_Cliente
             this.cmbTipoDocumento.Items.Add("LC");
         }
 
-        
+
 
         public Boolean campoVacio(TextBox textbox)
         {
@@ -223,6 +228,10 @@ namespace PalcoNet.Abm_Cliente
             {
                 cargarUsuario();
                 cargarCliente();
+                if (tarjetaAsociada != null)
+                {
+                    cargarTarjeta();
+                }
                 new frmConfirmacionCliente(this.usuario_username, this.passwordNoHash).Show();
                 CargarDatos(string.Empty, string.Empty, string.Empty, string.Empty);
                 dgResultados.Refresh();
@@ -290,17 +299,17 @@ namespace PalcoNet.Abm_Cliente
 
         public void cargarCliente()
         {
-            List<SqlParameter> listaParametros= new List<SqlParameter>();
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@usuario_username", this.usuario_username);
             SqlDataReader lector = SqlConnector.ejecutarReader("SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = @usuario_username", listaParametros, SqlConnector.iniciarConexion());
             lector.Read();
-            int idUser = Convert.ToInt32(lector["usuario_id"]);
+            usuarioId = Convert.ToInt32(lector["usuario_id"]);
             SqlConnector.cerrarConexion();
 
             List<SqlParameter> listaParametros2 = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros2, "@usuario_id", idUser);
+            SqlConnector.agregarParametro(listaParametros2, "@usuario_id", usuarioId);
             SqlConnector.agregarParametro(listaParametros2, "@tipoDocumento", this.tipoDocumento);
-            SqlConnector.agregarParametro(listaParametros2, "@numeroDocumento", Convert.ToInt32(this.numeroDocumento));
+            SqlConnector.agregarParametro(listaParametros2, "@numeroDocumento", Convert.ToInt64(this.numeroDocumento));
             SqlConnector.agregarParametro(listaParametros2, "@CUIL", this.CUIL);
             SqlConnector.agregarParametro(listaParametros2, "@nombre", this.nombre);
             SqlConnector.agregarParametro(listaParametros2, "@apellido", this.apellido);
@@ -309,9 +318,18 @@ namespace PalcoNet.Abm_Cliente
             SqlConnector.agregarParametro(listaParametros2, "@cod_postal", this.cod_postal);
             SqlConnector.agregarParametro(listaParametros2, "@fechaNacimiento", this.fechaNacimiento);
             SqlConnector.agregarParametro(listaParametros2, "@fechaCreacion", Configuration.getActualDate());
-            SqlConnector.agregarParametro(listaParametros2, "@tarjetaCredito", 1); //cambiar este campo
             SqlConnector.agregarParametro(listaParametros2, "@localidad", this.localidad);
             SqlConnector.agregarParametro(listaParametros2, "@depto", this.departamento);
+
+
+            if (tarjetaAsociada != null)
+            {
+                SqlConnector.agregarParametro(listaParametros2, "@tarjetaCredito", tarjetaAsociada.NumeroTarjeta);
+            }
+            else
+            {
+                SqlConnector.agregarParametro(listaParametros2, "@tarjetaCredito", DBNull.Value);
+            }
 
             if (this.telefono.Equals(""))
             {
@@ -337,8 +355,41 @@ namespace PalcoNet.Abm_Cliente
 
 
             int idRol = Rol.obtenerID("Cliente");
-            Roles.AgregarRolEnUsuario(idUser, idRol);
+            Roles.AgregarRolEnUsuario(usuarioId, idRol);
         }
+
+        public void cargarTarjeta()
+        {
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", usuarioId);
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT c.cliente_id " +
+                                                                "FROM VADIUM.CLIENTE c " +
+                                                                "JOIN VADIUM.USUARIO u ON u.usuario_id = c.usuario_id " +
+                                                                "WHERE c.usuario_id = @usuario_id AND u.usuario_activo = 1", listaParametros, SqlConnector.iniciarConexion());
+
+            if (lector.HasRows)
+            {
+                lector.Read();
+                clienteId = Convert.ToInt32(lector["cliente_id"]);
+            }
+
+            SqlConnector.cerrarConexion();
+
+
+            List<SqlParameter> listaParametros2 = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros2, "@nroTarjeta", tarjetaAsociada.NumeroTarjeta);
+            SqlConnector.agregarParametro(listaParametros2, "@banco", tarjetaAsociada.Banco);
+            SqlConnector.agregarParametro(listaParametros2, "@codSeguridad", tarjetaAsociada.CodigoSeguridad);
+            SqlConnector.agregarParametro(listaParametros2, "@tipo", tarjetaAsociada.Tipo);
+            SqlConnector.agregarParametro(listaParametros2, "@cliente_id", clienteId);
+            SqlConnector.agregarParametro(listaParametros2, "@mesVencimiento", tarjetaAsociada.MesVencimiento);
+            SqlConnector.agregarParametro(listaParametros2, "@anioVencimiento", tarjetaAsociada.AnioVencimiento);
+            SqlConnector.ejecutarQuery("INSERT INTO VADIUM.TARJETADECREDITO (nroTarjeta, banco, codSeguridad, tipo, cliente_id, mesVencimiento, anioVencimiento) " +
+                                       "VALUES (@nroTarjeta, @banco, @codSeguridad, @tipo, @cliente_id, @mesVencimiento, @anioVencimiento)", listaParametros2, SqlConnector.iniciarConexion());
+            SqlConnector.cerrarConexion();
+
+        }
+
 
         private void btnAtras_Click(object sender, EventArgs e)
         {
@@ -445,5 +496,15 @@ namespace PalcoNet.Abm_Cliente
             }
         }
 
+        private void btnAsociarTarjeta_Click(object sender, EventArgs e)
+        {
+            frmAgregarTarjetaDeCredito tarjeta = new frmAgregarTarjetaDeCredito(this);
+            this.Hide();
+            tarjeta.ShowDialog();
+            if (tarjeta != null)
+            {
+                mskNumeroTarjeta.Text = tarjeta.numeroTarjeta;
+            }
+        }
     }
 }

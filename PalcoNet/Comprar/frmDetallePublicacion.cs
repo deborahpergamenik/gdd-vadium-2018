@@ -72,6 +72,11 @@ namespace PalcoNet.Comprar
 
         private void btnComprar_Click(object sender, EventArgs e)
         {
+            if (UserInstance.getUserInstance().clienteId == null)
+            {
+                MessageBox.Show("Este usuario no puede comprar porque no tiene asignado los datos de un cliente");
+                return;
+            }
             string codigoTarjeta;
             if (ubicacionesSeleccionadas.Count == 0)
             {
@@ -94,38 +99,38 @@ namespace PalcoNet.Comprar
         {
             string codigoTarjeta = null;
 
-            List<SqlParameter> parametrosValidarTarjeta = new List<SqlParameter>();
-            SqlConnector.agregarParametro(parametrosValidarTarjeta, "@codCliente", UserInstance.getUserInstance().clienteId); //traer codigo de cliente
-            SqlConnector.agregarParametro(parametrosValidarTarjeta, "@fechaActual", Configuration.getActualDate());
-            SqlDataReader lectorTarjeta = SqlConnector.ObtenerDataReader("VADIUM.VALIDAR_TARJETA", "SP", parametrosValidarTarjeta);
+            //List<SqlParameter> parametrosValidarTarjeta = new List<SqlParameter>();
+            //SqlConnector.agregarParametro(parametrosValidarTarjeta, "@codCliente", UserInstance.getUserInstance().clienteId); //traer codigo de cliente
+            //SqlConnector.agregarParametro(parametrosValidarTarjeta, "@fechaActual", Configuration.getActualDate());
+            //SqlDataReader lectorTarjeta = SqlConnector.ObtenerDataReader("VADIUM.VALIDAR_TARJETA", "SP", parametrosValidarTarjeta);
 
-            if (!lectorTarjeta.HasRows)
-            {
-                Tarjeta tarjeta = new Tarjeta();
-                MessageBox.Show("No tiene una tarjeta de credito asociada, por favor, registre una para continuar la compra");
-                if (new Abm_Cliente.frmAgregarTarjetaDeCredito(tarjeta).DialogResult == DialogResult.OK)
-                {
-                    UTF8Encoding encoderHash = new UTF8Encoding();
-                    SHA256Managed hasher = new SHA256Managed();
-                    byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(tarjeta.Numero));
-                    string tarjetaNumero = bytesDeHasheoToString(bytesDeHasheo);
+            //if (!lectorTarjeta.HasRows)
+            //{
+            //    Tarjeta tarjeta = null;
+            //    MessageBox.Show("No tiene una tarjeta de credito asociada, por favor, registre una para continuar la compra");
+            //    if (new Abm_Cliente.frmAgregarTarjetaDeCredito(tarjeta).DialogResult == DialogResult.OK)
+            //    {
+            //        UTF8Encoding encoderHash = new UTF8Encoding();
+            //        SHA256Managed hasher = new SHA256Managed();
+            //        byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(tarjeta.NumeroTarjeta));
+            //        string tarjetaNumero = bytesDeHasheoToString(bytesDeHasheo);
 
-                    List<SqlParameter> parametrosGuardarTarjeta = new List<SqlParameter>();
-                    SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codCliente", "codigoDeCliente"); //traer codigo de cliente
-                    SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@nroTarjeta", tarjetaNumero);
-                    SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@ultimosDigitos", tarjeta.Numero.Substring(tarjeta.Numero.Length - 4, 4));
-                    SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codSeguridad", tarjeta.CodigoSeguridad);                    
-                    SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@mesVencimiento", tarjeta.Mes);
-                    SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@anioVencimiento", tarjeta.Anio);
-                    SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.GUARDAR_TARJETA", "SP", parametrosGuardarTarjeta);
+            //        List<SqlParameter> parametrosGuardarTarjeta = new List<SqlParameter>();
+            //        SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codCliente", "codigoDeCliente"); //traer codigo de cliente
+            //        SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@nroTarjeta", tarjetaNumero);
+            //        SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@ultimosDigitos", tarjeta.Numero.Substring(tarjeta.Numero.Length - 4, 4));
+            //        SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codSeguridad", tarjeta.CodigoSeguridad);
+            //        SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@mesVencimiento", tarjeta.Mes);
+            //        SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@anioVencimiento", tarjeta.Anio);
+            //        SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.GUARDAR_TARJETA", "SP", parametrosGuardarTarjeta);
 
-                    lector["codigoTarjeta"].ToString();
-                }
-            }
-            else
-            {
-                codigoTarjeta = lectorTarjeta["codigoTarjeta"].ToString();
-            }
+            //        lector["codigoTarjeta"].ToString();
+            //    }
+            //}
+            //else
+            //{
+            //    codigoTarjeta = lectorTarjeta["codigoTarjeta"].ToString();
+            //}
 
             return codigoTarjeta;
         }
@@ -149,17 +154,20 @@ namespace PalcoNet.Comprar
             List<SqlParameter> parametrosGuardarTarjeta = new List<SqlParameter>();
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codCliente", UserInstance.getUserInstance().clienteId); //traer codigo de cliente
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@FormaPago", codigoTarjeta);
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, " @fecha", Configuration.getActualDate());
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, " @monto", montoTotal);
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, " @cantidad", cantidad);
-            SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.COMPRAR", "SP", parametrosGuardarTarjeta);
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@fecha", Configuration.getStringActualDate());
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@monto", montoTotal);
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@cantidad", cantidad);
+            DataTable tabla = SqlConnector.obtenerDataTable("VADIUM.COMPRAR", "SP", parametrosGuardarTarjeta);
             int? val = null;
-            if (lector.HasRows)
-            {
-                lector.Read();
-                var obj = lector["@new_identity"];
-                val = Convert.ToInt32(obj) ;
+            var compraId = tabla.Rows[0].ItemArray[0];
+            if (compraId != null)
+            { 
+                val = Convert.ToInt32(compraId);
+                Ubicaciones.comprarUbicaciones(ubicacionesSeleccionadas, (int)val);
+                MessageBox.Show("Se han comprado " + cantidad + " entradas");
+                this.Hide();
             }
+            
         }
 
         private void btnAtras_Click(object sender, EventArgs e)
@@ -183,7 +191,7 @@ namespace PalcoNet.Comprar
                 {
                     var idUbi = dgvUbicaciones[1, e.RowIndex].Value;
                     ubicacionesSeleccionadas.Add(Convert.ToInt32(idUbi));
-                    precioActual += Convert.ToDouble(dgvUbicaciones[4, e.RowIndex].Value);
+                    precioActual += Convert.ToDouble(dgvUbicaciones[5, e.RowIndex].Value);
                 }
                 lblPrecio.Text = precioActual.ToString();
 

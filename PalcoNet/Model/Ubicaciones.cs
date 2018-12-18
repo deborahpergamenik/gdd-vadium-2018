@@ -39,8 +39,8 @@ namespace PalcoNet.Model
         }
         public static void comprarUbicaciones (List<int> ubicaciones, int compraId)
         {
-            string filtro = Configuration.createFilter(ubicaciones, "ubi.ubicacion_id");
-            SqlDataReader lector = SqlConnector.ejecutarReader("UPDATE VADIUM.UBICAION ubi SET compra_id = " + compraId + " WHERE " + filtro , SqlConnector.iniciarConexion());
+            string filtro = Configuration.createFilter(ubicaciones, "ubicacion_id");
+            SqlDataReader lector = SqlConnector.ejecutarReader("UPDATE VADIUM.UBICACION  SET compra_id = " + compraId + " WHERE " + filtro , SqlConnector.iniciarConexion());
         }
        
         

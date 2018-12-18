@@ -14,11 +14,72 @@ namespace PalcoNet.Generar_Publicacion
     public partial class frmGenerarPublicacion : Form
     {
         public bool lotes =false;
+        int paginaActual;
+        int cantPublicacionesPorPagina = 18;
+        int cantPublicacionesTotal;
+        int ultimaPagina;
+        string descripcion;
         public frmGenerarPublicacion()
         {
             InitializeComponent();
             loadData();
-            dataGridView1.DataSource = Publicaciones.obtenerPublicaiones(0,20, null, null, null, null);
+            contarPublicaciones();
+            cargarPublicaciones();
+        }
+
+        private void cargarPublicaciones()
+        {
+            int desde;
+            int hasta;
+
+            if (paginaActual == 0)
+            {
+                desde = 0;
+                hasta = cantPublicacionesPorPagina;
+
+                if (ultimaPagina != 0)
+                {
+                    btnAnteriorPag.Enabled = false;
+                    btnPrimerPag.Enabled = false;
+                    btnSiguientePag.Enabled = true;
+                    btnUltimaPag.Enabled = true;
+                }
+                else
+                {
+                    btnAnteriorPag.Enabled = false;
+                    btnPrimerPag.Enabled = false;
+                    btnSiguientePag.Enabled = false;
+                    btnUltimaPag.Enabled = false;
+                }
+            }
+            else if (paginaActual == ultimaPagina)
+            {
+                desde = ((cantPublicacionesPorPagina * paginaActual) + 1);
+                hasta = (desde + cantPublicacionesPorPagina - 1);
+
+                btnSiguientePag.Enabled = false;
+                btnUltimaPag.Enabled = false;
+                btnAnteriorPag.Enabled = true;
+                btnPrimerPag.Enabled = true;
+            }
+            else
+            {
+                desde = ((cantPublicacionesPorPagina * paginaActual) + 1);
+                hasta = (desde + cantPublicacionesPorPagina - 1);
+
+                btnSiguientePag.Enabled = true;
+                btnUltimaPag.Enabled = true;
+                btnAnteriorPag.Enabled = true;
+                btnPrimerPag.Enabled = true;
+            }
+            int estado =Convert.ToInt32( ((ComboBoxItem)cmbEstado.SelectedItem).Value);
+            dgvPublicaciones.DataSource = Publicaciones.obtenerPublicaiones(desde, hasta, null, descripcion, null, null, estado);
+     
+        }
+
+        private void contarPublicaciones()
+        {
+            throw new NotImplementedException();
         }
 
         public frmGenerarPublicacion(string modo)
@@ -51,6 +112,10 @@ namespace PalcoNet.Generar_Publicacion
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
+            if (UserInstance.getUserInstance().empresaId == null)
+            {
+                MessageBox.Show("No puede generar una publicacion porque  este usuario no tiene una empresa asociado");
+            }
             List<DateTime> espectaculos = new List<DateTime>();
             Publicacion publi = new Publicacion
             {
@@ -89,12 +154,14 @@ namespace PalcoNet.Generar_Publicacion
 
             dtpPublicacion.Format = DateTimePickerFormat.Custom;
             dtpPublicacion.CustomFormat = "dd/MM/yyyy hh:mm:ss";
+
+            
         }
         public void loadData()
         {
-            List<ComboBoxItem> usuario_activos = Estados.obtenerEstados().Select(x => new ComboBoxItem { Text =x.descripcion, Value =x.codigo }).ToList();
-            usuario_activos.ForEach(x => cmbusuario_activo.Items.Add(x));
-
+            List<ComboBoxItem> estados = Estados.obtenerEstados().Select(x => new ComboBoxItem { Text =x.descripcion, Value =x.codigo }).ToList();
+            estados.ForEach(x => cmbEstado.Items.Add(x));
+            estados.ForEach(x => cmbEstados.Items.Add(x));
             List<ComboBoxItem> rubros = Rubros.obtenerRubros().Select(x => new ComboBoxItem { Text = x.Descripcion, Value = x.Id }).ToList();
             rubros.ForEach(x => cmbRubro.Items.Add(x));
 
@@ -103,6 +170,11 @@ namespace PalcoNet.Generar_Publicacion
 
            
 
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

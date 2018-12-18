@@ -29,6 +29,10 @@ namespace PalcoNet.Abm_Cliente
             InitializeComponent();
             setearComboBoxes();
         }
+        public frmAgregarTarjetaDeCredito()
+        {
+            InitializeComponent();
+        }
 
         public void setearComboBoxes()
         {
@@ -127,6 +131,11 @@ namespace PalcoNet.Abm_Cliente
         {
             this.Hide();
             frmAbmCliente.Show();
+        }
+
+        private void frmAgregarTarjetaDeCredito_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

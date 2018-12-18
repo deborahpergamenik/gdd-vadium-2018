@@ -64,11 +64,11 @@ namespace PalcoNet.Model
         //    return publicaciones;
         //}
          
-        public static DataTable obtenerPublicaiones(int start, int finish, List<int> rubros, string desc, DateTime? desde, DateTime? hasta)
+        public static DataTable obtenerPublicaiones(int start, int finish, List<int> rubros, string desc, DateTime? desde, DateTime? hasta, int? estado = null)
         {
             try{
                 string query = obtenerQuerySinFiltros();
-                string filtros = armarquery( rubros, desc, desde, hasta);
+                string filtros = armarquery( rubros, desc, desde, hasta, estado);
 
                 if (!String.IsNullOrEmpty(filtros))
                 {
@@ -145,11 +145,17 @@ namespace PalcoNet.Model
                                        "  pub.fechaVencimiento <= '" + ((DateTime)Configuration.getActualDate()).ToString("yyyy-MM-dd HH:mm:ss") + "' AND " +
                                        "  pub.fecha >= '" + ((DateTime)Configuration.getActualDate()).ToString("yyyy-MM-dd HH:mm:ss") + "' ";
         }
-        private static string armarquery( List<int> rubros, string desc, DateTime? desde, DateTime? hasta)
+        private static string armarquery( List<int> rubros, string desc, DateTime? desde, DateTime? hasta, int? estado = null)
         {
             string filtro = "";
             filtro += filtrosRubro(rubros);
-          
+
+            if (estado != null)
+            {
+                if (filtro != "")
+                    filtro += " AND ";
+                filtro += " pub.estado_id =  " + estado + " ";
+            }
 
             if (!String.IsNullOrEmpty(desc))
             {

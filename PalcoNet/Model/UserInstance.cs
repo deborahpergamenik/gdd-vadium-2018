@@ -32,6 +32,7 @@ namespace PalcoNet.Model
             this.rol = rol;
             this.usuario = user;
 
+           
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@usuario_id", user.usuario_id);
             SqlDataReader lector = SqlConnector.ejecutarReader("SELECT c.cliente_id " +
@@ -46,6 +47,7 @@ namespace PalcoNet.Model
             }
                 
             SqlConnector.cerrarConexion();
+            
 
             List<SqlParameter> listaParametros2 = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros2, "@usuario_id", user.usuario_id);

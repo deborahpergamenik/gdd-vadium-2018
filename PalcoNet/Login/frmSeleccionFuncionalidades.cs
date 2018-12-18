@@ -3,7 +3,7 @@ using PalcoNet.Abm_Empresa_Espectaculo;
 using PalcoNet.Abm_Grado;
 using PalcoNet.Abm_Rol;
 using PalcoNet.Abm_Rubro;
-using PalcoNet.Abm_Tarjeta_Credito;
+
 using PalcoNet.Canje_Puntos;
 using PalcoNet.Common;
 using PalcoNet.Comprar;
@@ -233,7 +233,7 @@ namespace PalcoNet.Login
                         form12.Show();
                         break;
                     case 13:
-                        frmAbmTarjetaDeCredito form13 = new frmAbmTarjetaDeCredito(this,(int)UserInstance.getUserInstance().clienteId);
+                        frmAgregarTarjetaDeCredito form13 = new frmAgregarTarjetaDeCredito();//this, (int)UserInstance.getUserInstance().clienteId
                         this.Hide();
                         form13.Show();
                         break;

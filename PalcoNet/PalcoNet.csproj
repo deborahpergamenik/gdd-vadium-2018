@@ -126,18 +126,6 @@
     <Compile Include="Abm Rubro\frmRubro.Designer.cs">
       <DependentUpon>frmRubro.cs</DependentUpon>
     </Compile>
-    <Compile Include="Abm Tarjeta Credito\frmAbmTarjetaDeCredito.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Abm Tarjeta Credito\frmAbmTarjetaDeCredito.Designer.cs">
-      <DependentUpon>frmAbmTarjetaDeCredito.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Abm Tarjeta Credito\frmModificarTarjetaDeCredito.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Abm Tarjeta Credito\frmModificarTarjetaDeCredito.Designer.cs">
-      <DependentUpon>frmModificarTarjetaDeCredito.cs</DependentUpon>
-    </Compile>
     <Compile Include="Canje Puntos\frmCanjePuntos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -308,12 +296,6 @@
     <EmbeddedResource Include="Abm Rubro\frmRubro.resx">
       <DependentUpon>frmRubro.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Abm Tarjeta Credito\frmAbmTarjetaDeCredito.resx">
-      <DependentUpon>frmAbmTarjetaDeCredito.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Abm Tarjeta Credito\frmModificarTarjetaDeCredito.resx">
-      <DependentUpon>frmModificarTarjetaDeCredito.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Canje Puntos\frmCanjePuntos.resx">
       <DependentUpon>frmCanjePuntos.cs</DependentUpon>
     </EmbeddedResource>
@@ -325,6 +307,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Comprar\frmDetallePublicacion.resx">
       <DependentUpon>frmDetallePublicacion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Generar Publicacion\frmGenerarPublicacion.resx">
+      <DependentUpon>frmGenerarPublicacion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Generar Publicacion\frmPublicaiconesPorLotes.resx">
       <DependentUpon>frmPublicaiconesPorLotes.cs</DependentUpon>
@@ -362,7 +347,6 @@
     <EmbeddedResource Include="Registro de Usuario\frmRegistroUsuarioEmpresa.resx">
       <DependentUpon>frmRegistroUsuarioEmpresa.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -372,34 +372,38 @@ AS
 BEGIN
 	BEGIN TRY	
 		
-		DECLARE @stock int
-		DECLARE  @codEspec int
-
-		DECLARE stockEspectaculo CURSOR FOR
-		SELECT COUNT(*), codigoEspectaculo
-		FROM UBICACION ubi
-		WHERE ubi.compra_id IS NULL  AND EXISTS ( SELECT i.codigoEspectaculo FROM inserted i WHERE i.codigoEspectaculo = ubi.codigoEspectaculo)
-		group by ubi.codigoEspectaculo
 		
+		
+		DECLARE  @codEspec numeric(18,0)
 
-		OPEN stockEspectaculo
-		FETCH NEXT FROM stockEspectaculo INTO @stock, @codEspec
+		print'cursor'
+
+		DECLARE espectaculo CURSOR FOR
+		SELECT i.codigoEspectaculo
+		FROM inserted i
+		group by i.codigoEspectaculo
+		
+		 
+		OPEN espectaculo
+		FETCH NEXT FROM espectaculo INTO  @codEspec
 
 		WHILE @@FETCH_STATUS = 0
 		BEGIN 
-				--DECLARE @stockActual INT
-				--SELECT @stockActual = p.stock FROM PUBLICACION p WHERE p.codigoEspectaculo = @codEspec
-				--SET @stockActual = @stockActual + @stock
+
+				DECLARE @stock int
+				SET @stock = 0
+				print @stock 
+				SELECT @stock = COUNT(*) FROM VADIUM.UBICACION u WHERE u.codigoEspectaculo = @codEspec AND u.compra_id IS NULL
 				
-				--print @stockActual
+				print @stock 
+				print @codEspec
+				UPDATE PUBLICACION SET stock = @stock WHERE codigoEspectaculo =@codEspec
 
-				UPDATE PUBLICACION SET stock += @stock WHERE codigoEspectaculo =@codEspec
 
-
-				FETCH NEXT FROM stockEspectaculo INTO @stock, @codEspec
+				FETCH NEXT FROM espectaculo INTO @codEspec
 		END
-		CLOSE stockEspectaculo  
-		DEALLOCATE stockEspectaculo 
+		CLOSE espectaculo  
+		DEALLOCATE espectaculo 
 
 	END TRY
 	BEGIN CATCH
@@ -443,6 +447,15 @@ BEGIN
 	VALUES (0,'admin','8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918',0,1,0); --pass admin en SHA256
 	SET IDENTITY_INSERT VADIUM.USUARIO OFF
 
+	INSERT INTO VADIUM.CLIENTE(apellido, calle,cod_postal, CUIL, depto, fechaCreacion,fechaNacimiento, localidad, mail, nombre, numeroDocumento, piso,tipoDocumento,telefono, usuario_id)
+	VALUES('Martinez', 'Medrano', '1179', '20-29705392-7', 'C',  CONVERT(datetime, '2018-12-30'), CONVERT(datetime, '1984-10-19'), 'Buenos aires', 'LucasMartinez@gmail.com', 'Lucas', '29705392', 9, 'DNI', '1553783566', 0 )
+	
+	INSERT INTO VADIUM.EMPRESA(ciudad, calle,cod_postal,cuit, depto, fechaCreacion, localidad, mail,  piso,razonSocial,telefono, usuario_id)
+	VALUES('CABA', 'Cordoba','1414', '30-70875678-0', 'C',  CONVERT(datetime, '2018-12-30'), 'Buenos aires', 'LucasMartinez@gmail.com',  9, 'BALIHAI', '1553783566', 0 )
+
+	
+	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(2,0)
+	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(1,0)
 	--RUBRO
 	INSERT INTO [VADIUM].RUBRO(descripcion) values('Ciencia ficcion')
 	INSERT INTO [VADIUM].RUBRO(descripcion) values('Comedia')
@@ -472,17 +485,19 @@ BEGIN
 	HAVING m.Ubicacion_Tipo_Codigo IS NOT NULL
 
 	-------Cliente------
-	INSERT INTO [VADIUM].Cliente (numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail, calle, piso, depto, cod_postal )
-	SELECT  m.Cli_Dni,'DNI' ,m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Mail,m.Cli_Dom_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
+	INSERT INTO [VADIUM].Cliente (numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail, calle, piso, depto, cod_postal, telefono, fechaCreacion, CUIL, localidad )
+	SELECT  m.Cli_Dni,'DNI' ,m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Mail,m.Cli_Dom_Calle, m.Cli_Piso, m.Cli_Depto,
+			 m.Cli_Cod_Postal,   CONCAT('155', CONVERT(nvarchar(15),  FLOOR(RAND()*(999-1)+1)),CONVERT(nvarchar(15),  FLOOR(RAND()*(9999-1)+1)) ), CONVERT(datetime, '2018-12-30'), CONCAT('20-',m.Cli_Dni,'-7'), 'Buenos Aires'
 
 	FROM gd_esquema.Maestra m
 	GROUP BY m.Cli_Mail, m.Cli_Dni, m.Cli_Apeliido, m.Cli_Nombre, m.Cli_Fecha_Nac, m.Cli_Dom_Calle, m.Cli_Piso, m.Cli_Depto, m.Cli_Cod_Postal
 	HAVING m.Cli_Mail IS NOT NULL
 
 	-------EMPRESA------
-	INSERT INTO [VADIUM].EMPRESA(razonSocial, cuit, mail, fechaCreacion, calle, piso, depto, cod_postal )
+	INSERT INTO [VADIUM].EMPRESA(razonSocial, cuit, mail, fechaCreacion, calle, piso, depto, cod_postal, telefono, localidad, ciudad )
 	SELECT  m.Espec_Empresa_Razon_Social, m.Espec_Empresa_Cuit, m.Espec_Empresa_Mail, m.Espec_Empresa_Fecha_Creacion,
-				m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal
+				m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal,  CONCAT('155', CONVERT(nvarchar(15),  FLOOR(RAND()*(999-1)+1)),CONVERT(nvarchar(15),  FLOOR(RAND()*(9999-1)+1)) ),
+				'Buenos Aires', 'CABA'
 	FROM gd_esquema.Maestra m
 	GROUP BY m.Espec_Empresa_Razon_Social, m.Espec_Empresa_Cuit, m.Espec_Empresa_Mail, m.Espec_Empresa_Fecha_Creacion, m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal	
 	HAVING m.Espec_Empresa_Razon_Social IS NOT NULL
@@ -557,6 +572,7 @@ BEGIN
 		
 END
 GO
+
 
 --------------------------------FKS------------------------------
 
@@ -827,13 +843,15 @@ BEGIN
 END
 GO
 ------------------COMPRAR-------------------------------------------
-CREATE PROCEDURE [VADIUM].COMPRAR @codCliente int, @FormaPago nvarchar(255), @fecha datetime, @monto numeric(18,0), @cantidad int, @new_identity INT = NULL OUTPUT
+CREATE PROCEDURE [VADIUM].COMPRAR @codCliente int, @FormaPago nvarchar(255), @fecha datetime, @monto numeric(18,0), @cantidad int
 AS
 BEGIN
+	
+	
 
-	INSERT INTO VADIUM.COMPRA (id_cliente_comprador, medio_de_pago, fecha_compra)
-	VALUES(@codCliente, @FormaPago, @fecha)
-	SET @new_identity = SCOPE_IDENTITY();
+	INSERT INTO VADIUM.COMPRA (id_cliente_comprador, medio_de_pago, fecha_compra, monto, cantidad)
+	VALUES(@codCliente, @FormaPago, @fecha, @monto, @cantidad)
+	SELECT  SCOPE_IDENTITY();
 
 END
 GO
@@ -930,6 +948,7 @@ EXEC VADIUM.AGREGAR_ROL_USUARIO
 	@iduser = 0, @idrol = 0;
 GO
 
+
 ----- ADMIN ------
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
@@ -963,23 +982,21 @@ EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 ----- Cliente -----
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @funcionalidad = 'EditarPublicacion';		
+	@rol = 'Cliente', @funcionalidad = 'AdministrarCompras';		
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @funcionalidad = 'GenerarPublicacion';	
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @funcionalidad = 'HistorialClientes';	
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @funcionalidad = 'ListadoEstadistico';
+	@rol = 'Cliente', @funcionalidad = 'AdministrarPuntos';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Cliente', @funcionalidad = 'TarjetaDeCredito';		
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Cliente', @funcionalidad = 'AdministrarClientes';		
+
+
 		
 ----- Empresas ----
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 	@rol = 'Empresa', @funcionalidad = 'EditarPublicacion';		
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @funcionalidad = 'GenerarPublicacion';
+	@rol = 'Empresa', @funcionalidad = 'GenerarPublicacion';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @funcionalidad = 'HistorialClientes';			
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @funcionalidad = 'ListadoEstadistico';		
+	@rol = 'Empresa', @funcionalidad = 'AdministrarEmpresas';	

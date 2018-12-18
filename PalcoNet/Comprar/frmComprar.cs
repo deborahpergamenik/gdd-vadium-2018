@@ -14,12 +14,12 @@ using System.Windows.Forms;
 namespace PalcoNet.Comprar
 {
     public partial class frmComprar : Form
-    {
-        int paginaActual;
+    { int paginaActual;
         int cantPublicacionesPorPagina = 18; 
         int cantPublicacionesTotal;
         int ultimaPagina;
         string descripcion;
+       
         DateTime? start = null;
         DateTime? finish = null;
         static List<int> rubros = new List<int>();
@@ -112,25 +112,6 @@ namespace PalcoNet.Comprar
             Publicaciones_Datagrid.DataSource = Publicaciones.obtenerPublicaiones(desde, hasta, rubros, descripcion, start, finish);
      
 
-
-
-
-            //Publicaciones_Datagrid.MaxRecords = 10;
-            //List<Publicacion> listaPublicaciones = Publicaciones.obtenerPublicacionesPaginadas(desde, hasta,rubro,descripcion,start,finish );
-            //Publicaciones_Datagrid1.DataSource = listaPublicaciones;
-            
-            
-            ////AGREGAR COLUMNAS QUE SE CONSIDEREN NECESARIAS MOSTRAR / QUITAR LAS QUE NO IRÍAN
-            //Publicaciones_Datagrid1.Columns["codigoEspectaculo"].Visible = false;
-            //Publicaciones_Datagrid1.Columns["descripcion"].Visible = false;
-            //Publicaciones_Datagrid1.Columns["fecha"].Visible = false;
-            //Publicaciones_Datagrid1.Columns["fechaVencimiento"].Visible = false;
-            //Publicaciones_Datagrid1.Columns["usuario_activo_id"].Visible = false;
-            //Publicaciones_Datagrid1.Columns["direccion"].Visible = false;
-            //Publicaciones_Datagrid1.Columns["rubro_id"].Visible = false;
-            //Publicaciones_Datagrid1.Columns["grado_id"].Visible = false;
-            //Publicaciones_Datagrid1.Columns["empresa_id"].Visible = false;
-
         }
 
         private void btnSiguientePag_Click(object sender, EventArgs e)
@@ -187,7 +168,7 @@ namespace PalcoNet.Comprar
                 int codigoPublicacion = Convert.ToInt32( val);
                 frmDetallePublicacion detalleForm = new frmDetallePublicacion(codigoPublicacion);
                 detalleForm.ShowDialog();
-                cargarPublicaciones();
+                this.Hide();
             }
 
         }

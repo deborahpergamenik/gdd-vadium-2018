@@ -82,14 +82,9 @@ IF OBJECT_ID('VADIUM.OBTENER_CLIENTE') IS NOT NULL
 DROP PROCEDURE VADIUM.OBTENER_CLIENTE;
 GO
 ------------------------------DROP TRIGGERS ---------------------------------
-IF OBJECT_ID('VADIUM.TriggerNuevaEmpresa') IS NOT NULL
-DROP TRIGGER VADIUM.TriggerNuevaEmpresa
-GO
-IF OBJECT_ID('VADIUM.TriggerNuevoCliente') IS NOT NULL
-DROP TRIGGER VADIUM.TriggerNuevoCliente
-GO
-IF OBJECT_ID('VADIUM.TR_NuevaEmpresa') IS NOT NULL
-DROP TRIGGER VADIUM.TR_NuevaEmpresa
+
+IF OBJECT_ID('VADIUM.TR_NuevaUbicacion') IS NOT NULL
+DROP TRIGGER VADIUM.TR_NuevaUbicacion
 GO
 IF OBJECT_ID('VADIUM.TR_NuevoCliente') IS NOT NULL
 DROP TRIGGER VADIUM.TR_NuevoCliente
@@ -277,7 +272,8 @@ CREATE TABLE [VADIUM].PUBLICACION(
 	direccion nvarchar(255),
 	rubro_id int,
 	grado_id int,
-	empresa_id int
+	empresa_id int,
+	stock int
 )
 GO
 
@@ -367,38 +363,49 @@ GO
 --	END CATCH
 --END
 --GO
---   -----CLIENTE--------
---CREATE TRIGGER [VADIUM].TR_NuevoCliente
---ON VADIUM.CLIENTE
---INSTEAD OF INSERT
---AS
---BEGIN
---	BEGIN TRY
---		INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
---		SELECT I.mail,  HashBytes('SHA2_256',I.mail), 1,0, 1
---		FROM inserted I
---		GROUP BY I.mail
---		HAVING I.mail NOT IN(SELECT us2.usuario_username FROM VADIUM.USUARIO us2 )
+   -----CLIENTE--------
+CREATE TRIGGER [VADIUM].TR_NuevaUbicacion
+ON VADIUM.UBICACION
+AFTER INSERT, update
+AS
+BEGIN
+	BEGIN TRY	
+		
+		DECLARE @stock int
+		DECLARE  @codEspec int
+
+		DECLARE stockEspectaculo CURSOR FOR
+		SELECT COUNT(*), codigoEspectaculo
+		FROM UBICACION ubi
+		WHERE ubi.compra_id IS NULL  AND EXISTS ( SELECT i.codigoEspectaculo FROM inserted i WHERE i.codigoEspectaculo = ubi.codigoEspectaculo)
+		group by ubi.codigoEspectaculo
 		
 
---		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
---		SELECT 1, us.usuario_id
---		FROM inserted I JOIN VADIUM.USUARIO us ON (us.usuario_username = I.mail)
---		WHERE NOT EXISTS(SELECT 1 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 2 AND rolUser.usuario_id = us.usuario_id)
---		GROUP BY us.usuario_id,us.usuario_username, i.mail
+		OPEN stockEspectaculo
+		FETCH NEXT FROM stockEspectaculo INTO @stock, @codEspec
+
+		WHILE @@FETCH_STATUS = 0
+		BEGIN 
+				--DECLARE @stockActual INT
+				--SELECT @stockActual = p.stock FROM PUBLICACION p WHERE p.codigoEspectaculo = @codEspec
+				--SET @stockActual = @stockActual + @stock
+				
+				--print @stockActual
+
+				UPDATE PUBLICACION SET stock += @stock WHERE codigoEspectaculo =@codEspec
 
 
---		INSERT INTO VADIUM.CLIENTE(numeroDocumento, tipoDocumento, apellido, nombre, fechaNacimiento, mail,  usuario_id, calle, piso, depto, cod_postal )
---		SELECT ins.numeroDocumento, ins.tipoDocumento, ins.apellido, ins.nombre,ins.fechaNacimiento, ins.mail, 
---		(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.calle, ins.piso, ins.depto, ins.cod_postal
---		FROM inserted ins
+				FETCH NEXT FROM stockEspectaculo INTO @stock, @codEspec
+		END
+		CLOSE stockEspectaculo  
+		DEALLOCATE stockEspectaculo 
 
---	END TRY
---	BEGIN CATCH
---	  SELECT 'ERROR', ERROR_MESSAGE()
---	END CATCH
---END
---GO
+	END TRY
+	BEGIN CATCH
+	  SELECT 'ERROR', ERROR_MESSAGE()
+	END CATCH
+END
+GO
 
 
 
@@ -493,12 +500,12 @@ BEGIN
 	HAVING m.Espectaculo_Estado IS NOT NULL
 
 	------PUBLICACION-----
-		INSERT INTO [VADIUM].PUBLICACION(codigoEspectaculo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id, grado_id)
+		INSERT INTO [VADIUM].PUBLICACION(codigoEspectaculo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id, grado_id, stock)
 		SELECT m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, 
 				(SELECT TOP 1 emp.empresa_id FROM EMPRESA emp WHERE emp.mail = m.Espec_Empresa_Mail), 
 				(SELECT TOP 1 ru.rubro_id FROM RUBRO ru order by NEWID()),
 				(SELECT TOP 1 es.codigo FROM ESTADO es WHERE es.descripcion = m.Espectaculo_Estado),
-				(SELECT TOP 1 gr.grado_id FROM VADIUM.GRADO gr order by newid())
+				(SELECT TOP 1 gr.grado_id FROM VADIUM.GRADO gr order by newid()), 0
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, m.Espec_Empresa_Mail, m.Espectaculo_Rubro_Descripcion, Espectaculo_Estado
 	HAVING m.Espectaculo_Cod IS NOT NULL
@@ -582,23 +589,22 @@ GO
 
 
 --------------------------------Estadisticas------------------------------
---CREATE PROCEDURE [VADIUM].MayorCantLocalidadesNoVendidos @year int, @month int, @grado int
+CREATE PROCEDURE [VADIUM].MayorCantLocalidadesNoVendidos @year int, @month int, @grado int
 
---AS
---BEGIN
---SELECT TOP 5 emp.razonSocial , COUNT(*) as cantidad
---FROM VADIUM.EMPRESA emp JOIN VADIUM.PUBLICACION pub ON(emp.empresa_id = pub.empresa_id )
---						JOIN VADIUM.UBICACION ubi ON (pub.codigoEspectaculo = ubi.codigoEspectaculo)
+AS
+BEGIN
+SELECT TOP 5 emp.razonSocial , COUNT(*) as cantidad
+FROM VADIUM.EMPRESA emp JOIN VADIUM.PUBLICACION pub ON(emp.empresa_id = pub.empresa_id )
+						JOIN VADIUM.UBICACION ubi ON (pub.codigoEspectaculo = ubi.codigoEspectaculo)
+		WHERE ubi.compra_id IS NULL AND
+			 (@year is null or year(pub.fecha) =  @year) AND
+			 (@month is null or (month(pub.fecha) > @month AND month(pub.fecha) < (@month + 2) )) AND
+			 (@grado is null or pub.grado_id = @grado)
+	GROUP BY emp.empresa_id, emp.razonSocial
+	ORDER BY COUNT(*) DESC
 
---	WHERE ubicacion_id NOT IN (SELECT ubicacion_id FROM VADIUM.ITEMFACTURA item) AND
---			 (@year is null or year(pub.fecha) =  @year) AND
---			 (@month is null or (month(pub.fecha) > @month AND month(pub.fecha) < (@month + 2) )) AND
---			 (@grado is null or pub.grado_id = @grado)
---	GROUP BY emp.empresa_id, emp.razonSocial
---	ORDER BY COUNT(*) DESC
-
---END
---GO
+END
+GO
 
 
 --CREATE PROCEDURE [VADIUM].ClientesPuntosVencidos @year int, @month int
@@ -617,24 +623,23 @@ GO
 --END
 --GO
 
---CREATE PROCEDURE [VADIUM].ClientesMayorCompras @year int, @month int
+CREATE PROCEDURE [VADIUM].ClientesMayorCompras @year int, @month int
 
---AS
---BEGIN
---SELECT TOP 5 cli.mail, COUNT(DISTINCT pub.empresa_id)
---FROM VADIUM.CLIENTE cli  JOIN VADIUM.ITEMFACTURA item on (cli.cliente_id = item.clie)
---					     JOIN VADIUM.FACTURA fact on (item.factura_nro = fact.factura_nro)
---						 JOIN VADIUM.UBICACION ubi on (item.ubicacion_id = ubi.ubicacion_id)
---						 JOIN VADIUM.PUBLICACION pub on (ubi.codigoEspectaculo = pub.codigoEspectaculo)
+AS
+BEGIN
+SELECT TOP 5 cli.mail, COUNT(DISTINCT pub.empresa_id)
+FROM VADIUM.CLIENTE cli  JOIN VADIUM.COMPRA com on (cli.cliente_id = com.id_cliente_comprador)
+						 JOIN VADIUM.UBICACION ubi on (com.compra_id = ubi.compra_id)
+						 JOIN VADIUM.PUBLICACION pub on (ubi.codigoEspectaculo = pub.codigoEspectaculo)
 
---	WHERE    (@year is null or year(fact.fecha) =  @year) AND
---			 (@month is null or (month(fact.fecha) > @month AND month(fact.fecha) < (@month + 2) )) 
+	WHERE    (@year is null or year(com.fecha_compra) =  @year) AND
+			 (@month is null or (month(com.fecha_compra) > @month AND month(com.fecha_compra) < (@month + 2) )) 
 			 
---	GROUP BY cli.mail
---	ORDER BY COUNT(DISTINCT pub.empresa_id) DESC
+	GROUP BY cli.mail
+	ORDER BY COUNT(DISTINCT pub.empresa_id) DESC
 
---END
---GO
+END
+GO
 --------------------------ROLES-----------------------------------
 
 ---------------------------LOGIN------------------------------------

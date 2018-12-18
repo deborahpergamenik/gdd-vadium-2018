@@ -137,7 +137,7 @@ namespace PalcoNet.Model
         {
             return "SELECT pub.codigoEspectaculo, pub.descripcion,pub.fecha as Fecha_Evento, pub.fechaVencimiento, rub.rubro_id, rub.descripcion as rubro_descripcion, " +
                     "pub.direccion as direccionEspectaculo, gr.descripcion as grado_descripcion, gr.comision as comision, gr.grado_id as grado_id, " +
-                    "pub.empresa_id, es.codigo as estado_id, es.descripcion as estado_descripcion " +
+                    "pub.empresa_id, es.codigo as estado_id, es.descripcion as estado_descripcion, pub.stock as stock_disponible " +
                      "FROM VADIUM.PUBLICACION pub JOIN VADIUM.ESTADO es ON (pub.estado_id = es.codigo) " +
                                         "JOIN VADIUM.RUBRO rub ON (pub.rubro_id = rub.rubro_id) " +
                                         "JOIN VADIUM.GRADO gr ON (pub.grado_id = gr.grado_id)" +

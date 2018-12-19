@@ -41,6 +41,7 @@ namespace PalcoNet.Model
         {
             string filtro = Configuration.createFilter(ubicaciones, "ubicacion_id");
             SqlDataReader lector = SqlConnector.ejecutarReader("UPDATE VADIUM.UBICACION  SET compra_id = " + compraId + " WHERE " + filtro , SqlConnector.iniciarConexion());
+            SqlConnector.cerrarConexion();
         }
        
         

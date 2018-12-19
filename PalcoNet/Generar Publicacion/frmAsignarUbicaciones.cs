@@ -76,7 +76,7 @@ namespace PalcoNet.Generar_Publicacion
                             int cantidad = Convert.ToInt32(txtCantidad.Text);
                             for(int i = 0 ; i < cantidad; i++)
                             {
-                                Ubicacion ubicacion = new Ubicacion{ Precio = Convert.ToDouble(txtPrecio.Text),SinNumerar = true, idTipoUbicacion = Convert.ToInt32(cmbTipoUbicaciones.SelectedValue) };
+                                Ubicacion ubicacion = new Ubicacion{ Precio = Convert.ToInt32(txtPrecio.Text),SinNumerar = true, idTipoUbicacion = Convert.ToInt32(cmbTipoUbicaciones.SelectedValue) };
                                 ubicacionesCreadas.Add(ubicacion);
                             }
                             MessageBox.Show("Se agregaron " + cantidad + " ubicaciones sin numerar del tipo " + cmbTipoUbicaciones.SelectedText);
@@ -101,7 +101,7 @@ namespace PalcoNet.Generar_Publicacion
                             char c = alpha[i];
                             for (int j = startAs; j<= finsihAs; j++)
                             {cantidad++;
-                                 Ubicacion ubicacion = new Ubicacion{ Precio = Convert.ToDouble(txtPrecio.Text),SinNumerar = false, idTipoUbicacion = Convert.ToInt32(cmbTipoUbicaciones.SelectedValue), Fila = c.ToString(), Asiento = j };
+                                 Ubicacion ubicacion = new Ubicacion{ Precio = Convert.ToInt32(txtPrecio.Text),SinNumerar = false, idTipoUbicacion = Convert.ToInt32(cmbTipoUbicaciones.SelectedValue), Fila = c.ToString(), Asiento = j };
                                 ubicacionesCreadas.Add(ubicacion);
                             }
                         }
@@ -121,22 +121,45 @@ namespace PalcoNet.Generar_Publicacion
         {
             txtCantidad.Text = "";
             txtPrecio.Text = "";
-            MessageBox.Show
+            
         }
 
         private bool CantidadIsValid(string p)
         {
-            throw new NotImplementedException();
+            if (String.IsNullOrEmpty(p))
+            {
+                MessageBox.Show("El campo cantidad no puede ser vacio");
+                return false;
+            }
+            int n;
+            if(!int.TryParse(p, out n))
+            {
+                MessageBox.Show("El campo cantidad debe ser numerico");
+                return false;
+            }
+            return true;
         }
 
         private bool PrecioEsValid(string p)
         {
-            throw new NotImplementedException();
+            if (String.IsNullOrEmpty(p))
+            {
+                MessageBox.Show("El campo precio no puede ser vacio");
+                return false;
+            }
+            int n;
+            if (!int.TryParse(p, out n))
+            {
+                MessageBox.Show("El campo precio no tiene un valor valido");
+                return false;
+            }
+            return true;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            UserInstance.getUserInstance().ubicacionesAGuardar = ubicacionesCreadas;
+            this.Hide();
         }
     }
 }

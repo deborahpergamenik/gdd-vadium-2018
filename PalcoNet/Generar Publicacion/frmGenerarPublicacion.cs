@@ -21,12 +21,11 @@ namespace PalcoNet.Generar_Publicacion
         int ultimaPagina;
         string descripcion;
         int? estado = null;
+        List<Ubicacion> ubicaciones = new List<Ubicacion>();
         public frmGenerarPublicacion()
         {
             InitializeComponent();
-            loadData();
-            contarPublicaciones();
-            cargarPublicaciones();
+            
         }
 
         private void cargarPublicaciones()
@@ -74,14 +73,23 @@ namespace PalcoNet.Generar_Publicacion
                 btnAnteriorPag.Enabled = true;
                 btnPrimerPag.Enabled = true;
             }
-           
-            dgvPublicaciones.DataSource = Publicaciones.obtenerPublicaiones(desde, hasta, null, descripcion, null, null, estado);
+            int? empresaId =null;
+            if(!UserInstance.userInstance.rol.nombre.ToLower().Contains("admin"))
+                empresaId = UserInstance.getUserInstance().empresaId;
+            dgvPublicaciones.DataSource = Publicaciones.obtenerPublicaiones(desde, hasta, null, descripcion, null, null, estado, empresaId);
      
         }
 
         private void contarPublicaciones()
         {
-            throw new NotImplementedException();
+            int? empresaId = null;
+            if (!UserInstance.userInstance.rol.nombre.ToLower().Contains("admin"))
+                empresaId = UserInstance.getUserInstance().empresaId;
+            cantPublicacionesTotal = Publicaciones.getTotal(null, descripcion, null, null, estado, empresaId);
+            ultimaPagina = cantPublicacionesTotal / cantPublicacionesPorPagina;
+
+            if (ultimaPagina < 1)
+                ultimaPagina = 0;
         }
 
         public frmGenerarPublicacion(string modo)
@@ -94,7 +102,7 @@ namespace PalcoNet.Generar_Publicacion
 
         private void cmbIngresoDeLotes_CheckedChanged(object sender, EventArgs e)
         {
-            if (chbIngresoDeLotes.Checked)
+            if (chbIngresoUnico.Checked)
             {
                 txtLotes.Visible = false;
                 lblLotes.Visible = false;
@@ -114,49 +122,133 @@ namespace PalcoNet.Generar_Publicacion
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (UserInstance.getUserInstance().empresaId == null)
+            if (UserInstance.userInstance.rol.nombre.ToLower().Contains("admin"))
             {
                 MessageBox.Show("No puede generar una publicacion porque  este usuario no tiene una empresa asociado");
             }
-            List<DateTime> espectaculos = new List<DateTime>();
-            Publicacion publi = new Publicacion
+            if (ValidarInfo())
             {
-                Descripcion = txtDescripcion.Text,
-                direccionEspectaculo = txtdireccion.Text,
-                FechaPublicacion = dtpPublicacion.Value,
+                List<DateTime> espectaculos = new List<DateTime>();
 
-
-            };
-            if (chbIngresoDeLotes.Checked)
-            {
-                publi.FechaEspectaculo = dtpEspectaculo.Value;
-                publi.save();
-            }
-            else 
-            {
-                DateTime? lastDate = null;
-                for (int i = 0; i<Convert.ToInt32(txtLotes.Text);i++)
+                Publicacion publi = new Publicacion
                 {
-                    using (var form = new frmPublicaiconesPorLotes(lastDate))
+                    Descripcion = txtDescripcion.Text,
+                    direccionEspectaculo = txtdireccion.Text,
+                    FechaPublicacion = dtpPublicacion.Value,
+                    precio = Convert.ToInt32( txtPrecio.Text),
+                    stock = Convert.ToInt32(txtStock.Text),
+                    estado_id = Convert.ToInt32(cmbEstado.SelectedValue),
+                    rubro_id = Convert.ToInt32(cmbRubro.SelectedValue),
+                    grado_id = Convert.ToInt32(cmbGrado.SelectedValue)
+
+                };
+                if (chbIngresoUnico.Checked)
+                {
+                    if (validarFechas(dtpPublicacion.Value, dtpEspectaculo.Value))
                     {
-                        form.ShowDialog();
-                        lastDate = form.espectaculo;
+                        publi.FechaEspectaculo = dtpEspectaculo.Value;
+                        int? id = publi.save();
+                        if(id == null)
+                        {
+                            MessageBox.Show("Hubo un error al guardar la publicacion, revise sus datos");
+                            return;
+                        }
+                        ubicaciones.ForEach(x => x.save((int)id));
                     }
-                    espectaculos.Add((DateTime)lastDate);
                 }
-                publi.save(espectaculos);
+                else
+                {
+                    if (ValidLotes(txtLotes.Text))
+                    {
+                        DateTime? lastDate = dtpPublicacion.Value;
+                        for (int i = 0; i < Convert.ToInt32(txtLotes.Text); i++)
+                        {
+                            using (var form = new frmPublicaiconesPorLotes(lastDate))
+                            {
+                                form.ShowDialog();
+                                lastDate = form.espectaculo;
+                            }
+                            espectaculos.Add((DateTime)lastDate);
+                        }
+                        publi.save(espectaculos);
+                    }
+                }
             }
         }
 
+        private bool ValidLotes(string p)
+        {
+            if (String.IsNullOrEmpty(p))
+            {
+                MessageBox.Show("Debe asignar un valor a la cantidad de lotes  o definir que solo va a ser una publicacion");
+                return false;
+            }
+            int n;
+            if (!int.TryParse(p, out n))
+            {
+                MessageBox.Show("El campo cantidad debe ser numerico");
+                return false;
+            }
+            return true;
+        }
+
+        private bool ValidarInfo( )
+        {
+            if (String.IsNullOrEmpty(txtdireccion.Text) || String.IsNullOrEmpty(txtDescripcion.Text) || String.IsNullOrEmpty(txtPrecio.Text) || cmbEstado.SelectedItem == null|| cmbGrado.SelectedItem == null|| cmbRubro.SelectedItem == null )
+            { 
+                MessageBox.Show("Faltan completar datos");
+                return false;
+            }
+            int p;
+            string val = txtPrecio.Text;
+            if (!int.TryParse(val, out p))
+            {
+                MessageBox.Show("El precio no es valido");
+                return false;
+            }
+            if (Configuration.getActualDate().CompareTo(dtpPublicacion.Value) > 0)
+            {
+                MessageBox.Show("La fecha de publicacion debe ser posterior a la de hoy 30/12/2018");
+                return false;
+            }
+           
+            return true;
+        }
+
+        private bool validarFechas(DateTime publi, DateTime evento)
+        {
+            if (publi.CompareTo(evento) > 0 || publi.CompareTo(evento) == 0)
+            {
+                MessageBox.Show("La fecha de publicacion debe ser anterior a la del evento");
+                return false;
+            }
+            return true;
+        }
+
+
+        public void loadInitial()
+        {
+            chbNuevo.Checked = true;
+            chbIngresoUnico.Checked = true;
+            txtLotes.Visible = false;
+            lblLotes.Visible = false;
+            dtpEspectaculo.Visible = true;
+            lblEspectaculo.Visible = true;
+            lotes = false;
+        }
         private void frmGenerarPublicacion_Load(object sender, EventArgs e)
         {
+            loadData();
+            contarPublicaciones();
+            cargarPublicaciones();
+            loadInitial();
 
             dtpEspectaculo.Format = DateTimePickerFormat.Custom;
             dtpEspectaculo.CustomFormat = "dd/MM/yyyy hh:mm:ss";
-
+            dtpEspectaculo.Value = Configuration.getActualDate();
             dtpPublicacion.Format = DateTimePickerFormat.Custom;
             dtpPublicacion.CustomFormat = "dd/MM/yyyy hh:mm:ss";
-
+            dtpPublicacion.Value = Configuration.getActualDate();
             
         }
         public void loadData()
@@ -169,8 +261,9 @@ namespace PalcoNet.Generar_Publicacion
 
             List<ComboBoxItem> grados = Grados.ObtenerTodosLosGrados().Select(x => new ComboBoxItem { Text = x.Descripcion, Value = x.Id}).ToList();
             grados.ForEach(x => cmbGrado.Items.Add(x));
-
-           
+            if (UserInstance.getUserInstance().empresaId != null)
+                txtEmpresa.Text = UserInstance.getUserInstance().empresaId.ToString();
+          
 
         }
 
@@ -227,6 +320,15 @@ namespace PalcoNet.Generar_Publicacion
 
         private void dgvPublicaciones_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (chbNuevo.Checked)
+            {
+                MessageBox.Show("Si se quiere editar una fila, primero deseleccione el checkbox 'Nuevo' ");
+                return;
+            }
+            if (UserInstance.getUserInstance().empresaId == null)
+            {
+                MessageBox.Show("Solamente una empresa puede modificar una publicacion");
+            }
             int row = e.RowIndex;
             string estado = dgvPublicaciones[12,row].Value.ToString();
             if (estado.ToLower().Equals("finalizado"))
@@ -261,7 +363,7 @@ namespace PalcoNet.Generar_Publicacion
                 {
 
                 }
-                chbIngresoDeLotes.Enabled = false;
+                chbIngresoUnico.Enabled = false;
                 txtLotes.Enabled = false;
                 chbNuevo.Checked = false;
             }
@@ -278,21 +380,45 @@ namespace PalcoNet.Generar_Publicacion
             txtDescripcion.Enabled = enable;
             txtdireccion.Enabled = enable;
             txtPrecio.Enabled = enable;
-            txtEmpresa.Enabled = enable;
-            txtStock.Enabled = enable;
             cmbRubro.Enabled = enable;
             cmbGrado.Enabled = enable;
             cmbEstado.Enabled = enable;
             dtpPublicacion.Enabled = enable;
             dtpEspectaculo.Enabled = enable;
-            chbIngresoDeLotes.Enabled = enable;
+            chbIngresoUnico.Enabled = enable;
             txtLotes.Enabled = enable;
             chbNuevo.Checked = enable;
+        }
+        public void clearAll()
+        {
+            txtDescripcion.Text = "";
+            txtdireccion.Text = "";
+            txtPrecio.Text = "";
+            txtEmpresa.Text = "";
+            txtStock.Text = "";
+            loadData();
         }
 
         private void btnAgregarUbicaciones_Click(object sender, EventArgs e)
         {
-            List<Ubicacion> ubicaciones = new List<Ubicacion>();
+            
+            ubicaciones = UserInstance.getUserInstance().ubicacionesAGuardar;
+            frmAsignarUbicaciones frmAsignarUb = new frmAsignarUbicaciones();
+            frmAsignarUb.Show();
+            txtStock.Text = ubicaciones.Count.ToString();
+        }
+
+        private void chbNuevo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbNuevo.Checked)
+            {
+                changehabilityALl(true);
+                btnAgregarUbicaciones.Enabled = true;
+            }
+            else 
+            {
+                btnAgregarUbicaciones.Enabled = false;
+            }
         }
     }
 }

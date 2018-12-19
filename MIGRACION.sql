@@ -5,6 +5,13 @@ GO
 IF OBJECT_ID('VADIUM.CANJEAR_PREMIO') IS NOT NULL
 DROP PROCEDURE VADIUM.CANJEAR_PREMIO;
 GO
+IF OBJECT_ID('VADIUM.AgregarPublicacion') IS NOT NULL
+DROP PROCEDURE VADIUM.AgregarPublicacion;
+GO
+IF OBJECT_ID('VADIUM.AgregarUbicacion') IS NOT NULL
+DROP PROCEDURE VADIUM.AgregarUbicacion;
+GO
+
 IF OBJECT_ID('VADIUM.MODIFICAR_PUNTOS') IS NOT NULL
 DROP PROCEDURE VADIUM.MODIFICAR_PUNTOS;
 GO
@@ -97,6 +104,10 @@ GO
 IF OBJECT_ID('VADIUM.TR_NuevoCliente') IS NOT NULL
 DROP TRIGGER VADIUM.TR_NuevoCliente
 GO
+IF OBJECT_ID('VADIUM.TR_NuevaCompra') IS NOT NULL
+DROP TRIGGER VADIUM.TR_NuevaCompra;
+GO
+
 
 -----------------------DROP TABLES-------------------------------
 IF OBJECT_ID('VADIUM.ROL_POR_FUNCIONALIDAD') IS NOT NULL
@@ -290,7 +301,8 @@ CREATE TABLE [VADIUM].PUBLICACION(
 	rubro_id int,
 	grado_id int,
 	empresa_id int,
-	stock int
+	stock int,
+	precio numeric(18,0),
 )
 GO
 
@@ -357,10 +369,10 @@ GO
 
 
 CREATE TABLE [VADIUM].PUNTOS (
-	anioVencimiento INT NOT NULL,
+	puntos_id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+	fechaVencimiento DATETIME NOT NULL,
 	cliente_id INT NOT NULL,
 	cantidad NUMERIC(18,0) NOT NULL,
-	PRIMARY KEY(cliente_id, anioVencimiento)
 )
 GO
 CREATE TABLE [VADIUM].PREMIO (
@@ -411,7 +423,8 @@ GO
 --	END CATCH
 --END
 --GO
---CREATE TRIGGER [VADIUM].TR_NuevaUbicacion
+--CREATE TRIGGER [VADIUM].
+
 --ON VADIUM.UBICACION
 --AFTER INSERT, update
 --AS
@@ -457,7 +470,26 @@ GO
 --	END CATCH
 --END
 --GO
-   -----CLIENTE--------
+CREATE TRIGGER [VADIUM].TR_NuevaCompra
+ON VADIUM.COMPRA
+AFTER INSERT
+AS
+BEGIN
+	BEGIN TRY	
+		
+		INSERT INTO PUNTOS (fechaVencimiento, cantidad, cliente_id)
+		SELECT DATEADD(year,1,i.fecha_compra), i.monto, i.id_cliente_comprador
+		FROM inserted i
+		
+
+	END TRY
+	BEGIN CATCH
+	  SELECT 'ERROR', ERROR_MESSAGE()
+	END CATCH
+END
+GO
+
+   -----UBICACION--------
 CREATE TRIGGER [VADIUM].TR_NuevaUbicacion
 ON VADIUM.UBICACION
 AFTER INSERT, update
@@ -502,7 +534,7 @@ GO
 
 
 
-----------------------------FUNCIONALIDADES-------------------------
+----------------------------DATOS PRE CARGADOS-------------------------
 CREATE PROCEDURE [VADIUM].PR_DATOS_INSERT_DATOS_INICIALES
 AS
 BEGIN
@@ -611,12 +643,12 @@ BEGIN
 	HAVING m.Espectaculo_Estado IS NOT NULL
 
 	------PUBLICACION-----
-		INSERT INTO [VADIUM].PUBLICACION(codigoEspectaculo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id, grado_id, stock)
+		INSERT INTO [VADIUM].PUBLICACION(codigoEspectaculo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id, grado_id, stock, precio)
 		SELECT m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, 
 				(SELECT TOP 1 emp.empresa_id FROM EMPRESA emp WHERE emp.mail = m.Espec_Empresa_Mail), 
 				(SELECT TOP 1 ru.rubro_id FROM RUBRO ru order by NEWID()),
 				(SELECT TOP 1 es.codigo FROM ESTADO es WHERE es.descripcion = m.Espectaculo_Estado),
-				(SELECT TOP 1 gr.grado_id FROM VADIUM.GRADO gr order by newid()), 0
+				(SELECT TOP 1 gr.grado_id FROM VADIUM.GRADO gr order by newid()), 0, MIN(m.Ubicacion_Precio)
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, m.Espec_Empresa_Mail, m.Espectaculo_Rubro_Descripcion, Espectaculo_Estado
 	HAVING m.Espectaculo_Cod IS NOT NULL
@@ -635,13 +667,13 @@ BEGIN
 		SELECT m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, 
 				(SELECT TOP 1 tipou.codigoTipoUbicacion FROM TIPOUBICACION tipou WHERE tipou.codigoTipoUbicacion = m.Ubicacion_Tipo_Codigo),
 				(SELECT TOP 1 publi.codigoEspectaculo FROM PUBLICACION publi WHERE publi.codigoEspectaculo = m.Espectaculo_Cod),
-			    (SELECT TOP 1 com.compra_id FROM COMPRA com WHERE com.fecha_compra = m.Compra_Fecha AND 
-						com.id_cliente_comprador = (SELECT TOP 1 cli.cliente_id FROM VADIUM.CLIENTE cli WHERE cli.mail = m.Cli_Mail ) )
+			    (SELECT TOP 1 com.compra_id FROM COMPRA com WHERE   com.fecha_compra = MIN(m.Compra_Fecha) AND 
+						com.id_cliente_comprador = (SELECT TOP 1 cli.cliente_id FROM VADIUM.CLIENTE cli WHERE cli.mail = MIN(m.Cli_Mail) ) )
 				--TODO, como hacemos para migra el id de las compras? pensemos que siempre que hay una factura asociada a una ubicaicon
 				--en la tabla maestra es xq hubo una compra
-
+		
 		FROM gd_esquema.Maestra m 
-		GROUP BY m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, m.Ubicacion_Tipo_Codigo, m.Espectaculo_Cod, m.Compra_Fecha, m.Cli_Mail
+		GROUP BY m.Ubicacion_Fila, m.Ubicacion_Asiento, m.Ubicacion_Sin_numerar, m.Ubicacion_Precio, m.Ubicacion_Tipo_Codigo, m.Espectaculo_Cod
 		HAVING m.Ubicacion_Fila IS NOT NULL
 		
 	---------FACTURA--------
@@ -930,6 +962,15 @@ BEGIN
 		 (@descripcion = '' OR @descripcion is null OR  lower(pub.descripcion) LIKE '%' + lower(@descripcion) + '%') 
 END
 GO
+CREATE PROCEDURE [VADIUM].AgregarPublicacion @desc nvarchar(255), @fechEsp datetime, @fechaPub datetime, @estado_id int, @direccion nvarchar(255), @rubro_id int, @grado_id int, @empresa_id int, @stock int, @precio int
+AS
+BEGIN
+
+	INSERT INTO VADIUM.PUBLICACION (descripcion, fecha, fechaVencimiento, estado_id, direccion, rubro_id, grado_id, empresa_id, stock, precio )
+	VALUES(@desc,@fechEsp,@fechaPub,@estado_id, @direccion , @rubro_id , @grado_id , @empresa_id ,0, @precio )
+	 SELECT  SCOPE_IDENTITY();
+END
+GO
 
 ---------------COMISIONES--------------------
 CREATE PROCEDURE [VADIUM].obtenerCompras @cantidad int
@@ -987,6 +1028,15 @@ BEGIN
 	WHERE (@publicacion_id IS NULL OR ubi.codigoEspectaculo = @publicacion_id) AND 
 		  (@tipoUbicacionId IS NULL OR tu.codigoTipoUbicacion = @tipoUbicacionId) AND 
 			ubi.compra_id IS NULL
+END
+GO
+CREATE PROCEDURE [VADIUM].AgregarUbicacion @fila nvarchar(3), @asiento numeric(18,0), @sinNumerar bit, @precio numeric(18,0), @codigoTipoubicacion numeric(18,0), @codigoEspectaculo numeric(18,0), @compra_id int
+AS
+BEGIN
+
+	INSERT INTO VADIUM.UBICACION(fila, asiento, sinNumerar, precio, codigoTipoUbicacion, codigoEspectaculo, compra_id)
+	VALUES(@fila,@asiento,@sinNumerar, @precio , @codigoTipoubicacion , @codigoEspectaculo , @compra_id )
+	 SELECT  SCOPE_IDENTITY();
 END
 GO
 ------------------COMPRAR-------------------------------------------
@@ -1095,7 +1145,7 @@ GO
 		END
 	
 		DECLARE @cantidad_puntos_actuales NUMERIC(18,0), @costo_premio NUMERIC(18,0)
-		SELECT @cantidad_puntos_actuales = cantidad FROM VADIUM.PUNTOS WHERE @cliente_id = cliente_id AND YEAR(@fecha_actual) + 1 = anioVencimiento
+		SELECT @cantidad_puntos_actuales = cantidad FROM VADIUM.PUNTOS WHERE @cliente_id = cliente_id AND DATEADD(YEAR,1,@fecha_actual) = fechaVencimiento
 		SELECT @costo_premio = valor FROM VADIUM.PREMIO WHERE premio_id = @premio_id
 
 		IF @cantidad_puntos_actuales IS NULL OR @cantidad_puntos_actuales < @costo_premio
@@ -1127,18 +1177,18 @@ GO
 	CREATE PROCEDURE VADIUM.MODIFICAR_PUNTOS(@cliente_id INT, @cantidad NUMERIC(18,0), @fecha_actual DATETIME)
 	AS
 	BEGIN
-		IF EXISTS (SELECT 1 FROM VADIUM.PUNTOS WHERE cliente_id = @cliente_id AND YEAR(@fecha_actual) + 1 = anioVencimiento)
+		IF EXISTS (SELECT 1 FROM VADIUM.PUNTOS WHERE cliente_id = @cliente_id AND DATEADD(YEAR,1,@fecha_actual) = fechaVencimiento)
 		BEGIN 
 			UPDATE VADIUM.PUNTOS
 			SET cantidad = CASE WHEN cantidad + @cantidad > 0 THEN cantidad + @cantidad ELSE 0 END
-			WHERE cliente_id = @cliente_id AND YEAR(@fecha_actual) + 1 = anioVencimiento
+			WHERE cliente_id = @cliente_id AND DATEADD(YEAR,1,@fecha_actual) = fechaVencimiento
 		END
 		ELSE
 		BEGIN
 			INSERT INTO VADIUM.PUNTOS
-			(cliente_id, anioVencimiento, cantidad)
+			(cliente_id, fechaVencimiento, cantidad)
 			VALUES
-			(@cliente_id, YEAR(@fecha_actual) + 1,
+			(@cliente_id, DATEADD(YEAR,1,@fecha_actual),
 			CASE WHEN @cantidad > 0 THEN @cantidad ELSE 0 END)
 		END
 	END

@@ -158,6 +158,11 @@ namespace PalcoNet.Comprar
 
         private void btnAbrirPublicacion_Click(object sender, EventArgs e)
         {
+            if (UserInstance.userInstance.rol.nombre.ToLower().Contains("admin"))
+            {
+                MessageBox.Show("No puede generar una publicacion porque  este usuario no tiene una empresa asociado");
+                return;
+            }
             if (Publicaciones_Datagrid.SelectedRows.Count == 0)
                 return;
             else

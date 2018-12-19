@@ -15,6 +15,7 @@ namespace PalcoNet.Model
         public int? clienteId = null;
         public int? empresaId = null;
         public Rol rol;
+        public List<Ubicacion> ubicacionesAGuardar = new List<Ubicacion>();
         public static void createUserInstance()
         {
             userInstance = new UserInstance();
@@ -63,6 +64,10 @@ namespace PalcoNet.Model
             }
 
             SqlConnector.cerrarConexion();
+        }
+        public void clearUbicaiones()
+        {
+            ubicacionesAGuardar = new List<Ubicacion>();
         }
 
     }

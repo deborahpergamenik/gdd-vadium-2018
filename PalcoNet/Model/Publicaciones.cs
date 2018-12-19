@@ -64,11 +64,11 @@ namespace PalcoNet.Model
         //    return publicaciones;
         //}
          
-        public static DataTable obtenerPublicaiones(int start, int finish, List<int> rubros, string desc, DateTime? desde, DateTime? hasta, int? estado = null)
+        public static DataTable obtenerPublicaiones(int start, int finish, List<int> rubros, string desc, DateTime? desde, DateTime? hasta, int? estado = null, int? empresaId = null)
         {
             try{
                 string query = obtenerQuerySinFiltros();
-                string filtros = armarquery( rubros, desc, desde, hasta, estado);
+                string filtros = armarquery( rubros, desc, desde, hasta, estado,  empresaId );
 
                 if (!String.IsNullOrEmpty(filtros))
                 {
@@ -145,7 +145,7 @@ namespace PalcoNet.Model
                                        "  pub.fechaVencimiento <= '" + ((DateTime)Configuration.getActualDate()).ToString("yyyy-MM-dd HH:mm:ss") + "' AND " +
                                        "  pub.fecha >= '" + ((DateTime)Configuration.getActualDate()).ToString("yyyy-MM-dd HH:mm:ss") + "' ";
         }
-        private static string armarquery( List<int> rubros, string desc, DateTime? desde, DateTime? hasta, int? estado = null)
+        private static string armarquery( List<int> rubros, string desc, DateTime? desde, DateTime? hasta, int? estado = null, int? empresaId = null)
         {
             string filtro = "";
             filtro += filtrosRubro(rubros);
@@ -156,7 +156,12 @@ namespace PalcoNet.Model
                     filtro += " AND ";
                 filtro += " pub.estado_id =  " + estado + " ";
             }
-
+            if (empresaId != null)
+            {
+                if (filtro != "")
+                    filtro += " AND ";
+                filtro += " pub.empresa_id =  " + empresaId + " ";
+            }
             if (!String.IsNullOrEmpty(desc))
             {
                 if (filtro != "")
@@ -204,10 +209,10 @@ namespace PalcoNet.Model
             return filtro;
         }
 
-        internal static int getTotal(List<int> rubros, string descripcion, DateTime? start, DateTime? finish)
+        internal static int getTotal(List<int> rubros, string descripcion, DateTime? start, DateTime? finish, int? estado = null, int? empresaId = null)
         {
            
-            string filtros = armarquery( rubros, descripcion, start, finish);
+            string filtros = armarquery( rubros, descripcion, start, finish, estado, empresaId);
 
             int countTotalRows = getTotalRows(filtros);
             return countTotalRows;

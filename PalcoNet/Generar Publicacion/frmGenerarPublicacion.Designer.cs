@@ -49,7 +49,7 @@
             this.lblEspectaculo = new System.Windows.Forms.Label();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
-            this.chbIngresoDeLotes = new System.Windows.Forms.CheckBox();
+            this.chbIngresoUnico = new System.Windows.Forms.CheckBox();
             this.txtLotes = new System.Windows.Forms.TextBox();
             this.lblLotes = new System.Windows.Forms.Label();
             this.dtpPublicacion = new System.Windows.Forms.DateTimePicker();
@@ -68,6 +68,8 @@
             this.btnAnteriorPag = new System.Windows.Forms.Button();
             this.chbNuevo = new System.Windows.Forms.CheckBox();
             this.btnAgregarUbicaciones = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lblCodEspectaculo = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPublicaciones)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -174,6 +176,7 @@
             // 
             // txtEmpresa
             // 
+            this.txtEmpresa.Enabled = false;
             this.txtEmpresa.Location = new System.Drawing.Point(1883, 428);
             this.txtEmpresa.Name = "txtEmpresa";
             this.txtEmpresa.Size = new System.Drawing.Size(181, 26);
@@ -251,16 +254,16 @@
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
             // 
-            // chbIngresoDeLotes
+            // chbIngresoUnico
             // 
-            this.chbIngresoDeLotes.AutoSize = true;
-            this.chbIngresoDeLotes.Location = new System.Drawing.Point(1418, 484);
-            this.chbIngresoDeLotes.Name = "chbIngresoDeLotes";
-            this.chbIngresoDeLotes.Size = new System.Drawing.Size(134, 24);
-            this.chbIngresoDeLotes.TabIndex = 26;
-            this.chbIngresoDeLotes.Text = "Ingreso Unico";
-            this.chbIngresoDeLotes.UseVisualStyleBackColor = true;
-            this.chbIngresoDeLotes.CheckedChanged += new System.EventHandler(this.cmbIngresoDeLotes_CheckedChanged);
+            this.chbIngresoUnico.AutoSize = true;
+            this.chbIngresoUnico.Location = new System.Drawing.Point(1418, 484);
+            this.chbIngresoUnico.Name = "chbIngresoUnico";
+            this.chbIngresoUnico.Size = new System.Drawing.Size(134, 24);
+            this.chbIngresoUnico.TabIndex = 26;
+            this.chbIngresoUnico.Text = "Ingreso Unico";
+            this.chbIngresoUnico.UseVisualStyleBackColor = true;
+            this.chbIngresoUnico.CheckedChanged += new System.EventHandler(this.cmbIngresoDeLotes_CheckedChanged);
             // 
             // txtLotes
             // 
@@ -438,6 +441,7 @@
             this.chbNuevo.TabIndex = 37;
             this.chbNuevo.Text = "Nuevo";
             this.chbNuevo.UseVisualStyleBackColor = true;
+            this.chbNuevo.CheckedChanged += new System.EventHandler(this.chbNuevo_CheckedChanged);
             // 
             // btnAgregarUbicaciones
             // 
@@ -449,11 +453,30 @@
             this.btnAgregarUbicaciones.UseVisualStyleBackColor = true;
             this.btnAgregarUbicaciones.Click += new System.EventHandler(this.btnAgregarUbicaciones_Click);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(1414, 191);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(147, 20);
+            this.label11.TabIndex = 39;
+            this.label11.Text = "CodigoEspectaculo";
+            // 
+            // lblCodEspectaculo
+            // 
+            this.lblCodEspectaculo.AutoSize = true;
+            this.lblCodEspectaculo.Location = new System.Drawing.Point(1591, 191);
+            this.lblCodEspectaculo.Name = "lblCodEspectaculo";
+            this.lblCodEspectaculo.Size = new System.Drawing.Size(0, 20);
+            this.lblCodEspectaculo.TabIndex = 40;
+            // 
             // frmGenerarPublicacion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(2167, 955);
+            this.Controls.Add(this.lblCodEspectaculo);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.btnAgregarUbicaciones);
             this.Controls.Add(this.chbNuevo);
             this.Controls.Add(this.btnAtras);
@@ -466,7 +489,7 @@
             this.Controls.Add(this.dtpPublicacion);
             this.Controls.Add(this.txtLotes);
             this.Controls.Add(this.lblLotes);
-            this.Controls.Add(this.chbIngresoDeLotes);
+            this.Controls.Add(this.chbIngresoUnico);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.lblEspectaculo);
@@ -522,7 +545,7 @@
         private System.Windows.Forms.Label lblEspectaculo;
         private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.Button btnCancelar;
-        private System.Windows.Forms.CheckBox chbIngresoDeLotes;
+        private System.Windows.Forms.CheckBox chbIngresoUnico;
         private System.Windows.Forms.TextBox txtLotes;
         private System.Windows.Forms.Label lblLotes;
         private System.Windows.Forms.DateTimePicker dtpPublicacion;
@@ -541,5 +564,7 @@
         private System.Windows.Forms.Button btnAnteriorPag;
         private System.Windows.Forms.CheckBox chbNuevo;
         private System.Windows.Forms.Button btnAgregarUbicaciones;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lblCodEspectaculo;
     }
 }

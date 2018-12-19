@@ -158,6 +158,7 @@ namespace PalcoNet.Comprar
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@monto", montoTotal);
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@cantidad", cantidad);
             DataTable tabla = SqlConnector.obtenerDataTable("VADIUM.COMPRAR", "SP", parametrosGuardarTarjeta);
+            SqlConnector.cerrarConexion();
             int? val = null;
             var compraId = tabla.Rows[0].ItemArray[0];
             if (compraId != null)

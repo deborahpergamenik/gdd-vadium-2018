@@ -49,7 +49,7 @@
             // 
             // btnAtras
             // 
-            this.btnAtras.Location = new System.Drawing.Point(785, 294);
+            this.btnAtras.Location = new System.Drawing.Point(785, 299);
             this.btnAtras.Margin = new System.Windows.Forms.Padding(4);
             this.btnAtras.Name = "btnAtras";
             this.btnAtras.Size = new System.Drawing.Size(100, 37);
@@ -63,7 +63,7 @@
             this.txtPuntos.AutoSize = true;
             this.txtPuntos.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPuntos.ForeColor = System.Drawing.Color.Red;
-            this.txtPuntos.Location = new System.Drawing.Point(167, 23);
+            this.txtPuntos.Location = new System.Drawing.Point(200, 24);
             this.txtPuntos.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtPuntos.Name = "txtPuntos";
             this.txtPuntos.Size = new System.Drawing.Size(27, 20);
@@ -77,7 +77,7 @@
             this.dgvCanjearPuntos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCanjearPuntos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ExchangeButton});
-            this.dgvCanjearPuntos.Location = new System.Drawing.Point(18, 55);
+            this.dgvCanjearPuntos.Location = new System.Drawing.Point(18, 71);
             this.dgvCanjearPuntos.Margin = new System.Windows.Forms.Padding(4);
             this.dgvCanjearPuntos.Name = "dgvCanjearPuntos";
             this.dgvCanjearPuntos.ReadOnly = true;

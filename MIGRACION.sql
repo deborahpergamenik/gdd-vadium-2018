@@ -2,6 +2,12 @@ USE GD2C2018
 GO
 
 -------------------------------DROP PROCEDURES-------------------
+IF OBJECT_ID('VADIUM.CANJEAR_PREMIO') IS NOT NULL
+DROP PROCEDURE VADIUM.CANJEAR_PREMIO;
+GO
+IF OBJECT_ID('VADIUM.MODIFICAR_PUNTOS') IS NOT NULL
+DROP PROCEDURE VADIUM.MODIFICAR_PUNTOS;
+GO
 IF OBJECT_ID('VADIUM.QUITAR_FUNCIONALIDAD') IS NOT NULL
 DROP PROCEDURE VADIUM.QUITAR_FUNCIONALIDAD;
 GO
@@ -17,11 +23,9 @@ GO
 IF OBJECT_ID('VADIUM.FinalizarPublicaion') IS NOT NULL
 DROP PROCEDURE VADIUM.FinalizarPublicaion;
 GO
-
 IF OBJECT_ID('VADIUM.COMPRAR') IS NOT NULL
 DROP PROCEDURE VADIUM.COMPRAR;
 GO
-
 IF OBJECT_ID('VADIUM.AGREGAR_FUNCIONALIDAD') IS NOT NULL
 DROP PROCEDURE VADIUM.AGREGAR_FUNCIONALIDAD;
 GO
@@ -135,8 +139,16 @@ GO
 IF OBJECT_ID('VADIUM.GRADO') IS NOT NULL
 DROP TABLE [VADIUM].GRADO
 GO
-IF OBJECT_ID('VADIUM.PREMIO_POR_CLIENTE') IS NOT NULL
-DROP TABLE [VADIUM].PREMIO_POR_CLIENTE
+
+--IF OBJECT_ID('VADIUM.PREMIO_POR_CLIENTE') IS NOT NULL
+--DROP TABLE [VADIUM].PREMIO_POR_CLIENTE
+--GO
+
+IF OBJECT_ID('VADIUM.CANJES') IS NOT NULL
+DROP TABLE [VADIUM].CANJES
+GO
+IF OBJECT_ID('VADIUM.PUNTOS') IS NOT NULL
+DROP TABLE [VADIUM].PUNTOS
 GO
 IF OBJECT_ID('VADIUM.PREMIO') IS NOT NULL
 DROP TABLE [VADIUM].PREMIO
@@ -324,20 +336,51 @@ CREATE TABLE [VADIUM].ITEMFACTURA(
 	compra_id int
 )
 GO
-CREATE TABLE [VADIUM].PREMIO(
- premioId int PRIMARY KEY IDENTITY(1,1),
- descripcion varchar(255),
- puntos numeric(18,0),
- stock int, 
- fechaVencimiento datetime
-)
-CREATE TABLE [VADIUM].PREMIO_POR_CLIENTE(
- premioId int,
- cliente_id int,
- puntos int,
- fecha datetime,
+
+
+---------------------------------------------------------------------
+
+--CREATE TABLE [VADIUM].PREMIO(
+-- premioId int PRIMARY KEY IDENTITY(1,1),
+-- descripcion varchar(255),
+-- puntos numeric(18,0),
+-- stock int, 
+-- fechaVencimiento datetime
+--)
+--CREATE TABLE [VADIUM].PREMIO_POR_CLIENTE(
+-- premioId int,
+-- cliente_id int,
+-- puntos int,
+-- fecha datetime,
+--)
+--GO
+
+
+CREATE TABLE [VADIUM].PUNTOS (
+	anioVencimiento INT NOT NULL,
+	cliente_id INT NOT NULL,
+	cantidad NUMERIC(18,0) NOT NULL,
+	PRIMARY KEY(cliente_id, anioVencimiento)
 )
 GO
+CREATE TABLE [VADIUM].PREMIO (
+	premio_id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+	nombre VARCHAR(50) NOT NULL,
+	descripcion VARCHAR(255),
+	stock INT DEFAULT(0) NOT NULL,
+	valor NUMERIC(18,0) NOT NULL
+)
+GO
+CREATE TABLE [VADIUM].CANJES (
+	cliente_id INT NOT NULL FOREIGN KEY REFERENCES [VADIUM].CLIENTE(cliente_id),
+	premio_id INT NOT NULL FOREIGN KEY REFERENCES [VADIUM].PREMIO(premio_id),
+	fecha DATETIME NOT NULL,
+	nroRepeticion TINYINT NOT NULL
+	PRIMARY KEY(cliente_id, premio_id, nroRepeticion)
+)
+GO
+
+
 ----------------------------TRIGGERS-------------------------------
 
     -----------EMPRESA-------
@@ -463,8 +506,6 @@ GO
 CREATE PROCEDURE [VADIUM].PR_DATOS_INSERT_DATOS_INICIALES
 AS
 BEGIN
-
-
 	-- ROL 
 	INSERT INTO [VADIUM].ROL (rol_nombre,rol_habilitado) values('Administrador',1)
 	INSERT INTO [VADIUM].ROL (rol_nombre,rol_habilitado) values('Cliente',1)
@@ -514,8 +555,14 @@ BEGIN
 	INSERT INTO [VADIUM].ESTADO(descripcion) values('Finalizado')
 
 	-- PREMIOS
-	INSERT INTO [VADIUM].PREMIO (puntos, descripcion, stock, fechaVencimiento) VALUES (100, ' voucher entrada gratis', 10, convert(datetime,'18-06-19 10:34:09 PM',5))
-	INSERT INTO [VADIUM].PREMIO (puntos, descripcion,stock, fechaVencimiento) VALUES (50, ' voucher 50% descuento en entradas', 10 ,convert(datetime,'31-12-18 10:34:09 PM',5))
+	--INSERT INTO [VADIUM].PREMIO (puntos, descripcion, stock, fechaVencimiento) VALUES (100, ' voucher entrada gratis', 10, convert(datetime,'18-06-19 10:34:09 PM',5))
+	--INSERT INTO [VADIUM].PREMIO (puntos, descripcion,stock, fechaVencimiento) VALUES (50, ' voucher 50% descuento en entradas', 10 ,convert(datetime,'31-12-18 10:34:09 PM',5))
+
+	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('Descuento','25% descuento en entradas', 200, 350)
+	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('Descuento','50% descuento en entradas', 100, 600)
+	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('Descuento','75% descuento en entradas', 50, 750)
+	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('VIP','Entrada VIP', 150, 750)
+	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('VIP','Entrada VIP + pochoclos + gaseosa', 200, 750)
 END
 GO
 
@@ -644,8 +691,8 @@ ALTER TABLE [VADIUM].UBICACION ADD FOREIGN KEY (compra_id) REFERENCES [VADIUM].C
 ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (factura_nro) REFERENCES [VADIUM].FACTURA
 ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (ubicacion_id) REFERENCES [VADIUM].UBICACION
 
-ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (cliente_id) REFERENCES [VADIUM].CLIENTE
-ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (premioId) REFERENCES [VADIUM].PREMIO
+--ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (cliente_id) REFERENCES [VADIUM].CLIENTE
+--ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (premioId) REFERENCES [VADIUM].PREMIO
 
 ALTER TABLE [VADIUM].COMPRA ADD FOREIGN KEY (id_cliente_comprador) REFERENCES [VADIUM].CLIENTE
 
@@ -985,6 +1032,66 @@ GO
 	END
 	GO
 
+
+	------------------------------SP REALIZAR CANJE DE PUNTOS--------------------------
+
+	CREATE PROCEDURE VADIUM.CANJEAR_PREMIO(@cliente_id INT, @premio_id INT, @fecha_actual DATETIME)
+	AS
+	BEGIN
+		IF (SELECT stock FROM VADIUM.PREMIO WHERE @premio_id = premio_id) = 0
+		BEGIN
+			RAISERROR('No se puede canjear algo sin stock',16, 1)
+		END
+	
+		DECLARE @cantidad_puntos_actuales NUMERIC(18,0), @costo_premio NUMERIC(18,0)
+		SELECT @cantidad_puntos_actuales = cantidad FROM VADIUM.PUNTOS WHERE @cliente_id = cliente_id AND YEAR(@fecha_actual) + 1 = anioVencimiento
+		SELECT @costo_premio = valor FROM VADIUM.PREMIO WHERE premio_id = @premio_id
+
+		IF @cantidad_puntos_actuales IS NULL OR @cantidad_puntos_actuales < @costo_premio
+		BEGIN
+			RAISERROR('El premio cuesta más que los puntos disponibles', 16, 1)
+		END
+
+		BEGIN TRANSACTION
+			INSERT INTO VADIUM.CANJES
+			(premio_id, cliente_id, fecha, nroRepeticion)
+			VALUES
+			(@premio_id, @cliente_id, @fecha_actual, 
+				(SELECT COALESCE(MAX(nroRepeticion), 0) + 1
+				FROM VADIUM.CANJES
+				WHERE premio_id = @premio_id AND cliente_id = @cliente_id))
+
+			UPDATE VADIUM.PREMIO
+			SET stock = stock - 1
+			WHERE premio_id = @premio_id
+
+			SET @costo_premio *= -1			
+			EXEC VADIUM.MODIFICAR_PUNTOS @cliente_id, @costo_premio, @fecha_actual
+		COMMIT TRANSACTION
+	END
+	GO
+
+	------------------------------------SP MODIFICAR PUNTOS-----------------------------------
+
+	CREATE PROCEDURE VADIUM.MODIFICAR_PUNTOS(@cliente_id INT, @cantidad NUMERIC(18,0), @fecha_actual DATETIME)
+	AS
+	BEGIN
+		IF EXISTS (SELECT 1 FROM VADIUM.PUNTOS WHERE cliente_id = @cliente_id AND YEAR(@fecha_actual) + 1 = anioVencimiento)
+		BEGIN 
+			UPDATE VADIUM.PUNTOS
+			SET cantidad = CASE WHEN cantidad + @cantidad > 0 THEN cantidad + @cantidad ELSE 0 END
+			WHERE cliente_id = @cliente_id AND YEAR(@fecha_actual) + 1 = anioVencimiento
+		END
+		ELSE
+		BEGIN
+			INSERT INTO VADIUM.PUNTOS
+			(cliente_id, anioVencimiento, cantidad)
+			VALUES
+			(@cliente_id, YEAR(@fecha_actual) + 1,
+			CASE WHEN @cantidad > 0 THEN @cantidad ELSE 0 END)
+		END
+	END
+	GO
 
 --------------Ejecutar datos iniciales y migracion------------------
 EXECUTE VADIUM.PR_DATOS_INSERT_DATOS_INICIALES;

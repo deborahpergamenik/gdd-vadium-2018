@@ -18,7 +18,11 @@ namespace PalcoNet.Model
         public int Cliente_id { get; set; }
         public string MesVencimiento { get; set; }
         public string AnioVencimiento { get; set; }
+        
+        public Tarjeta()
+        {
 
+        }
 
         public Tarjeta(int? _id, string _nroTarjeta, string _banco, string _codigoSeguridad, string _tipo, int _cliente_id, string _mesVencimiento, string _anioVencimiento)
         {

@@ -501,9 +501,9 @@ namespace PalcoNet.Abm_Cliente
             frmAgregarTarjetaDeCredito tarjeta = new frmAgregarTarjetaDeCredito(this);
             this.Hide();
             tarjeta.ShowDialog();
-            if (tarjeta != null)
+            if (tarjetaAsociada != null)
             {
-                mskNumeroTarjeta.Text = tarjeta.numeroTarjeta;
+                mskNumeroTarjeta.Text = tarjetaAsociada.NumeroTarjeta;
             }
         }
     }

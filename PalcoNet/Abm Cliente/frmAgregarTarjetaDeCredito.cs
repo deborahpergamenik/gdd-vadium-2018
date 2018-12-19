@@ -22,6 +22,9 @@ namespace PalcoNet.Abm_Cliente
         public string mesVencimiento { get; set; }
         public string anioVencimiento { get; set; }
         public frmAbmCliente frmAbmCliente { get; set; }
+        public frmModificarCliente frmModificarCliente { get; set; }
+        public string tipoRegistroDeTarjeta { get; set; }
+
 
         public frmAgregarTarjetaDeCredito(frmAbmCliente _frmAbmCliente)
         {
@@ -29,6 +32,31 @@ namespace PalcoNet.Abm_Cliente
             InitializeComponent();
             setearComboBoxes();
         }
+
+        public frmAgregarTarjetaDeCredito(frmModificarCliente _frmModificarCliente, Tarjeta tarjeta, string registroDeTarjeta)
+        {
+            if (registroDeTarjeta == "Nuevo")
+            {
+                this.frmModificarCliente = _frmModificarCliente;
+                tipoRegistroDeTarjeta = registroDeTarjeta;
+                InitializeComponent();
+                setearComboBoxes();
+            }
+            else if (registroDeTarjeta == "Modificar")
+            {
+                this.frmModificarCliente = _frmModificarCliente;
+                tipoRegistroDeTarjeta = registroDeTarjeta;
+                InitializeComponent();
+                setearComboBoxes();
+                mskNumeroTarjeta.Text = tarjeta.NumeroTarjeta;
+                txtBanco.Text = tarjeta.Banco;
+                mskCodSeguridad.Text = tarjeta.CodigoSeguridad;
+                cmbTipo.SelectedItem = tarjeta.Tipo;
+                cmbMes.SelectedItem = tarjeta.MesVencimiento;
+                cmbAno.SelectedItem = tarjeta.AnioVencimiento;
+            }
+        }
+
         public frmAgregarTarjetaDeCredito()
         {
             InitializeComponent();
@@ -71,7 +99,16 @@ namespace PalcoNet.Abm_Cliente
             if (chequearCampos())
             {
                 Tarjeta tarjeta = new Tarjeta(null, this.numeroTarjeta, this.banco, this.codigoSeguridad, this.tipo, 0, this.mesVencimiento, this.anioVencimiento);
-                frmAbmCliente.tarjetaAsociada = tarjeta;
+
+                if (frmAbmCliente != null)
+                {
+                    frmAbmCliente.tarjetaAsociada = tarjeta;
+                }
+                else
+                {
+                    frmModificarCliente.tarjetaAsociada = tarjeta;
+                }
+
                 MessageBox.Show("Asociación de tarjeta realizada con éxito.", "Asociación tarjeta exitoso");
                 cmbTipo.SelectedIndex = -1;
                 mskNumeroTarjeta.Text = "";
@@ -79,7 +116,16 @@ namespace PalcoNet.Abm_Cliente
                 cmbMes.SelectedIndex = -1;
                 cmbAno.SelectedIndex = -1;
                 this.Hide();
-                frmAbmCliente.Show();
+
+                if (frmAbmCliente != null)
+                {
+                    frmAbmCliente.Show();
+                }
+                else
+                {
+                    frmModificarCliente.Show();
+                }
+          
             }
             else
             {
@@ -130,7 +176,14 @@ namespace PalcoNet.Abm_Cliente
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.Hide();
-            frmAbmCliente.Show();
+            if (frmAbmCliente != null)
+            {
+                frmAbmCliente.Show();
+            }
+            else
+            {
+                frmModificarCliente.Show();
+            }          
         }
 
         private void frmAgregarTarjetaDeCredito_Load(object sender, EventArgs e)

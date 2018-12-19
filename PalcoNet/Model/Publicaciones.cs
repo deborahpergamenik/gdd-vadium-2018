@@ -212,5 +212,14 @@ namespace PalcoNet.Model
             int countTotalRows = getTotalRows(filtros);
             return countTotalRows;
         }
+
+        internal static void PublicacionFinalizada(int codPublicacionActual)
+        {
+            int estadoFinalizado = Estados.obtenerEstados().Where(x => x.descripcion.ToLower().Equals("finalizado")).FirstOrDefault().codigo;
+            string query = "UPDATE VADIUM.PUBLICACION SET stock = 0, estado_id =" + estadoFinalizado + "WHERE codigoEspectaculo = " + codPublicacionActual;
+
+            SqlConnector.ejecutarReader(query, SqlConnector.iniciarConexion());
+            SqlConnector.cerrarConexion();
+        }
     }
 }

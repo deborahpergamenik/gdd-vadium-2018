@@ -117,7 +117,7 @@ namespace PalcoNet.Comprar
         private void btnSiguientePag_Click(object sender, EventArgs e)
         {
             paginaActual = paginaActual + 1;
-            
+            contarPublicaciones();
             cargarPublicaciones();
 
         }

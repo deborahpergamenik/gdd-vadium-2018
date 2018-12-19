@@ -16,12 +16,11 @@ namespace PalcoNet.Comprar
         DataTable tiposUbicacion = new DataTable();
         List<int> ubicacionesSeleccionadas = new List<int>();
         int codPublicacionActual = 0;
-
+        int stockActual;
         public frmDetallePublicacion(int codPublicacion)
         {
             InitializeComponent();
             this.codPublicacionActual = codPublicacion;
-            
         }
 
         private void frmDetallePublicacion_Load(object sender, EventArgs e)
@@ -150,6 +149,7 @@ namespace PalcoNet.Comprar
         {
             double montoTotal = Convert.ToDouble(lblPrecio.Text);
             int cantidad = ubicacionesSeleccionadas.Count;
+            bool allBuy = dgvUbicaciones.Rows.Count == cantidad;
             
             List<SqlParameter> parametrosGuardarTarjeta = new List<SqlParameter>();
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codCliente", UserInstance.getUserInstance().clienteId); //traer codigo de cliente
@@ -166,6 +166,10 @@ namespace PalcoNet.Comprar
                 Ubicaciones.comprarUbicaciones(ubicacionesSeleccionadas, (int)val);
                 MessageBox.Show("Se han comprado " + cantidad + " entradas");
                 this.Hide();
+            }
+            if (allBuy)
+            {
+                Publicaciones.PublicacionFinalizada(codPublicacionActual);
             }
             
         }

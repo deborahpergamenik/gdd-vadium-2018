@@ -158,6 +158,12 @@
     <Compile Include="Editar Publicacion\frmEditarPublicacion.Designer.cs">
       <DependentUpon>frmEditarPublicacion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generar Publicacion\frmAsignarUbicaciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Generar Publicacion\frmAsignarUbicaciones.Designer.cs">
+      <DependentUpon>frmAsignarUbicaciones.cs</DependentUpon>
+    </Compile>
     <Compile Include="Generar Publicacion\frmGenerarPublicacion.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -307,6 +313,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Comprar\frmDetallePublicacion.resx">
       <DependentUpon>frmDetallePublicacion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Generar Publicacion\frmAsignarUbicaciones.resx">
+      <DependentUpon>frmAsignarUbicaciones.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Generar Publicacion\frmGenerarPublicacion.resx">
       <DependentUpon>frmGenerarPublicacion.cs</DependentUpon>

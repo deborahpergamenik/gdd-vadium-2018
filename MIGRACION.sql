@@ -14,6 +14,10 @@ GO
 IF OBJECT_ID('VADIUM.AGREGAR_ROL_USUARIO') IS NOT NULL
 DROP PROCEDURE VADIUM.AGREGAR_ROL_USUARIO;
 GO
+IF OBJECT_ID('VADIUM.FinalizarPublicaion') IS NOT NULL
+DROP PROCEDURE VADIUM.FinalizarPublicaion;
+GO
+
 IF OBJECT_ID('VADIUM.COMPRAR') IS NOT NULL
 DROP PROCEDURE VADIUM.COMPRAR;
 GO
@@ -364,6 +368,52 @@ GO
 --	END CATCH
 --END
 --GO
+--CREATE TRIGGER [VADIUM].TR_NuevaUbicacion
+--ON VADIUM.UBICACION
+--AFTER INSERT, update
+--AS
+--BEGIN
+--	BEGIN TRY	
+		
+		
+		
+--		DECLARE  @codEspec numeric(18,0)
+
+--		print'cursor'
+
+--		DECLARE espectaculo CURSOR FOR
+--		SELECT i.codigoEspectaculo
+--		FROM inserted i
+--		group by i.codigoEspectaculo
+		
+		 
+--		OPEN espectaculo
+--		FETCH NEXT FROM espectaculo INTO  @codEspec
+
+--		WHILE @@FETCH_STATUS = 0
+--		BEGIN 
+
+--				DECLARE @stock int
+--				SET @stock = 0
+--				print @stock 
+--				SELECT @stock = COUNT(*) FROM VADIUM.UBICACION u WHERE u.codigoEspectaculo = @codEspec AND u.compra_id IS NULL
+				
+--				print @stock 
+--				print @codEspec
+--				UPDATE PUBLICACION SET stock = @stock WHERE codigoEspectaculo =@codEspec
+
+
+--				FETCH NEXT FROM espectaculo INTO @codEspec
+--		END
+--		CLOSE espectaculo  
+--		DEALLOCATE espectaculo 
+
+--	END TRY
+--	BEGIN CATCH
+--	  SELECT 'ERROR', ERROR_MESSAGE()
+--	END CATCH
+--END
+--GO
    -----CLIENTE--------
 CREATE TRIGGER [VADIUM].TR_NuevaUbicacion
 ON VADIUM.UBICACION
@@ -373,34 +423,29 @@ BEGIN
 	BEGIN TRY	
 		
 		
-		
+		DECLARE @stock int
 		DECLARE  @codEspec numeric(18,0)
 
 		print'cursor'
 
 		DECLARE espectaculo CURSOR FOR
-		SELECT i.codigoEspectaculo
-		FROM inserted i
-		group by i.codigoEspectaculo
+		SELECT COUNT(*), ubi.codigoEspectaculo
+		FROM VADIUM.UBICACION ubi
+		WHERE ubi.compra_id IS NULL AND EXISTS (SELECT i.codigoEspectaculo FROM inserted i WHERE i.codigoEspectaculo = ubi.codigoEspectaculo) 
+		group by ubi.codigoEspectaculo
 		
 		 
 		OPEN espectaculo
-		FETCH NEXT FROM espectaculo INTO  @codEspec
+		FETCH NEXT FROM espectaculo INTO @stock,  @codEspec
 
 		WHILE @@FETCH_STATUS = 0
 		BEGIN 
 
-				DECLARE @stock int
-				SET @stock = 0
-				print @stock 
-				SELECT @stock = COUNT(*) FROM VADIUM.UBICACION u WHERE u.codigoEspectaculo = @codEspec AND u.compra_id IS NULL
 				
-				print @stock 
-				print @codEspec
-				UPDATE PUBLICACION SET stock = @stock WHERE codigoEspectaculo =@codEspec
+				UPDATE VADIUM.PUBLICACION SET stock = @stock WHERE codigoEspectaculo = @codEspec
 
 
-				FETCH NEXT FROM espectaculo INTO @codEspec
+				FETCH NEXT FROM espectaculo INTO @stock, @codEspec
 		END
 		CLOSE espectaculo  
 		DEALLOCATE espectaculo 
@@ -464,6 +509,9 @@ BEGIN
 	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(5,'BAJO')
 	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(10,'MEDIO')
 	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(15,'ALTO')
+	-- ESTADO 
+	INSERT INTO [VADIUM].ESTADO(descripcion) values('Borrador')
+	INSERT INTO [VADIUM].ESTADO(descripcion) values('Finalizado')
 
 	-- PREMIOS
 	INSERT INTO [VADIUM].PREMIO (puntos, descripcion, stock, fechaVencimiento) VALUES (100, ' voucher entrada gratis', 10, convert(datetime,'18-06-19 10:34:09 PM',5))
@@ -830,6 +878,7 @@ BEGIN
 		 (@descripcion = '' OR @descripcion is null OR  lower(pub.descripcion) LIKE '%' + lower(@descripcion) + '%') 
 END
 GO
+
 ---------------UBICACIONES------------------------------------------
 CREATE PROCEDURE [VADIUM].UBICACIONES_NO_VENDIDAS @publicacion_id int = NULL, @tipoUbicacionId int = NULL
 AS

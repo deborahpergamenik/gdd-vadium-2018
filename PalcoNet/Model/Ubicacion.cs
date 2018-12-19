@@ -13,8 +13,9 @@ namespace PalcoNet.Model
         public string Fila { get; set; }
         public int Asiento { get; set; }
         public bool SinNumerar { get; set; }
-        public int Precio { get; set; }
+        public double Precio { get; set; }
         public TipoUbicacion TipoUbicacion { get; set; }
+        public int idTipoUbicacion { get; set; }
         public string Tipo
         {
             get
@@ -24,7 +25,7 @@ namespace PalcoNet.Model
 
         }
         public int CodigoPublicacion { get; set; }
-        public int EmpresaId { get; set; }
+        
     }
 
     public class TipoUbicacion

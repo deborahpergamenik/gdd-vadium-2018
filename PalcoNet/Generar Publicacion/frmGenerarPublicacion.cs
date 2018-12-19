@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace PalcoNet.Generar_Publicacion
         int cantPublicacionesTotal;
         int ultimaPagina;
         string descripcion;
+        int? estado = null;
         public frmGenerarPublicacion()
         {
             InitializeComponent();
@@ -72,7 +74,7 @@ namespace PalcoNet.Generar_Publicacion
                 btnAnteriorPag.Enabled = true;
                 btnPrimerPag.Enabled = true;
             }
-            int estado =Convert.ToInt32( ((ComboBoxItem)cmbEstado.SelectedItem).Value);
+           
             dgvPublicaciones.DataSource = Publicaciones.obtenerPublicaiones(desde, hasta, null, descripcion, null, null, estado);
      
         }
@@ -92,7 +94,7 @@ namespace PalcoNet.Generar_Publicacion
 
         private void cmbIngresoDeLotes_CheckedChanged(object sender, EventArgs e)
         {
-            if (cmbIngresoDeLotes.Checked)
+            if (chbIngresoDeLotes.Checked)
             {
                 txtLotes.Visible = false;
                 lblLotes.Visible = false;
@@ -125,7 +127,7 @@ namespace PalcoNet.Generar_Publicacion
 
 
             };
-            if (cmbIngresoDeLotes.Checked)
+            if (chbIngresoDeLotes.Checked)
             {
                 publi.FechaEspectaculo = dtpEspectaculo.Value;
                 publi.save();
@@ -174,7 +176,123 @@ namespace PalcoNet.Generar_Publicacion
 
         private void btnReset_Click(object sender, EventArgs e)
         {
+            txtDescripcion.Text = "";
+            cmbEstados.SelectedValue = null;
+        }
+
+        private void btnUltimaPag_Click(object sender, EventArgs e)
+        {
+            paginaActual = ultimaPagina;
+            contarPublicaciones();
+            cargarPublicaciones();
+        }
+
+        private void btnSiguientePag_Click(object sender, EventArgs e)
+        {
+            paginaActual = paginaActual + 1;
+            contarPublicaciones();
+            cargarPublicaciones();
+        }
+
+        private void btnAnteriorPag_Click(object sender, EventArgs e)
+        {
+            paginaActual = paginaActual - 1;
+            contarPublicaciones();
+            cargarPublicaciones();
+        }
+
+        private void btnPrimerPag_Click(object sender, EventArgs e)
+        {
+            paginaActual = 0;
+            contarPublicaciones();
+            cargarPublicaciones();
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            paginaActual = 0;
+
             
+            descripcion = txtDescripcion.Text;
+            if(cmbEstado.SelectedItem != null)
+                estado = Convert.ToInt32(((ComboBoxItem)cmbEstado.SelectedItem).Value);
+            contarPublicaciones();
+            cargarPublicaciones();
+        }
+
+        private void btnAtras_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
+
+        private void dgvPublicaciones_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int row = e.RowIndex;
+            string estado = dgvPublicaciones[12,row].Value.ToString();
+            if (estado.ToLower().Equals("finalizado"))
+            {
+                MessageBox.Show("La publicacion no puede ser modificada en estado finalizado");
+            }
+            else
+            {
+                txtDescripcion.Text = dgvPublicaciones[1, row].Value.ToString();
+                txtdireccion.Text = dgvPublicaciones[6, row].Value.ToString();
+                txtPrecio.Text = "0";//min publicacion 
+                txtEmpresa.Text = dgvPublicaciones[10, row].Value.ToString();
+                txtStock.Text = dgvPublicaciones[13, row].Value.ToString();
+                cmbRubro.SelectedValue = dgvPublicaciones[4, row].Value;
+                cmbGrado.SelectedValue = dgvPublicaciones[9, row].Value;
+                cmbEstado.SelectedValue = dgvPublicaciones[11, row].Value;
+                
+
+                string date = dgvPublicaciones[3, row].Value.ToString();
+                dtpPublicacion.Value = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                date = dgvPublicaciones[2, row].Value.ToString();
+                dtpEspectaculo.Value = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                if (estado.ToLower().Equals("publicada"))
+                {
+                    changehabilityALl(false);
+                    cmbEstado.Enabled = true;
+                    cmbEstado.Items.Clear();
+                    List<ComboBoxItem> estados = Estados.obtenerEstados().Where(x=>!x.descripcion.ToLower().Contains("borrador")).Select(x => new ComboBoxItem { Text = x.descripcion, Value = x.codigo }).ToList();
+                    estados.ForEach(x => cmbEstado.Items.Add(x));
+                }
+                else 
+                {
+
+                }
+                chbIngresoDeLotes.Enabled = false;
+                txtLotes.Enabled = false;
+                chbNuevo.Checked = false;
+            }
+            //if(estado.ToLower().Equals("borrador"))
+            //{
+            //}
+            //else
+            //{
+            //    MessageBox.Show("La publicacion no esta en estado borrador, por lo tanto no es editable")
+            //}
+        }
+        public void changehabilityALl(bool enable)
+        {
+            txtDescripcion.Enabled = enable;
+            txtdireccion.Enabled = enable;
+            txtPrecio.Enabled = enable;
+            txtEmpresa.Enabled = enable;
+            txtStock.Enabled = enable;
+            cmbRubro.Enabled = enable;
+            cmbGrado.Enabled = enable;
+            cmbEstado.Enabled = enable;
+            dtpPublicacion.Enabled = enable;
+            dtpEspectaculo.Enabled = enable;
+            chbIngresoDeLotes.Enabled = enable;
+            txtLotes.Enabled = enable;
+            chbNuevo.Checked = enable;
+        }
+
+        private void btnAgregarUbicaciones_Click(object sender, EventArgs e)
+        {
+            List<Ubicacion> ubicaciones = new List<Ubicacion>();
         }
     }
 }

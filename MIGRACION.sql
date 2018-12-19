@@ -701,6 +701,11 @@ GO
 
 
 --------------------------------Estadisticas------------------------------
+CREATE TYPE [VADIUM].[ids] AS TABLE(
+	[id] [int] NULL
+)
+GO
+
 CREATE PROCEDURE [VADIUM].MayorCantLocalidadesNoVendidos @year int, @month int, @grado int
 
 AS
@@ -923,6 +928,52 @@ BEGIN
 		 (@hasta IS NULL OR @hasta < pub.fecha) AND
 		 (@rubro = '' OR @rubro is null OR  lower(rub.descripcion) LIKE '%' + lower(@rubro) + '%') AND
 		 (@descripcion = '' OR @descripcion is null OR  lower(pub.descripcion) LIKE '%' + lower(@descripcion) + '%') 
+END
+GO
+
+---------------COMISIONES--------------------
+CREATE PROCEDURE [VADIUM].obtenerCompras @cantidad int
+AS 
+BEGIN
+	select top (@cantidad) compra.compra_id , compra.fecha_compra
+							from VADIUM.COMPRA compra
+							join VADIUM.UBICACION ubi on ubi.compra_id = compra.compra_id
+							where not exists (select 1 from VADIUM.ITEMFACTURA item where ubi.ubicacion_id = item.ubicacion_id)										
+							group by compra.compra_id, compra.fecha_compra
+							order by compra.fecha_compra asc
+END
+GO
+
+CREATE PROCEDURE [VADIUM].crearFactura @items VADIUM.ids readonly
+AS BEGIN
+BEGIN TRY
+	BEGIN TRANSACTION
+		insert into VADIUM.FACTURA(empresa_id, fecha, total) 
+			select empresa_id, getdate(), sum(grado.comision /100 * ubi.precio)
+				from VADIUM.UBICACION ubi 
+					join VADIUM.PUBLICACION publi on ubi.codigoEspectaculo = publi.codigoEspectaculo
+						join VADIUM.GRADO grado on publi.grado_id = grado.grado_id  
+				where ubi.compra_id in (select * from @items)
+				group by empresa_id
+
+		insert into VADIUM.ITEMFACTURA 
+			select 
+				(select top 1  FACTURA.factura_nro from VADIUM.FACTURA where FACTURA.empresa_id = publi.empresa_id order by fecha desc),
+				ubi.ubicacion_id,
+				(grado.comision / 100 * ubi.precio),
+				1.00,
+				concat('A: ',ubi.asiento,'F: ', ubi.fila,'T: ', ubi.codigoTipoUbicacion,'E: ',ubi.codigoEspectaculo),
+				ubi.compra_id
+									from VADIUM.UBICACION ubi
+									join VADIUM.PUBLICACION publi on ubi.codigoEspectaculo = publi.codigoEspectaculo
+									join VADIUM.GRADO grado on publi.grado_id = grado.grado_id
+									where ubi.compra_id in (select * from @items)
+	COMMIT
+END TRY
+BEGIN CATCH
+	SELECT 'ERROR', ERROR_MESSAGE()
+	ROLLBACK
+END CATCH
 END
 GO
 

@@ -107,6 +107,9 @@ GO
 IF OBJECT_ID('VADIUM.TR_NuevaCompra') IS NOT NULL
 DROP TRIGGER VADIUM.TR_NuevaCompra;
 GO
+IF OBJECT_ID('VADIUM.TR_CanjeDePuntos') IS NOT NULL
+DROP TRIGGER VADIUM.TR_CanjeDePuntos;
+GO
 
 
 -----------------------DROP TABLES-------------------------------
@@ -488,7 +491,63 @@ BEGIN
 	END CATCH
 END
 GO
+------PUNTOS---------------
+CREATE TRIGGER [VADIUM].TR_CanjeDePuntos
+ON VADIUM.CANJES
+AFTER INSERT
+AS
+BEGIN
+	BEGIN TRY
+		DECLARE @puntos int
+		DECLARE  @cliente int
+		DECLARE @fecha datetime
+		
 
+		DECLARE canjes CURSOR FOR
+		SELECT p.valor, i.cliente_id, fecha
+		FROM inserted i JOIN VADIUM.PREMIO p ON (i.premio_id = p.premio_id)
+
+		OPEN canjes
+		FETCH NEXT FROM canjes INTO @puntos,  @cliente, @fecha
+
+		WHILE @@FETCH_STATUS = 0
+		BEGIN 
+				DECLARE @PuntosPendiente int
+				DECLARE @actualId int
+				DECLARE @puntosParciales int
+				SET @PuntosPendiente = @puntos
+				WHILE(@PuntosPendiente > 0 )
+				BEGIN
+					SELECT @actualId = puntos_id, @puntosParciales = cantidad FROM PUNTOS 
+						WHERE cantidad > 0 AND fechaVencimiento > @fecha ORDER BY fechaVencimiento ASC
+
+					IF(@puntosParciales > @PuntosPendiente)
+						BEGIN
+							SET @puntosParciales = @PuntosPendiente
+							SET @PuntosPendiente = 0						
+						END
+					ELSE
+						BEGIN
+							SET @PuntosPendiente = @PuntosPendiente - @puntosParciales
+							SET @puntosParciales = 0	
+						END
+
+					UPDATE PUNTOS SET cantidad = @puntosParciales WHERE puntos_id = @actualId
+				END
+
+
+				FETCH NEXT FROM canjes INTO @puntos,  @cliente, @fecha
+
+		END
+		CLOSE canjes  
+		DEALLOCATE canjes 
+
+	END TRY
+	BEGIN CATCH
+	  SELECT 'ERROR', ERROR_MESSAGE()
+	END CATCH
+END
+GO
    -----UBICACION--------
 CREATE TRIGGER [VADIUM].TR_NuevaUbicacion
 ON VADIUM.UBICACION
@@ -496,8 +555,6 @@ AFTER INSERT, update
 AS
 BEGIN
 	BEGIN TRY	
-		
-		
 		DECLARE @stock int
 		DECLARE  @codEspec numeric(18,0)
 
@@ -531,7 +588,7 @@ BEGIN
 	END CATCH
 END
 GO
-
+-------------------------FUNCTION-----------------------------------
 
 
 ----------------------------DATOS PRE CARGADOS-------------------------

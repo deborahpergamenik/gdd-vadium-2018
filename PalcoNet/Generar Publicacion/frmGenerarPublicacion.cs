@@ -139,7 +139,8 @@ namespace PalcoNet.Generar_Publicacion
                     stock = Convert.ToInt32(txtStock.Text),
                     estado_id = Convert.ToInt32(cmbEstado.SelectedValue),
                     rubro_id = Convert.ToInt32(cmbRubro.SelectedValue),
-                    grado_id = Convert.ToInt32(cmbGrado.SelectedValue)
+                    grado_id = Convert.ToInt32(cmbGrado.SelectedValue),
+                    ubicaiones = this.ubicaciones
 
                 };
                 if (chbIngresoUnico.Checked)
@@ -153,7 +154,7 @@ namespace PalcoNet.Generar_Publicacion
                             MessageBox.Show("Hubo un error al guardar la publicacion, revise sus datos");
                             return;
                         }
-                        ubicaciones.ForEach(x => x.save((int)id));
+                       
                     }
                 }
                 else

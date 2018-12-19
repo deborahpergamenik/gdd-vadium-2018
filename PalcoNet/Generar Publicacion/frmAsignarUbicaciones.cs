@@ -87,14 +87,16 @@ namespace PalcoNet.Generar_Publicacion
                     {
                         //RANGO DE FILAS
                         string abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                        string selectRowStartItem = cmbFilasInicial.SelectedText.ToString();                         
+                        string selectRowStartItem = cmbFilasInicial.SelectedItem.ToString();                         
                         int startChar = abc.IndexOf(selectRowStartItem);
-                        string selectRowFinishItem = cmbFilasFinal.SelectedText.ToString();                         
+                        string selectRowFinishItem = cmbFilasFinal.SelectedItem.ToString();                         
                         int finishChar = abc.IndexOf(selectRowFinishItem);
                         char[] alpha = abc.ToCharArray();
                         //RANGO DE ASIENTOS
-                        int startAs = Convert.ToInt32(cmbAsientosInicial.SelectedText);
-                        int finsihAs = Convert.ToInt32(cmbAsientosFinal.SelectedText);
+                        string stAs = cmbAsientosInicial.SelectedItem.ToString();
+                        string fsAs = cmbAsientosFinal.SelectedItem.ToString();
+                        int startAs = Convert.ToInt32(stAs);
+                        int finsihAs = Convert.ToInt32(fsAs);
                         int cantidad = 0;
                         for (int i = startChar -1; i< finishChar; i++)
                         {

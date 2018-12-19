@@ -47,7 +47,8 @@ namespace PalcoNet.Model
                 DataTable tabla = SqlConnector.obtenerDataTable("VADIUM.AgregarPublicacion", "SP", parametrosGuardarTarjeta);
                 int? val = null;
                  val = Convert.ToInt32(tabla.Rows[0].ItemArray[0]);
-
+                if(val!= null)
+                    ubicaciones.ForEach(x => x.save((int)id));
                 return val;
             }
             catch (Exception e)

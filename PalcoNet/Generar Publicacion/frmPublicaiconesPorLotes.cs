@@ -37,10 +37,15 @@ namespace PalcoNet.Generar_Publicacion
 
         private void frmPublicaiconesPorLotes_Load(object sender, EventArgs e)
         {
+
             dtpEspectaculo.Format = DateTimePickerFormat.Custom;
             dtpEspectaculo.CustomFormat = "dd/MM/yyyy hh:mm:ss";
-            if(this.espectaculoAnterior != null)
+            if (this.espectaculoAnterior != null)
+
+            {
+                dtpEspectaculo.Value = (DateTime)this.espectaculoAnterior;
                 MessageBox.Show("Ingrese una fecha posterior a " + espectaculoAnterior.ToString());
+            }
         }
     }
 }

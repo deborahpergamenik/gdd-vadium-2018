@@ -13,7 +13,7 @@ namespace PalcoNet.Generar_Publicacion
 {
     public partial class frmAsignarUbicaciones : Form
     {
-        List<Ubicacion> ubicacionesCreadas = new List<Ubicacion>();
+       public  List<Ubicacion> ubicacionesCreadas = new List<Ubicacion>();
         public frmAsignarUbicaciones()
         {
             InitializeComponent();
@@ -76,7 +76,7 @@ namespace PalcoNet.Generar_Publicacion
                             int cantidad = Convert.ToInt32(txtCantidad.Text);
                             for(int i = 0 ; i < cantidad; i++)
                             {
-                                Ubicacion ubicacion = new Ubicacion{ Precio = Convert.ToInt32(txtPrecio.Text),SinNumerar = true, idTipoUbicacion = Convert.ToInt32(cmbTipoUbicaciones.SelectedValue) };
+                                Ubicacion ubicacion = new Ubicacion{ precio = Convert.ToInt32(txtPrecio.Text),sinNumerar = true, codigoTipoubicacion = Convert.ToInt32(cmbTipoUbicaciones.SelectedValue) };
                                 ubicacionesCreadas.Add(ubicacion);
                             }
                             MessageBox.Show("Se agregaron " + cantidad + " ubicaciones sin numerar del tipo " + cmbTipoUbicaciones.SelectedText);
@@ -85,30 +85,34 @@ namespace PalcoNet.Generar_Publicacion
                     }
                     else
                     {
-                        //RANGO DE FILAS
-                        string abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                        string selectRowStartItem = cmbFilasInicial.SelectedItem.ToString();                         
-                        int startChar = abc.IndexOf(selectRowStartItem);
-                        string selectRowFinishItem = cmbFilasFinal.SelectedItem.ToString();                         
-                        int finishChar = abc.IndexOf(selectRowFinishItem);
-                        char[] alpha = abc.ToCharArray();
-                        //RANGO DE ASIENTOS
-                        string stAs = cmbAsientosInicial.SelectedItem.ToString();
-                        string fsAs = cmbAsientosFinal.SelectedItem.ToString();
-                        int startAs = Convert.ToInt32(stAs);
-                        int finsihAs = Convert.ToInt32(fsAs);
-                        int cantidad = 0;
-                        for (int i = startChar -1; i< finishChar; i++)
+                        if (verificarcmbs())
                         {
-                            char c = alpha[i];
-                            for (int j = startAs; j<= finsihAs; j++)
-                            {cantidad++;
-                                 Ubicacion ubicacion = new Ubicacion{ Precio = Convert.ToInt32(txtPrecio.Text),SinNumerar = false, idTipoUbicacion = Convert.ToInt32(cmbTipoUbicaciones.SelectedValue), Fila = c.ToString(), Asiento = j };
-                                ubicacionesCreadas.Add(ubicacion);
+                            //RANGO DE FILAS
+                            string abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                            string selectRowStartItem = cmbFilasInicial.SelectedItem.ToString();
+                            int startChar = abc.IndexOf(selectRowStartItem);
+                            string selectRowFinishItem = cmbFilasFinal.SelectedItem.ToString();
+                            int finishChar = abc.IndexOf(selectRowFinishItem);
+                            char[] alpha = abc.ToCharArray();
+                            //RANGO DE ASIENTOS
+                            string stAs = cmbAsientosInicial.SelectedItem.ToString();
+                            string fsAs = cmbAsientosFinal.SelectedItem.ToString();
+                            int startAs = Convert.ToInt32(stAs);
+                            int finsihAs = Convert.ToInt32(fsAs);
+                            int cantidad = 0;
+                            for (int i = startChar; i <= finishChar; i++)
+                            {
+                                char c = alpha[i];
+                                for (int j = startAs; j <= finsihAs; j++)
+                                {
+                                    cantidad++;
+                                    Ubicacion ubicacion = new Ubicacion { precio = Convert.ToInt32(txtPrecio.Text), sinNumerar = false, codigoTipoubicacion = Convert.ToInt32(((ComboBoxItem)cmbTipoUbicaciones.SelectedItem).Value), fila = c.ToString(), asiento = j };
+                                    ubicacionesCreadas.Add(ubicacion);
+                                }
                             }
+                            MessageBox.Show("Se agregaron " + cantidad + " ubicaciones numeradas del tipo " + ((ComboBoxItem)cmbTipoUbicaciones.SelectedItem).Text);
+                            Clear();
                         }
-                         MessageBox.Show("Se agregaron " + cantidad + " ubicaciones numeradas del tipo " + cmbTipoUbicaciones.SelectedText);
-                        Clear();
                     }
                 }
                 else
@@ -117,6 +121,16 @@ namespace PalcoNet.Generar_Publicacion
                 }
             }
 
+        }
+
+        private bool verificarcmbs()
+        {
+            if (cmbAsientosFinal.SelectedItem == null || cmbAsientosInicial.SelectedItem == null || cmbFilasFinal.SelectedItem == null || cmbFilasInicial.SelectedItem == null)
+            {
+                MessageBox.Show("Debe seleccionar fila y asientos tantos iniciales como finales");
+                return false;
+            }
+            return true;
         }
 
         private void Clear()
@@ -160,8 +174,8 @@ namespace PalcoNet.Generar_Publicacion
 
         private void button2_Click(object sender, EventArgs e)
         {
-            UserInstance.getUserInstance().ubicacionesAGuardar = ubicacionesCreadas;
-            this.Hide();
+            
+            this.Close();
         }
     }
 }

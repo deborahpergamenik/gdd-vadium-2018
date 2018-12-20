@@ -47,8 +47,8 @@ namespace PalcoNet.Model
                 DataTable tabla = SqlConnector.obtenerDataTable("VADIUM.AgregarPublicacion", "SP", parametrosGuardarTarjeta);
                 int? val = null;
                  val = Convert.ToInt32(tabla.Rows[0].ItemArray[0]);
-                if(val!= null)
-                    ubicaciones.ForEach(x => x.save((int)id));
+                 if (val != null)
+                     Ubicaciones.AgregarLote(this.ubicaiones, (int)val);
                 return val;
             }
             catch (Exception e)
@@ -60,21 +60,48 @@ namespace PalcoNet.Model
         {
             ubicaiones = new List<Ubicacion>();
         }
-        internal List<int> save(List<DateTime> espectaculos)
+        internal int save(List<DateTime> espectaculos)
         {
-            List<int> pubsSave = new List<int>();
+            int cantOk = 0;
             foreach (DateTime date in espectaculos)
             {
                 FechaEspectaculo = date;
                 int? id;
                 if ((id = save()) != null)
                 {
-                    pubsSave.Add((int)id);
+                    cantOk++;
                 }
                 
             }
 
-            return pubsSave;
+            return cantOk;
+        }
+
+        internal int? update()
+        {
+            try
+            {
+                List<SqlParameter> parametrosGuardarTarjeta = new List<SqlParameter>();
+                SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@desc", Descripcion); //traer codigo de cliente
+                SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@fechEsp", FechaEspectaculo);
+                SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@fechaPub", FechaPublicacion);
+                SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@estado_id", estado_id);
+                SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@direccion", direccionEspectaculo);
+                SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@rubro_id", rubro_id);
+                SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@grado_id", grado_id); 
+                SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@precio", precio);
+                SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codigo", CodigoPublicacion);
+
+                DataTable tabla = SqlConnector.obtenerDataTable("VADIUM.ModificarPublicacion", "SP", parametrosGuardarTarjeta);
+                int? val = null;
+                val = Convert.ToInt32(tabla.Rows[0].ItemArray[0]);
+                
+                return val;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

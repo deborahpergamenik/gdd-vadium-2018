@@ -232,8 +232,11 @@ namespace PalcoNet.Common
                         {
                             if (count == 0)
                                 result.Columns.Add(dr.GetName(i));
-
-                            row[i] = dr[i];
+                            DateTime valdt = new DateTime();
+                            if(dr[i].GetType().Equals(valdt.GetType()))
+                                 row[i] =( (DateTime)dr[i]).ToString("dd/MM/yyy");
+                            else
+                                row[i] = dr[i];
                         }
                         result.Rows.Add(row);
                         count++;

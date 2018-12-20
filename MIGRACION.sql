@@ -1,16 +1,30 @@
 USE GD2C2018
 GO
 
--------------------------------DROP PROCEDURES-------------------
+-----------DROP PROCEDURES-------------------
 IF OBJECT_ID('VADIUM.CANJEAR_PREMIO') IS NOT NULL
 DROP PROCEDURE VADIUM.CANJEAR_PREMIO;
 GO
+IF OBJECT_ID('VADIUM.crearFactura') IS NOT NULL
+DROP PROCEDURE VADIUM.crearFactura;
+GO
+IF OBJECT_ID('VADIUM.obtenerCompras') IS NOT NULL
+DROP PROCEDURE VADIUM.obtenerCompras;
+GO
+
+IF OBJECT_ID('VADIUM.ModificarPublicacion') IS NOT NULL
+DROP PROCEDURE VADIUM.ModificarPublicacion;
+GO 
 IF OBJECT_ID('VADIUM.AgregarPublicacion') IS NOT NULL
 DROP PROCEDURE VADIUM.AgregarPublicacion;
 GO
 IF OBJECT_ID('VADIUM.AgregarUbicacion') IS NOT NULL
 DROP PROCEDURE VADIUM.AgregarUbicacion;
 GO
+IF OBJECT_ID('VADIUM.AgregarLoteUbicaiones') IS NOT NULL
+DROP PROCEDURE VADIUM.AgregarLoteUbicaiones;
+GO 
+
 
 IF OBJECT_ID('VADIUM.MODIFICAR_PUNTOS') IS NOT NULL
 DROP PROCEDURE VADIUM.MODIFICAR_PUNTOS;
@@ -108,7 +122,16 @@ IF OBJECT_ID('VADIUM.TR_NuevaCompra') IS NOT NULL
 DROP TRIGGER VADIUM.TR_NuevaCompra;
 GO
 IF OBJECT_ID('VADIUM.TR_CanjeDePuntos') IS NOT NULL
-DROP TRIGGER VADIUM.TR_CanjeDePuntos;
+DROP TRIGGER VADIUM.TR_CanjeDePuntos; 
+GO
+------------------------------DROP TYPES------------------
+--IF OBJECT_ID('VADIUM.ubicacionesAgregadas') IS NOT NULL
+
+DROP TYPE [VADIUM].[ubicacionesAgregadas]
+GO
+--IF OBJECT_ID('VADIUM.ids') IS NOT NULL
+
+DROP TYPE [VADIUM].[ids]
 GO
 
 
@@ -700,12 +723,12 @@ BEGIN
 	HAVING m.Espectaculo_Estado IS NOT NULL
 
 	------PUBLICACION-----
-		INSERT INTO [VADIUM].PUBLICACION(codigoEspectaculo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id, grado_id, stock, precio)
+		INSERT INTO [VADIUM].PUBLICACION(codigoEspectaculo, descripcion, fecha, fechaVencimiento, empresa_id, rubro_id, estado_id, grado_id, stock, precio, direccion)
 		SELECT m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, 
 				(SELECT TOP 1 emp.empresa_id FROM EMPRESA emp WHERE emp.mail = m.Espec_Empresa_Mail), 
 				(SELECT TOP 1 ru.rubro_id FROM RUBRO ru order by NEWID()),
 				(SELECT TOP 1 es.codigo FROM ESTADO es WHERE es.descripcion = m.Espectaculo_Estado),
-				(SELECT TOP 1 gr.grado_id FROM VADIUM.GRADO gr order by newid()), 0, MIN(m.Ubicacion_Precio)
+				(SELECT TOP 1 gr.grado_id FROM VADIUM.GRADO gr order by newid()), 0, MIN(m.Ubicacion_Precio), CONCAT(MAX(m.Espec_Empresa_Dom_Calle), CONVERT(nvarchar, MIN(m.Espec_Empresa_Nro_Calle)))
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Espectaculo_Cod, m.Espectaculo_Descripcion, m.Espectaculo_Fecha, m.Espectaculo_Fecha_Venc, m.Espec_Empresa_Mail, m.Espectaculo_Rubro_Descripcion, Espectaculo_Estado
 	HAVING m.Espectaculo_Cod IS NOT NULL
@@ -788,8 +811,8 @@ ALTER TABLE [VADIUM].COMPRA ADD FOREIGN KEY (id_cliente_comprador) REFERENCES [V
 ALTER TABLE [VADIUM].FACTURA ADD FOREIGN KEY (empresa_id) REFERENCES [VADIUM].EMPRESA
 GO
 
+----------------------TYPES---------------------------------
 
---------------------------------Estadisticas------------------------------
 CREATE TYPE [VADIUM].[ids] AS TABLE(
 	[id] [int] NULL
 )
@@ -805,7 +828,7 @@ CREATE TYPE [VADIUM].[ubicacionesAgregadas] AS TABLE(
 
 )
 GO
-
+--------------------------------Estadisticas------------------------------
 CREATE PROCEDURE [VADIUM].MayorCantLocalidadesNoVendidos @year int, @month int, @grado int
 
 AS
@@ -1033,10 +1056,23 @@ GO
 CREATE PROCEDURE [VADIUM].AgregarPublicacion @desc nvarchar(255), @fechEsp datetime, @fechaPub datetime, @estado_id int, @direccion nvarchar(255), @rubro_id int, @grado_id int, @empresa_id int, @stock int, @precio int
 AS
 BEGIN
+	DECLARE @newCod numeric(18,0)
+	SELECT @newCod = MAX(codigoEspectaculo) FROM PUBLICACION 
+	SET @newCod =@newCod +1
 
-	INSERT INTO VADIUM.PUBLICACION (descripcion, fecha, fechaVencimiento, estado_id, direccion, rubro_id, grado_id, empresa_id, stock, precio )
-	VALUES(@desc,@fechEsp,@fechaPub,@estado_id, @direccion , @rubro_id , @grado_id , @empresa_id ,0, @precio )
-	 SELECT  SCOPE_IDENTITY();
+	INSERT INTO VADIUM.PUBLICACION (codigoEspectaculo, descripcion, fecha, fechaVencimiento, estado_id, direccion, rubro_id, grado_id, empresa_id, stock, precio )
+	VALUES(@newCod, @desc,@fechEsp,@fechaPub,@estado_id, @direccion , @rubro_id , @grado_id , @empresa_id ,0, @precio )
+	SELECT  @newCod
+END
+GO
+CREATE PROCEDURE [VADIUM].ModificarPublicacion @codigo int, @desc nvarchar(255), @fechEsp datetime, @fechaPub datetime, @estado_id int, @direccion nvarchar(255), @rubro_id int, @grado_id int, @precio int
+AS
+BEGIN
+
+
+	UPDATE VADIUM.PUBLICACION SET descripcion = @desc, fecha = @fechEsp, fechaVencimiento = @fechaPub, estado_id = @estado_id,
+	 direccion = @direccion, rubro_id = @rubro_id, grado_id = @grado_id,  precio = @precio 
+	WHERE codigoEspectaculo = @codigo
 END
 GO
 

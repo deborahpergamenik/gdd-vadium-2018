@@ -147,7 +147,7 @@ namespace PalcoNet.Comprar
 
         private void contarPublicaciones()
         {
-            cantPublicacionesTotal = Publicaciones.getTotal(rubros, descripcion, start, finish);;
+            cantPublicacionesTotal = Publicaciones.getTotalCompras(rubros, descripcion, start, finish);;
             ultimaPagina = cantPublicacionesTotal / cantPublicacionesPorPagina;
 
             if (ultimaPagina < 1)

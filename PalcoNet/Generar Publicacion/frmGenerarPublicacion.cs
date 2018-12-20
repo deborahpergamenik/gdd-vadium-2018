@@ -76,7 +76,7 @@ namespace PalcoNet.Generar_Publicacion
             int? empresaId =null;
             if(!UserInstance.userInstance.rol.nombre.ToLower().Contains("admin"))
                 empresaId = UserInstance.getUserInstance().empresaId;
-            dgvPublicaciones.DataSource = Publicaciones.obtenerPublicaiones(desde, hasta, null, descripcion, null, null, estado, empresaId);
+            dgvPublicaciones.DataSource = Publicaciones.ObtenerPublicacionesPorEmpresa(desde, hasta,  descripcion, estado, empresaId);
      
         }
 
@@ -85,7 +85,7 @@ namespace PalcoNet.Generar_Publicacion
             int? empresaId = null;
             if (!UserInstance.userInstance.rol.nombre.ToLower().Contains("admin"))
                 empresaId = UserInstance.getUserInstance().empresaId;
-            cantPublicacionesTotal = Publicaciones.getTotal(null, descripcion, null, null, estado, empresaId);
+            cantPublicacionesTotal = Publicaciones.getTotalCompras(null, descripcion, null, null, estado, empresaId);
             ultimaPagina = cantPublicacionesTotal / cantPublicacionesPorPagina;
 
             if (ultimaPagina < 1)
@@ -137,10 +137,11 @@ namespace PalcoNet.Generar_Publicacion
                     FechaPublicacion = dtpPublicacion.Value,
                     precio = Convert.ToInt32( txtPrecio.Text),
                     stock = Convert.ToInt32(txtStock.Text),
-                    estado_id = Convert.ToInt32(cmbEstado.SelectedValue),
-                    rubro_id = Convert.ToInt32(cmbRubro.SelectedValue),
-                    grado_id = Convert.ToInt32(cmbGrado.SelectedValue),
-                    ubicaiones = this.ubicaciones
+                    estado_id = Convert.ToInt32(((ComboBoxItem)cmbEstado.SelectedItem).Value),
+                    rubro_id = Convert.ToInt32(((ComboBoxItem)cmbRubro.SelectedItem).Value),
+                    grado_id = Convert.ToInt32(((ComboBoxItem)cmbGrado.SelectedItem).Value),
+                    ubicaiones = this.ubicaciones,
+                    empresaId = Convert.ToInt32(txtEmpresa.Text)
 
                 };
                 if (chbIngresoUnico.Checked)
@@ -148,11 +149,36 @@ namespace PalcoNet.Generar_Publicacion
                     if (validarFechas(dtpPublicacion.Value, dtpEspectaculo.Value))
                     {
                         publi.FechaEspectaculo = dtpEspectaculo.Value;
-                        int? id = publi.save();
-                        if(id == null)
+                        if (chbNuevo.Checked)
                         {
-                            MessageBox.Show("Hubo un error al guardar la publicacion, revise sus datos");
-                            return;
+                            int? id = publi.save();
+                            if (id == null)
+                            {
+                                MessageBox.Show("Hubo un error al guardar la publicacion, revise sus datos");
+                                return;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Se agrego un espectaculo correctamente, con sus " + ubicaciones.Count + " ubicaciones");
+                            }
+                        }
+                        else
+                        {
+                            if (String.IsNullOrEmpty(lblPublicacion.Text))
+                            {
+                                MessageBox.Show("Si desea modificar alguna publicacion, primero seleccione una de la tabla");
+                            }
+                            publi.CodigoPublicacion = Convert.ToInt32(lblPublicacion.Text);
+                            int? id = publi.update();
+                            if (id == null)
+                            {
+                                MessageBox.Show("Hubo un error al modificar la publicacion, revise sus datos");
+                                return;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Se modifico un espectaculo correctamente");
+                            }
                         }
                        
                     }
@@ -171,7 +197,8 @@ namespace PalcoNet.Generar_Publicacion
                             }
                             espectaculos.Add((DateTime)lastDate);
                         }
-                        publi.save(espectaculos);
+                        int cantOk = publi.save(espectaculos);
+                        MessageBox.Show("Se agregaron " +cantOk +" de un espectaculo correctamente, con sus " + ubicaciones.Count + " ubicaciones respectivamente");
                     }
                 }
             }
@@ -236,6 +263,8 @@ namespace PalcoNet.Generar_Publicacion
             dtpEspectaculo.Visible = true;
             lblEspectaculo.Visible = true;
             lotes = false;
+            txtStock.Text = "0";
+            ubicaciones.Clear();
         }
         private void frmGenerarPublicacion_Load(object sender, EventArgs e)
         {
@@ -264,7 +293,11 @@ namespace PalcoNet.Generar_Publicacion
             grados.ForEach(x => cmbGrado.Items.Add(x));
             if (UserInstance.getUserInstance().empresaId != null)
                 txtEmpresa.Text = UserInstance.getUserInstance().empresaId.ToString();
-          
+
+            dtpEspectaculo.Format = DateTimePickerFormat.Custom;
+            dtpEspectaculo.CustomFormat = "dd/MM/yyyy hh:mm:ss";
+            dtpPublicacion.Format = DateTimePickerFormat.Custom;
+            dtpPublicacion.CustomFormat = "dd/MM/yyyy hh:mm:ss";
 
         }
 
@@ -340,18 +373,21 @@ namespace PalcoNet.Generar_Publicacion
             {
                 txtDescripcion.Text = dgvPublicaciones[1, row].Value.ToString();
                 txtdireccion.Text = dgvPublicaciones[6, row].Value.ToString();
-                txtPrecio.Text = "0";//min publicacion 
+                txtPrecio.Text = dgvPublicaciones[14, row].Value.ToString();
                 txtEmpresa.Text = dgvPublicaciones[10, row].Value.ToString();
                 txtStock.Text = dgvPublicaciones[13, row].Value.ToString();
-                cmbRubro.SelectedValue = dgvPublicaciones[4, row].Value;
-                cmbGrado.SelectedValue = dgvPublicaciones[9, row].Value;
-                cmbEstado.SelectedValue = dgvPublicaciones[11, row].Value;
+                lblCodEspectaculo.Text = dgvPublicaciones[0, row].Value.ToString();
+                cmbRubro.SelectedItem = new ComboBoxItem {Value = Convert.ToInt32(dgvPublicaciones[4, row].Value), Text = dgvPublicaciones[5, row].Value.ToString() };
+                cmbGrado.SelectedValue = new ComboBoxItem { Value = Convert.ToInt32(dgvPublicaciones[9, row].Value), Text = dgvPublicaciones[7, row].Value.ToString() };
+                cmbEstado.SelectedValue = new ComboBoxItem { Value = Convert.ToInt32(dgvPublicaciones[11, row].Value), Text = dgvPublicaciones[12, row].Value.ToString() };
                 
 
                 string date = dgvPublicaciones[3, row].Value.ToString();
-                dtpPublicacion.Value = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                DateTime datetm = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                dtpPublicacion.Value = datetm;
                 date = dgvPublicaciones[2, row].Value.ToString();
-                dtpEspectaculo.Value = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                datetm = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                dtpEspectaculo.Value = datetm;
                 if (estado.ToLower().Equals("publicada"))
                 {
                     changehabilityALl(false);
@@ -402,11 +438,14 @@ namespace PalcoNet.Generar_Publicacion
 
         private void btnAgregarUbicaciones_Click(object sender, EventArgs e)
         {
-            
-            ubicaciones = UserInstance.getUserInstance().ubicacionesAGuardar;
-            frmAsignarUbicaciones frmAsignarUb = new frmAsignarUbicaciones();
-            frmAsignarUb.Show();
-            txtStock.Text = ubicaciones.Count.ToString();
+            using (var form =  new frmAsignarUbicaciones())
+            {
+                form.ShowDialog();
+                ubicaciones = form.ubicacionesCreadas;
+                txtStock.Text = ubicaciones.Count.ToString();
+            }
+           
+           
         }
 
         private void chbNuevo_CheckedChanged(object sender, EventArgs e)

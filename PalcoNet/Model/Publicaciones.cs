@@ -67,7 +67,7 @@ namespace PalcoNet.Model
         public static DataTable obtenerPublicaiones(int start, int finish, List<int> rubros, string desc, DateTime? desde, DateTime? hasta, int? estado = null, int? empresaId = null)
         {
             try{
-                string query = obtenerQuerySinFiltros();
+                string query = obtenerQueryCompras();
                 string filtros = armarquery( rubros, desc, desde, hasta, estado,  empresaId );
 
                 if (!String.IsNullOrEmpty(filtros))
@@ -87,7 +87,30 @@ namespace PalcoNet.Model
                 return null;
             }
         }
+        public static DataTable ObtenerPublicacionesPorEmpresa(int start, int finish,  string desc, int? estado = null, int? empresaId = null)
+        {
+            try
+            {
+                string query = obtenerQuerySinFiltros();
+                string filtros = armarquery(null, desc, null, null, estado, empresaId);
 
+                if (!String.IsNullOrEmpty(filtros))
+                {
+                    query = query + " WHERE " + filtros;
+                }
+                query = AgregarOrderBy(query);
+                int cant = finish - start;
+                query = agregarPaginacion(query, start, cant);
+                DataTable table = SqlConnector.obtenerDataTable(query, "T");
+
+                SqlConnector.cerrarConexion();
+                return table;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
         private static int getTotalRows(string filtros)
         {
             int cantidad = 0;
@@ -121,6 +144,38 @@ namespace PalcoNet.Model
             SqlConnector.cerrarConexion();
             return cantidad;
         }
+        private static int getTotalRowsWithouFilter(string filtros)
+        {
+            int cantidad = 0;
+            string principalquery = "SELECT COUNT(*) as cantidad " +
+                     "FROM VADIUM.PUBLICACION pub JOIN VADIUM.ESTADO es ON (pub.estado_id = es.codigo) " +
+                                        "JOIN VADIUM.RUBRO rub ON (pub.rubro_id = rub.rubro_id) " +
+                                        "JOIN VADIUM.GRADO gr ON (pub.grado_id = gr.grado_id)";
+                                        
+                                        
+            if (!String.IsNullOrEmpty(filtros))
+            {
+                principalquery = principalquery + " WHERE " + filtros;
+            }
+
+            SqlDataReader lector = SqlConnector.ObtenerDataReader(principalquery, "T");
+
+            if (lector.HasRows)
+            {
+                while (lector.Read())
+                {
+                    string var = lector.GetName(0);
+                    var val = lector[0];
+                    if (lector[0] != null)
+                    {
+                        string lect = lector[0].ToString();
+                        cantidad = Convert.ToInt32(lect);
+                    }
+                }
+            }
+            SqlConnector.cerrarConexion();
+            return cantidad;
+        }
         private static string agregarPaginacion(string query, int start, int cant)
         {
             string paginacion = "offset " + start + " rows fetch next " + cant + " rows only";
@@ -137,7 +192,16 @@ namespace PalcoNet.Model
         {
             return "SELECT pub.codigoEspectaculo, pub.descripcion,pub.fecha as Fecha_Evento, pub.fechaVencimiento, rub.rubro_id, rub.descripcion as rubro_descripcion, " +
                     "pub.direccion as direccionEspectaculo, gr.descripcion as grado_descripcion, gr.comision as comision, gr.grado_id as grado_id, " +
-                    "pub.empresa_id, es.codigo as estado_id, es.descripcion as estado_descripcion, pub.stock as stock_disponible " +
+                    "pub.empresa_id, es.codigo as estado_id, es.descripcion as estado_descripcion, pub.stock as stock_disponible, pub.precio " +
+                     "FROM VADIUM.PUBLICACION pub JOIN VADIUM.ESTADO es ON (pub.estado_id = es.codigo) " +
+                                        "JOIN VADIUM.RUBRO rub ON (pub.rubro_id = rub.rubro_id) " +
+                                        "JOIN VADIUM.GRADO gr ON (pub.grado_id = gr.grado_id)";
+        }
+        private static string obtenerQueryCompras()
+        {
+            return "SELECT pub.codigoEspectaculo, pub.descripcion,pub.fecha as Fecha_Evento, pub.fechaVencimiento, rub.rubro_id, rub.descripcion as rubro_descripcion, " +
+                    "pub.direccion as direccionEspectaculo, gr.descripcion as grado_descripcion, gr.comision as comision, gr.grado_id as grado_id, " +
+                    "pub.empresa_id, es.codigo as estado_id, es.descripcion as estado_descripcion, pub.stock as stock_disponible, pub.precio " +
                      "FROM VADIUM.PUBLICACION pub JOIN VADIUM.ESTADO es ON (pub.estado_id = es.codigo) " +
                                         "JOIN VADIUM.RUBRO rub ON (pub.rubro_id = rub.rubro_id) " +
                                         "JOIN VADIUM.GRADO gr ON (pub.grado_id = gr.grado_id)" +
@@ -209,7 +273,7 @@ namespace PalcoNet.Model
             return filtro;
         }
 
-        internal static int getTotal(List<int> rubros, string descripcion, DateTime? start, DateTime? finish, int? estado = null, int? empresaId = null)
+        internal static int getTotalCompras(List<int> rubros, string descripcion, DateTime? start, DateTime? finish, int? estado = null, int? empresaId = null)
         {
            
             string filtros = armarquery( rubros, descripcion, start, finish, estado, empresaId);
@@ -217,7 +281,14 @@ namespace PalcoNet.Model
             int countTotalRows = getTotalRows(filtros);
             return countTotalRows;
         }
+        internal static int getTotal( string descripcion,  int? estado = null, int? empresaId = null)
+        {
 
+            string filtros = armarquery(null, descripcion, null, null, estado, empresaId);
+
+            int countTotalRows = getTotalRowsWithouFilter(filtros);
+            return countTotalRows;
+        }
         internal static void PublicacionFinalizada(int codPublicacionActual)
         {
             int estadoFinalizado = Estados.obtenerEstados().Where(x => x.descripcion.ToLower().Equals("finalizado")).FirstOrDefault().codigo;

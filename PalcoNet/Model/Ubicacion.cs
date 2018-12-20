@@ -13,12 +13,13 @@ namespace PalcoNet.Model
     {
         public Publicacion publicacion { get; set; }
         public int UbicacionId { get; set; }
-        public string Fila { get; set; }
-        public int Asiento { get; set; }
-        public bool SinNumerar { get; set; }
-        public int Precio { get; set; }
+        public string fila { get; set; }
+        public int asiento { get; set; }
+        public bool sinNumerar { get; set; }
+        public int precio { get; set; }
         public TipoUbicacion TipoUbicacion { get; set; }
-        public int idTipoUbicacion { get; set; }
+        public int codigoTipoubicacion { get; set; }
+        public int codigoEspectaculo { get; set; }
         public string Tipo
         {
             get
@@ -27,18 +28,18 @@ namespace PalcoNet.Model
             }
 
         }
-        public int CodigoPublicacion { get; set; }
+      
 
 
         internal object save(int esp)
         {
              
             List<SqlParameter> parametrosGuardarTarjeta = new List<SqlParameter>();
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@fila", Fila); //traer codigo de cliente
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@asiento", Asiento);
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@sinNumerar", SinNumerar);
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@precio", Precio);
-            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codigoTipoubicacion", idTipoUbicacion);
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@fila", fila); //traer codigo de cliente
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@asiento", asiento);
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@sinNumerar", sinNumerar);
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@precio", precio);
+            SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codigoTipoubicacion", codigoTipoubicacion);
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codigoEspectaculo", esp);
             SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@compra_id", null);
 

@@ -45,17 +45,10 @@ namespace PalcoNet.Historial_Cliente
                 txtCliente.Text = NombreCliente + " " + ApellidoCliente;
 
                 List<SqlParameter> listaParametros = new List<SqlParameter>();
-                SqlConnector.agregarParametro(listaParametros, "@cliente_id", (int)UserInstance.getUserInstance().clienteId);
+                SqlConnector.agregarParametro(listaParametros, "@clienteId", (int)UserInstance.getUserInstance().clienteId);
                 String commandtext = "VADIUM.HistorialCliente";
                 DataTable table = SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
-                if (table.Rows.Count > 0 && table.Rows[0].ItemArray[0].ToString() == "ERROR")
-                {
-                    MessageBox.Show(table.Rows[0].ItemArray[1].ToString());
-                }
-                else
-                {
-                    dgvHistorialCliente.DataSource = table;
-                }
+                dgvHistorialCliente.DataSource = table;                
             }
         }
 

@@ -47,12 +47,16 @@ namespace PalcoNet.Canje_Puntos
 
                 List<SqlParameter> listaParametros2 = new List<SqlParameter>();
                 SqlConnector.agregarParametro(listaParametros2, "@cliente_id", this.idCliente);
-                SqlConnector.agregarParametro(listaParametros2, "@anioVencimiento", Configuration.getActualDate().Year + 1);
-                SqlDataReader lector2 = SqlConnector.ejecutarReader("SELECT cantidad FROM VADIUM.PUNTOS WHERE cliente_id = @cliente_id AND anioVencimiento = @anioVencimiento", listaParametros2, SqlConnector.iniciarConexion());
+                SqlConnector.agregarParametro(listaParametros2, "@fecha", Configuration.getActualDate());
+                SqlDataReader lector2 = SqlConnector.ejecutarReader("SELECT SUM(cantidad) AS cantidad " +
+                                                                    "FROM VADIUM.PUNTOS " +
+                                                                    "WHERE cliente_id = @cliente_id AND fechaVencimiento > @fecha " +
+                                                                    "GROUP BY cliente_id", listaParametros2, SqlConnector.iniciarConexion());
+
                 if (lector2.HasRows)
                 {
                     lector2.Read();
-                    puntos = Convert.ToDouble(lector["cantidad"]);
+                    puntos = Convert.ToDouble(lector2["cantidad"]);
                 }
 
                 SqlConnector.cerrarConexion();
@@ -85,7 +89,7 @@ namespace PalcoNet.Canje_Puntos
                     List<SqlParameter> parametros = new List<SqlParameter>();
                     SqlConnector.agregarParametro(parametros, "@cliente_id", idCliente);
                     SqlConnector.agregarParametro(parametros, "@premio_id", (int)dgvCanjearPuntos.Rows[e.RowIndex].Cells["premio_id"].Value);
-                    SqlConnector.agregarParametro(parametros, "@fechaActual", Configuration.getActualDate());
+                    SqlConnector.agregarParametro(parametros, "@fecha_actual", Configuration.getActualDate());
                     SqlConnector.ExecStoredProcedureSinRet("VADIUM.CANJEAR_PREMIO", parametros);
                     SqlConnector.cerrarConexion();
 

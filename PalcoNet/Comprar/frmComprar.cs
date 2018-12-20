@@ -206,10 +206,30 @@ namespace PalcoNet.Comprar
         {
             paginaActual = 0;
 
+
             if (chkDesde.Checked)
-               start = dateTimePickerDesde.Value;
+            {
+                start = dateTimePickerDesde.Value;
+                if (((DateTime)start).CompareTo(Configuration.getActualDate()) < 0) 
+                {
+                    MessageBox.Show("Las compras deben ser de eventos que todavia no se llevaron a cabo");
+                }
+            }
             if (chkHasta.Checked)
+            {
                 finish = dateTimePickerHasta.Value;
+                if (chkDesde.Checked)
+                {
+                    if (((DateTime)finish).CompareTo(dateTimePickerDesde.Value) < 0)
+                    {
+                        MessageBox.Show("La fecha inicial debe ser menos a la fecha final");
+                    }
+                }
+                if (((DateTime)finish).CompareTo(Configuration.getActualDate()) < 0)
+                {
+                    MessageBox.Show("Las compras deben ser de eventos que todavia no se llevaron a cabo");
+                }
+            }
             descripcion = txtDescripcion.Text;
             foreach (ComboBoxItem item in lstRubros.Items)
             {
@@ -253,7 +273,12 @@ namespace PalcoNet.Comprar
 
         private void frmComprar_Load(object sender, EventArgs e)
         {
-
+            dateTimePickerDesde.Format = DateTimePickerFormat.Custom;
+            dateTimePickerDesde.CustomFormat = "dd/MM/yyyy hh:mm:ss";
+            dateTimePickerDesde.Value = Configuration.getActualDate();
+            dateTimePickerHasta.Format = DateTimePickerFormat.Custom;
+            dateTimePickerHasta.CustomFormat = "dd/MM/yyyy hh:mm:ss";
+            dateTimePickerHasta.Value = Configuration.getActualDate();
         }
 
         private void cmbRubros_SelectedIndexChanged(object sender, EventArgs e)

@@ -26,6 +26,7 @@ namespace PalcoNet.Listado_Estadistico
             this.cmbTipoListado.Items.Add("Empresas con mayor cantidad de localidades no vendidas");
             this.cmbTipoListado.Items.Add("Clientes con mayores puntos vencidos");
             this.cmbTipoListado.Items.Add("Clientes con mayor cantidad de compras");
+            loadGrado();
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
@@ -35,8 +36,11 @@ namespace PalcoNet.Listado_Estadistico
                 int anio = Convert.ToInt32(this.txtAnio.Text);
                 int trimestre = this.cmbTrimestre.SelectedIndex + 1;
                 int opcionElegida = this.cmbTipoListado.SelectedIndex + 1;
+                int? grado = null;
+                if (cmbGrado.SelectedItem != null)
+                    grado =Convert.ToInt32( ((ComboBoxItem)cmbGrado.SelectedItem).Value);
 
-                ListadoEstadistico listado = new ListadoEstadistico(trimestre, anio);
+                ListadoEstadistico listado = new ListadoEstadistico(trimestre, anio,grado);
 
                 this.top5DataGridView.DataSource = listado.buscar(opcionElegida);
 
@@ -78,13 +82,13 @@ namespace PalcoNet.Listado_Estadistico
                     DialogResult result = MessageBox.Show(str, "Alerta!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return false;
                 }
+            }
+            if (cmbTrimestre.SelectedIndex == -1 || cmbTipoListado.SelectedIndex == -1)
+            {
 
-                if (tipoListado != null && tipoListado.SelectedIndex == -1)
-                {
-                    string str = "Los campos obligatorios no pueden estar vacios";
-                    DialogResult result = MessageBox.Show(str, "Alerta!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return false;
-                }
+                string str = "Los campos obligatorios no pueden estar vacios";
+                DialogResult result = MessageBox.Show(str, "Alerta!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
             }
 
             return true;
@@ -98,6 +102,32 @@ namespace PalcoNet.Listado_Estadistico
         private void btnAtras_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+        public void loadGrado()
+        {
+            List<ComboBoxItem> grados = Grados.ObtenerTodosLosGrados().Select(x => new ComboBoxItem { Text = x.Descripcion, Value = x.Id }).ToList();
+            grados.ForEach(x => cmbGrado.Items.Add(x));
+        }
+
+        private void cmbTipoListado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Empresas con mayor cantidad de localidades no vendidas
+            if (this.cmbTipoListado.SelectedIndex == 0)
+            {
+                cmbGrado.Visible = true;
+                lblGrado.Visible = true;
+                
+            }
+            else 
+            {
+                cmbGrado.Visible = false;
+                lblGrado.Visible = false;
+            }
+        }
+
+        private void frmListadoEstadistico_Load(object sender, EventArgs e)
+        {
+
         }
         
     }

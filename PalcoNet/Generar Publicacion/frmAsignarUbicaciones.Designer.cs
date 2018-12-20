@@ -241,6 +241,7 @@
             this.Controls.Add(this.button1);
             this.Name = "frmAsignarUbicaciones";
             this.Text = "frmAsignarUbicaciones";
+            this.Load += new System.EventHandler(this.frmAsignarUbicaciones_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

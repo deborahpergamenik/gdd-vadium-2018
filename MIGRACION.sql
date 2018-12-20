@@ -8,6 +8,10 @@ GO
 IF OBJECT_ID('VADIUM.obtenerCompras') IS NOT NULL
 DROP PROCEDURE VADIUM.obtenerCompras;
 GO
+IF OBJECT_ID('VADIUM.PR_DATOS_PREVIO_MIGRACION') IS NOT NULL
+DROP PROCEDURE VADIUM.PR_DATOS_PREVIO_MIGRACION;
+GO
+
 IF OBJECT_ID('VADIUM.crearFactura') IS NOT NULL
 DROP PROCEDURE VADIUM.crearFactura;
 GO
@@ -196,10 +200,10 @@ GO
 IF OBJECT_ID('VADIUM.ids') IS NOT NULL
 	DROP TYPE VADIUM.ids
 GO
-IF OBJECT_ID('VADIUM.UbicacionesAgregadas') IS NOT NULL
+IF TYPE_ID('VADIUM.UbicacionesAgregadas') IS NOT NULL
 	DROP TYPE VADIUM.UbicacionesAgregadas
 GO
-IF SCHEMA_ID('VADIUM.ids') IS NOT NULL
+IF TYPE_ID('VADIUM.ids') IS NOT NULL
 	DROP TYPE VADIUM.ids
 GO
 
@@ -504,6 +508,26 @@ GO
 ----------------------------------------------------------------------------------------------
 								/** DATOS PRE CARGADOS **/
 ----------------------------------------------------------------------------------------------
+CREATE PROCEDURE [VADIUM].PR_DATOS_PREVIO_MIGRACION
+AS
+BEGIN
+--RUBRO
+	INSERT INTO [VADIUM].RUBRO(descripcion) values('Ciencia ficcion')
+	INSERT INTO [VADIUM].RUBRO(descripcion) values('Comedia')
+	INSERT INTO [VADIUM].RUBRO(descripcion) values('Drama')
+	-- GRADO 
+	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(5,'BAJO')
+	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(10,'MEDIO')
+	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(15,'ALTO')
+	-- ESTADO 
+	INSERT INTO [VADIUM].ESTADO(descripcion) values('Borrador')
+	INSERT INTO [VADIUM].ESTADO(descripcion) values('Finalizado')
+END
+GO
+
+
+
+
 CREATE PROCEDURE [VADIUM].PR_DATOS_INSERT_DATOS_INICIALES
 AS
 BEGIN
@@ -590,17 +614,7 @@ BEGIN
     INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(1,0)
 
 
-	--RUBRO
-	INSERT INTO [VADIUM].RUBRO(descripcion) values('Ciencia ficcion')
-	INSERT INTO [VADIUM].RUBRO(descripcion) values('Comedia')
-	INSERT INTO [VADIUM].RUBRO(descripcion) values('Drama')
-	-- GRADO 
-	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(5,'BAJO')
-	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(10,'MEDIO')
-	INSERT INTO [VADIUM].GRADO(comision,descripcion) values(15,'ALTO')
-	-- ESTADO 
-	INSERT INTO [VADIUM].ESTADO(descripcion) values('Borrador')
-	INSERT INTO [VADIUM].ESTADO(descripcion) values('Finalizado')
+	
 
 	-- PREMIOS
 	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('Descuento','25% descuento en entradas', 200, 350)
@@ -645,12 +659,12 @@ BEGIN
 	GROUP BY m.Espec_Empresa_Razon_Social, m.Espec_Empresa_Cuit, m.Espec_Empresa_Mail, m.Espec_Empresa_Fecha_Creacion, m.Espec_Empresa_Dom_Calle, m.Espec_Empresa_Piso, m.Espec_Empresa_Depto, m.Espec_Empresa_Cod_Postal	
 	HAVING m.Espec_Empresa_Razon_Social IS NOT NULL
 
-	------RUBRO--------
-	INSERT INTO [VADIUM].RUBRO(descripcion)
-	SELECT m.Espectaculo_Rubro_Descripcion
-	FROM gd_esquema.Maestra m 
-	GROUP BY m.Espectaculo_Rubro_Descripcion
-	HAVING m.Espectaculo_Rubro_Descripcion IS NOT NULL
+	--------RUBRO--------
+	--INSERT INTO [VADIUM].RUBRO(descripcion)
+	--SELECT m.Espectaculo_Rubro_Descripcion
+	--FROM gd_esquema.Maestra m 
+	--GROUP BY m.Espectaculo_Rubro_Descripcion
+	--HAVING m.Espectaculo_Rubro_Descripcion IS NOT NULL AND 
 	------ESTADO--------
 	INSERT INTO [VADIUM].ESTADO(descripcion)
 	SELECT m.Espectaculo_Estado
@@ -752,7 +766,7 @@ GO
 								/** ESTADISTICAS **/
 ----------------------------------------------------------------------------------------------
 
-CREATE PROCEDURE [VADIUM].MayorCantLocalidadesNoVendidos @year int, @month int, @grado int
+CREATE PROCEDURE [VADIUM].MayorCantLocalidadesNoVendidos @year int, @month int, @grado int 
 
 AS
 BEGIN
@@ -762,7 +776,7 @@ FROM VADIUM.EMPRESA emp JOIN VADIUM.PUBLICACION pub ON(emp.empresa_id = pub.empr
 		WHERE ubi.compra_id IS NULL AND
 			 (@year is null or year(pub.fecha) =  @year) AND
 			 (@month is null or (month(pub.fecha) > @month AND month(pub.fecha) < (@month + 2) )) AND
-			 (@grado is null or pub.grado_id = @grado)
+			 (@grado = -1 or pub.grado_id = @grado)
 	GROUP BY emp.empresa_id, emp.razonSocial
 	ORDER BY COUNT(*) DESC
 
@@ -770,36 +784,38 @@ END
 GO
 
 
---CREATE PROCEDURE [VADIUM].ClientesPuntosVencidos @year int, @month int
+CREATE PROCEDURE [VADIUM].ClientesPuntosVencidos @year int, @month int
 
---AS
---BEGIN
---SELECT TOP 5 cli.mail , SUM(item.monto) as cantidad
---FROM VADIUM.CLIENTE cli  JOIN VADIUM.COMPRA item on (cli.cliente_id = item.cliente_id)
---						JOIN VADIUM.FACTURA fact on (item.factura_nro = fact.factura_nro)
---	WHERE    (@year is null or year(fact.fecha) =  @year -1) AND
---			 (@month is null or (month(fact.fecha) > @month AND month(fact.fecha) < (@month + 2) )) 
+AS
+BEGIN
+SELECT TOP 5 cli.mail , SUM(p.cantidad) as Punos_vencidos
+FROM VADIUM.CLIENTE cli  JOIN VADIUM.PUNTOS p on (cli.cliente_id = p.cliente_id)
+						
+	WHERE    (@year is null or year(p.fechaVencimiento) =  @year) AND
+			 (@month is null or (month(p.fechaVencimiento) > @month AND month(p.fechaVencimiento) < (@month + 2) )) 
 			 
---	GROUP BY cli.cliente_id, cli.mail
---	ORDER BY SUM(item.monto) DESC
+	GROUP BY cli.cliente_id, cli.mail
+	ORDER BY SUM(p.cantidad) DESC
 
---END
---GO
+END
+GO
 
 CREATE PROCEDURE [VADIUM].ClientesMayorCompras @year int, @month int
 
 AS
 BEGIN
-SELECT TOP 5 cli.mail, COUNT(DISTINCT pub.empresa_id)
+SELECT TOP 5 cli.mail,emp.razonSocial, COUNT(com.compra_id) as compras
 FROM VADIUM.CLIENTE cli  JOIN VADIUM.COMPRA com on (cli.cliente_id = com.id_cliente_comprador)
 						 JOIN VADIUM.UBICACION ubi on (com.compra_id = ubi.compra_id)
 						 JOIN VADIUM.PUBLICACION pub on (ubi.codigoEspectaculo = pub.codigoEspectaculo)
+						 JOIN VADIUM.EMPRESA emp on (pub.empresa_id = emp.empresa_id)
+
 
 	WHERE    (@year is null or year(com.fecha_compra) =  @year) AND
 			 (@month is null or (month(com.fecha_compra) > @month AND month(com.fecha_compra) < (@month + 2) )) 
 			 
-	GROUP BY cli.mail
-	ORDER BY COUNT(DISTINCT pub.empresa_id) DESC
+	GROUP BY cli.mail,emp.empresa_id, emp.razonSocial
+	ORDER BY COUNT(com.compra_id) DESC
 
 END
 GO
@@ -1184,36 +1200,9 @@ GO
 	CREATE PROCEDURE VADIUM.CANJEAR_PREMIO(@cliente_id INT, @premio_id INT, @fecha_actual DATETIME)
 	AS
 	BEGIN
-		IF (SELECT stock FROM VADIUM.PREMIO WHERE @premio_id = premio_id) = 0
-		BEGIN
-			RAISERROR('No se puede canjear algo sin stock',16, 1)
-		END
-	
-		DECLARE @cantidad_puntos_actuales NUMERIC(18,0), @costo_premio NUMERIC(18,0)
-		SELECT @cantidad_puntos_actuales = cantidad FROM VADIUM.PUNTOS WHERE @cliente_id = cliente_id AND DATEADD(YEAR,1,@fecha_actual) = fechaVencimiento
-		SELECT @costo_premio = valor FROM VADIUM.PREMIO WHERE premio_id = @premio_id
-
-		IF @cantidad_puntos_actuales IS NULL OR @cantidad_puntos_actuales < @costo_premio
-		BEGIN
-			RAISERROR('El premio cuesta más que los puntos disponibles', 16, 1)
-		END
-
-		BEGIN TRANSACTION
-			INSERT INTO VADIUM.CANJES
-			(premio_id, cliente_id, fecha, nroRepeticion)
-			VALUES
-			(@premio_id, @cliente_id, @fecha_actual, 
-				(SELECT COALESCE(MAX(nroRepeticion), 0) + 1
-				FROM VADIUM.CANJES
-				WHERE premio_id = @premio_id AND cliente_id = @cliente_id))
-
-			UPDATE VADIUM.PREMIO
-			SET stock = stock - 1
-			WHERE premio_id = @premio_id
-
-			SET @costo_premio *= -1			
-			EXEC VADIUM.MODIFICAR_PUNTOS @cliente_id, @costo_premio, @fecha_actual
-		COMMIT TRANSACTION
+		INSERT INTO CANJES (cliente_id, fecha, premio_id)	
+		VALUES(@cliente_id, @fecha_actual, @premio_id)
+		
 	END
 	GO
 
@@ -1221,33 +1210,35 @@ GO
 --		SP MODIFICAR PUNTOS
 -------------------------------------
 
-	CREATE PROCEDURE VADIUM.MODIFICAR_PUNTOS(@cliente_id INT, @cantidad NUMERIC(18,0), @fecha_actual DATETIME)
-	AS
-	BEGIN
-		IF EXISTS (SELECT 1 FROM VADIUM.PUNTOS WHERE cliente_id = @cliente_id AND DATEADD(YEAR,1,@fecha_actual) = fechaVencimiento)
-		BEGIN 
-			UPDATE VADIUM.PUNTOS
-			SET cantidad = CASE WHEN cantidad + @cantidad > 0 THEN cantidad + @cantidad ELSE 0 END
-			WHERE cliente_id = @cliente_id AND DATEADD(YEAR,1,@fecha_actual) = fechaVencimiento
-		END
-		ELSE
-		BEGIN
-			INSERT INTO VADIUM.PUNTOS
-			(cliente_id, fechaVencimiento, cantidad)
-			VALUES
-			(@cliente_id, DATEADD(YEAR,1,@fecha_actual),
-			CASE WHEN @cantidad > 0 THEN @cantidad ELSE 0 END)
-		END
-	END
-	GO
+	--CREATE PROCEDURE VADIUM.MODIFICAR_PUNTOS(@cliente_id INT, @cantidad NUMERIC(18,0), @fecha_actual DATETIME)
+	--AS
+	--BEGIN
+	--	IF EXISTS (SELECT 1 FROM VADIUM.PUNTOS WHERE cliente_id = @cliente_id AND DATEADD(YEAR,1,@fecha_actual) = fechaVencimiento)
+	--	BEGIN 
+	--		UPDATE VADIUM.PUNTOS
+	--		SET cantidad = CASE WHEN cantidad + @cantidad > 0 THEN cantidad + @cantidad ELSE 0 END
+	--		WHERE cliente_id = @cliente_id AND DATEADD(YEAR,1,@fecha_actual) = fechaVencimiento
+	--	END
+	--	ELSE
+	--	BEGIN
+	--		INSERT INTO VADIUM.PUNTOS
+	--		(cliente_id, fechaVencimiento, cantidad)
+	--		VALUES
+	--		(@cliente_id, DATEADD(YEAR,1,@fecha_actual),
+	--		CASE WHEN @cantidad > 0 THEN @cantidad ELSE 0 END)
+	--	END
+	--END
+	--GO
 
 
 ----------------------------------------------------------------------------------------------
 						/** EJECUTAR DATOS INICIALES Y MIGRACION **/
 ----------------------------------------------------------------------------------------------
 
+EXECUTE VADIUM.PR_DATOS_PREVIO_MIGRACION;
 EXECUTE VADIUM.PR_MIGRACION;
 EXECUTE VADIUM.PR_DATOS_INSERT_DATOS_INICIALES;
+
 
 
 ----------------------------------------------------------------------------------------------

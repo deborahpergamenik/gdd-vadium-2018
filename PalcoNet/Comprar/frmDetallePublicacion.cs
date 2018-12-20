@@ -33,31 +33,27 @@ namespace PalcoNet.Comprar
             List<TipoUbicacion> tiposUbicaciones = Ubicaciones.ObtenerTipoDeUbicaciones();
             tiposUbicaciones.ForEach(x => cmbTipo.Items.Add(new ComboBoxItem { Text = x.descripcion, Value = x.id }));
             lblPrecio.Text = "0";
+            cargarTarjetas();
+        }
+
+        private void cargarTarjetas()
+        {
+          List<Tarjeta> tarjetas =  Tarjeta.ObtenerTodasLasTarjetas((int)UserInstance.getUserInstance().clienteId);
+          if (tarjetas.Count == 0)
+          {
+              lblTarjetasAsocidas.Visible = false;
+              cmbTarjetas.Visible = false;
+              return;
+          }
+          else
+          {
+              lblTarjetasAsocidas.Visible = true;
+              cmbTarjetas.Visible = true;
+              tarjetas.ForEach(x => cmbTarjetas.Items.Add(x.NumeroTarjeta));
+          }
         }
 
 
-        //private void cargarUbicaciones(int? tipoUbicacion)
-        //{
-        //    //AGREAGR PARAMETROS QUE HAGAN FALTA PARA OBTENER LAS UBICACIONES
-
-        //    List<SqlParameter> parametros = new List<SqlParameter>();
-        //    SqlConnector.agregarParametro(parametros, "@codigoPublicacion", codPublicacionActual);
-        //    SqlConnector.agregarParametro(parametros, "@tipoUbicacion", tipoUbicacion.Value);
-        //    SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.ObtenerUbicacionesNoVendidas", "SP", parametros);
-
-        //    if (lector.HasRows)
-        //    {
-        //        lector.Read();
-        //        ubicacionesDisponibles.Load(lector);
-        //        SqlConnector.cerrarConexion();
-        //        ubicacionesDisponibles.PrimaryKey = new DataColumn[] { ubicacionesDisponibles.Columns["nro_ubicacion"] };
-        //        dgvUbicaciones.DataSource = ubicacionesDisponibles;
-        //        dgvUbicaciones.Columns["nro_ubicacion"].Visible = false;
-
-        //        ubicacionesSeleccionadas = ubicacionesDisponibles.Clone();
-        //        ubicacionesSeleccionadas.PrimaryKey = new DataColumn[] { ubicacionesSeleccionadas.Columns["nro_ubicacion"] };
-        //    }
-        //}
 
         private void dgvUbicaciones_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -200,6 +196,14 @@ namespace PalcoNet.Comprar
             if (tarjetaAsociada != null)
             {
                 mskNumeroTarjeta.Text = tarjetaAsociada.NumeroTarjeta;
+            }
+        }
+
+        private void cmbTarjetas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbTarjetas.SelectedItem != null)
+            {
+                string tarj = cmbTarjetas.SelectedItem.ToString();
             }
         }
     }

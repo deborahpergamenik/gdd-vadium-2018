@@ -93,10 +93,8 @@ namespace PalcoNet.Model
                 SqlConnector.agregarParametro(parametrosGuardarTarjeta, "@codigo", CodigoPublicacion);
 
                 DataTable tabla = SqlConnector.obtenerDataTable("VADIUM.ModificarPublicacion", "SP", parametrosGuardarTarjeta);
-                int? val = null;
-                val = Convert.ToInt32(tabla.Rows[0].ItemArray[0]);
-                
-                return val;
+               
+                return 1;
             }
             catch (Exception e)
             {

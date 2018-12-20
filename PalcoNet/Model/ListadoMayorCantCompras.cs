@@ -15,7 +15,7 @@ namespace PalcoNet.Model
         public int? anio { get; set; }
         public int? mes { get; set; }
 
-        public ListadoMayorCantCompras(int? anio, int? mes)
+        public ListadoMayorCantCompras(int? mes, int? anio)
         {
             this.anio = anio;
             this.mes = mes;
@@ -25,7 +25,7 @@ namespace PalcoNet.Model
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@year", this.anio);
-            SqlConnector.agregarParametro(listaParametros, "@moth", this.mes);
+            SqlConnector.agregarParametro(listaParametros, "@month", this.mes);
 
             //revisar query
             String commandtext = "VADIUM.ClientesMayorCompras";

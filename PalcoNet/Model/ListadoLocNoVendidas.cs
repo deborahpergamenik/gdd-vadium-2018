@@ -25,15 +25,21 @@ namespace PalcoNet.Model
 
         public DataTable obtenerListado()
         {
-            List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@year", this.anio);
-            SqlConnector.agregarParametro(listaParametros, "@month", this.mes);
-            SqlConnector.agregarParametro(listaParametros, "@grado", this.grado);
+            
+                List<SqlParameter> listaParametros = new List<SqlParameter>();
+                SqlConnector.agregarParametro(listaParametros, "@year", this.anio);
+                SqlConnector.agregarParametro(listaParametros, "@month", this.mes);
+                if(this.grado == null)
+                    SqlConnector.agregarParametro(listaParametros, "@grado", -1);
+                else
+                    SqlConnector.agregarParametro(listaParametros, "@grado", this.grado);
 
-            //revisar query
-            String commandtext = "VADIUM.MayorCantLocalidadesNoVendidos";
 
-            return SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
+                //revisar query
+                String commandtext = "VADIUM.MayorCantLocalidadesNoVendidos";
+
+                return SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
+          
         }
     }
 }

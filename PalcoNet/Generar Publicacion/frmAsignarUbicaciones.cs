@@ -177,5 +177,10 @@ namespace PalcoNet.Generar_Publicacion
             
             this.Close();
         }
+
+        private void frmAsignarUbicaciones_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

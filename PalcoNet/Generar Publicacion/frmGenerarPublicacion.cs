@@ -160,6 +160,7 @@ namespace PalcoNet.Generar_Publicacion
                             else
                             {
                                 MessageBox.Show("Se agrego un espectaculo correctamente, con sus " + ubicaciones.Count + " ubicaciones");
+                                reload();
                             }
                         }
                         else
@@ -168,7 +169,7 @@ namespace PalcoNet.Generar_Publicacion
                             {
                                 MessageBox.Show("Si desea modificar alguna publicacion, primero seleccione una de la tabla");
                             }
-                            publi.CodigoPublicacion = Convert.ToInt32(lblPublicacion.Text);
+                            publi.CodigoPublicacion = Convert.ToInt32(lblCodEspectaculo.Text);
                             int? id = publi.update();
                             if (id == null)
                             {
@@ -178,6 +179,7 @@ namespace PalcoNet.Generar_Publicacion
                             else
                             {
                                 MessageBox.Show("Se modifico un espectaculo correctamente");
+                                reload();
                             }
                         }
                        
@@ -199,9 +201,21 @@ namespace PalcoNet.Generar_Publicacion
                         }
                         int cantOk = publi.save(espectaculos);
                         MessageBox.Show("Se agregaron " +cantOk +" de un espectaculo correctamente, con sus " + ubicaciones.Count + " ubicaciones respectivamente");
+                        reload();
                     }
                 }
             }
+        }
+
+        private void reload()
+        {
+            clearAll();
+            loadData();
+            txtDescripcion.Text = "";
+            descripcion = "";
+            paginaActual = 0;
+            contarPublicaciones();
+            cargarPublicaciones();
         }
 
         private bool ValidLotes(string p)
@@ -378,8 +392,14 @@ namespace PalcoNet.Generar_Publicacion
                 txtStock.Text = dgvPublicaciones[13, row].Value.ToString();
                 lblCodEspectaculo.Text = dgvPublicaciones[0, row].Value.ToString();
                 cmbRubro.SelectedItem = new ComboBoxItem {Value = Convert.ToInt32(dgvPublicaciones[4, row].Value), Text = dgvPublicaciones[5, row].Value.ToString() };
-                cmbGrado.SelectedValue = new ComboBoxItem { Value = Convert.ToInt32(dgvPublicaciones[9, row].Value), Text = dgvPublicaciones[7, row].Value.ToString() };
-                cmbEstado.SelectedValue = new ComboBoxItem { Value = Convert.ToInt32(dgvPublicaciones[11, row].Value), Text = dgvPublicaciones[12, row].Value.ToString() };
+                cmbRubro.SelectedText = null;
+                cmbRubro.SelectedText = dgvPublicaciones[5, row].Value.ToString();
+                cmbGrado.SelectedItem = new ComboBoxItem { Value = Convert.ToInt32(dgvPublicaciones[9, row].Value), Text = dgvPublicaciones[7, row].Value.ToString() };
+                cmbRubro.SelectedText = null;
+                cmbGrado.SelectedText = dgvPublicaciones[7, row].Value.ToString();
+                cmbEstado.SelectedItem = new ComboBoxItem { Value = Convert.ToInt32(dgvPublicaciones[11, row].Value), Text = dgvPublicaciones[12, row].Value.ToString() };
+                cmbRubro.SelectedText = null;
+                cmbEstado.SelectedText = dgvPublicaciones[12, row].Value.ToString();
                 
 
                 string date = dgvPublicaciones[3, row].Value.ToString();
@@ -404,13 +424,7 @@ namespace PalcoNet.Generar_Publicacion
                 txtLotes.Enabled = false;
                 chbNuevo.Checked = false;
             }
-            //if(estado.ToLower().Equals("borrador"))
-            //{
-            //}
-            //else
-            //{
-            //    MessageBox.Show("La publicacion no esta en estado borrador, por lo tanto no es editable")
-            //}
+        
         }
         public void changehabilityALl(bool enable)
         {
@@ -454,11 +468,18 @@ namespace PalcoNet.Generar_Publicacion
             {
                 changehabilityALl(true);
                 btnAgregarUbicaciones.Enabled = true;
+                clearAll();
             }
             else 
             {
                 btnAgregarUbicaciones.Enabled = false;
             }
+        }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            clearAll();
+
         }
     }
 }

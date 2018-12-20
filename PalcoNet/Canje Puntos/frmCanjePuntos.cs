@@ -32,15 +32,10 @@ namespace PalcoNet.Canje_Puntos
 
         private void frmCanjePuntos_Load(object sender, EventArgs e)
         {
-            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT premio_id, nombre, descripcion , stock, valor " +
-                                                               "FROM VADIUM.PREMIO p " +
-                                                               "WHERE stock > 0", SqlConnector.iniciarConexion());
-            lector.Read();
-            premios.Load(lector);
-            SqlConnector.cerrarConexion();
-            dgvCanjearPuntos.DataSource = premios;
-            dgvCanjearPuntos.Columns["premio_id"].Visible = false;
 
+            string queryPuntos = "SELECT premio_id, nombre, descripcion , stock, valor " +
+                                                               "FROM VADIUM.PREMIO p " +
+                                                               "WHERE p.stock > 0 ";
             if (!UserInstance.getUserInstance().esAdmin)
             {
                 idCliente = (int)UserInstance.getUserInstance().clienteId;
@@ -58,7 +53,7 @@ namespace PalcoNet.Canje_Puntos
                     lector2.Read();
                     puntos = Convert.ToDouble(lector2["cantidad"]);
                 }
-
+                queryPuntos = queryPuntos + "  AND p.valor < " + puntos ;
                 SqlConnector.cerrarConexion();
                 txtPuntos.Text = puntos.ToString();
             }
@@ -66,6 +61,13 @@ namespace PalcoNet.Canje_Puntos
             {
                 MessageBox.Show("Usuario ADMIN. Solo puede tener visualización de los premios a canjear.", "Aviso");
             }
+
+            SqlDataReader lector = SqlConnector.ejecutarReader(queryPuntos, SqlConnector.iniciarConexion());
+            lector.Read();
+            premios.Load(lector);
+            SqlConnector.cerrarConexion();
+            dgvCanjearPuntos.DataSource = premios;
+            dgvCanjearPuntos.Columns["premio_id"].Visible = false;
         }
 
         private void btnAtras_Click(object sender, EventArgs e)

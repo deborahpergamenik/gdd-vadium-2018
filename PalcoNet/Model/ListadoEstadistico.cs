@@ -11,11 +11,12 @@ namespace PalcoNet.Model
     {
         public int anio { get; set; }
         public int trimestre { get; set; }
-
-        public ListadoEstadistico(int trimestre, int anio)
+        public int? grado { get; set; }
+        public ListadoEstadistico(int trimestre, int anio, int? grado = null)
         {
             this.trimestre = this.obtenerRangoTrimestre(trimestre);
             this.anio = anio;
+            this.grado = grado;
         }
           
 
@@ -45,7 +46,7 @@ namespace PalcoNet.Model
         {
             if (opcionElegida == 1)
             {
-                ListadoLocNoVendidas listadoEmpresas = new ListadoLocNoVendidas(trimestre, anio,null);
+                ListadoLocNoVendidas listadoEmpresas = new ListadoLocNoVendidas(trimestre, anio,grado);
                 return listadoEmpresas.obtenerListado();
             }
             else if (opcionElegida == 2)

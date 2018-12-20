@@ -794,6 +794,17 @@ CREATE TYPE [VADIUM].[ids] AS TABLE(
 	[id] [int] NULL
 )
 GO
+CREATE TYPE [VADIUM].[ubicacionesAgregadas] AS TABLE(
+	fila nvarchar(3), 
+	asiento numeric(18,0), 
+	sinNumerar bit, 
+	precio numeric(18,0),
+	codigoTipoubicacion numeric(18,0),
+	codigoEspectaculo numeric(18,0),
+	compra_id int
+
+)
+GO
 
 CREATE PROCEDURE [VADIUM].MayorCantLocalidadesNoVendidos @year int, @month int, @grado int
 
@@ -1038,7 +1049,8 @@ BEGIN
 							join VADIUM.UBICACION ubi on ubi.compra_id = compra.compra_id
 							where not exists (select 1 from VADIUM.ITEMFACTURA item where ubi.ubicacion_id = item.ubicacion_id)										
 							group by compra.compra_id, compra.fecha_compra
-							order by compra.fecha_compra asc
+							order by compra.fecha_compra asc
+
 END
 GO
 
@@ -1094,6 +1106,13 @@ BEGIN
 	INSERT INTO VADIUM.UBICACION(fila, asiento, sinNumerar, precio, codigoTipoUbicacion, codigoEspectaculo, compra_id)
 	VALUES(@fila,@asiento,@sinNumerar, @precio , @codigoTipoubicacion , @codigoEspectaculo , @compra_id )
 	 SELECT  SCOPE_IDENTITY();
+END
+GO
+CREATE PROCEDURE [VADIUM].AgregarLoteUbicaiones @items VADIUM.UbicacionesAgregadas readonly
+AS
+BEGIN
+	INSERT INTO VADIUM.UBICACION(fila, asiento, sinNumerar, precio, codigoTipoUbicacion, codigoEspectaculo, compra_id)
+	SELECT fila, asiento, sinNumerar, precio, codigoTipoUbicacion, codigoEspectaculo, compra_id FROM @items
 END
 GO
 ------------------COMPRAR-------------------------------------------

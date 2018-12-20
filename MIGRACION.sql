@@ -1,7 +1,16 @@
 USE GD2C2018
 GO
 
--------------------------------DROP PROCEDURES-------------------
+----------------------------------------------------------------------------------------------
+								/** DROP PROCEDURES **/
+----------------------------------------------------------------------------------------------
+
+IF OBJECT_ID('VADIUM.obtenerCompras') IS NOT NULL
+DROP PROCEDURE VADIUM.obtenerCompras;
+GO
+IF OBJECT_ID('VADIUM.crearFactura') IS NOT NULL
+DROP PROCEDURE VADIUM.crearFactura;
+GO
 IF OBJECT_ID('VADIUM.CANJEAR_PREMIO') IS NOT NULL
 DROP PROCEDURE VADIUM.CANJEAR_PREMIO;
 GO
@@ -11,7 +20,6 @@ GO
 IF OBJECT_ID('VADIUM.AgregarUbicacion') IS NOT NULL
 DROP PROCEDURE VADIUM.AgregarUbicacion;
 GO
-
 IF OBJECT_ID('VADIUM.MODIFICAR_PUNTOS') IS NOT NULL
 DROP PROCEDURE VADIUM.MODIFICAR_PUNTOS;
 GO
@@ -96,7 +104,10 @@ GO
 IF OBJECT_ID('VADIUM.OBTENER_CLIENTE') IS NOT NULL
 DROP PROCEDURE VADIUM.OBTENER_CLIENTE;
 GO
-------------------------------DROP TRIGGERS ---------------------------------
+
+----------------------------------------------------------------------------------------------
+								/** DROP TRIGGERS **/
+----------------------------------------------------------------------------------------------
 
 IF OBJECT_ID('VADIUM.TR_NuevaUbicacion') IS NOT NULL
 DROP TRIGGER VADIUM.TR_NuevaUbicacion
@@ -108,8 +119,10 @@ IF OBJECT_ID('VADIUM.TR_NuevaCompra') IS NOT NULL
 DROP TRIGGER VADIUM.TR_NuevaCompra;
 GO
 
+----------------------------------------------------------------------------------------------
+								/** DROP TABLES **/
+----------------------------------------------------------------------------------------------
 
------------------------DROP TABLES-------------------------------
 IF OBJECT_ID('VADIUM.ROL_POR_FUNCIONALIDAD') IS NOT NULL
 DROP TABLE [VADIUM].ROL_POR_FUNCIONALIDAD
 GO
@@ -128,7 +141,6 @@ GO
 IF OBJECT_ID('VADIUM.FACTURA') IS NOT NULL
 DROP TABLE [VADIUM].FACTURA
 GO
-
 IF OBJECT_ID('VADIUM.UBICACION') IS NOT NULL
 DROP TABLE [VADIUM].UBICACION
 GO
@@ -150,11 +162,6 @@ GO
 IF OBJECT_ID('VADIUM.GRADO') IS NOT NULL
 DROP TABLE [VADIUM].GRADO
 GO
-
---IF OBJECT_ID('VADIUM.PREMIO_POR_CLIENTE') IS NOT NULL
---DROP TABLE [VADIUM].PREMIO_POR_CLIENTE
---GO
-
 IF OBJECT_ID('VADIUM.CANJES') IS NOT NULL
 DROP TABLE [VADIUM].CANJES
 GO
@@ -164,7 +171,6 @@ GO
 IF OBJECT_ID('VADIUM.PREMIO') IS NOT NULL
 DROP TABLE [VADIUM].PREMIO
 GO
-
 IF OBJECT_ID('VADIUM.TARJETADECREDITO') IS NOT NULL
 DROP TABLE [VADIUM].TARJETADECREDITO
 GO
@@ -182,15 +188,44 @@ DROP TABLE VADIUM.DIRECCION
 GO
 
 
------------------------DROP SCHEMA--------------------------------
+----------------------------------------------------------------------------------------------
+								/** DROP SCHEMA **/
+----------------------------------------------------------------------------------------------
+
 IF SCHEMA_ID('VADIUM') IS NOT NULL
 	DROP SCHEMA [VADIUM]
 GO
 
------------------------------CREACION SCHEMA --------------------------------
+
+----------------------------------------------------------------------------------------------
+								/** DROP TYPE **/
+----------------------------------------------------------------------------------------------
+
+
+IF SCHEMA_ID('ids') IS NOT NULL
+	DROP TYPE ids
+GO
+
+
+----------------------------------------------------------------------------------------------
+								/** CREACION TYPE **/
+----------------------------------------------------------------------------------------------
+
+CREATE TYPE [VADIUM].[ids] AS TABLE(
+	[id] [int] NULL
+)
+GO
+
+----------------------------------------------------------------------------------------------
+								/** CREACION DE SCHEMA **/
+----------------------------------------------------------------------------------------------
+
 CREATE SCHEMA [VADIUM]
 GO
-------------------------------CRATE TABLES---------------------------------
+----------------------------------------------------------------------------------------------
+								/** CREACION DE TABLAS **/
+----------------------------------------------------------------------------------------------
+
 CREATE TABLE [VADIUM].ROL(
 	rol_id int PRIMARY KEY IDENTITY(0,1),
 	rol_habilitado bit DEFAULT 1, 
@@ -204,7 +239,7 @@ CREATE TABLE [VADIUM].USUARIO(
 	usuario_password nvarchar(255) NOT NULL,
 	usuario_intentosLogin int default 0,
 	usuario_activo BIT,
-	primera_vez BIT
+	primera_vez INT
 )
 GO
 
@@ -350,24 +385,6 @@ CREATE TABLE [VADIUM].ITEMFACTURA(
 GO
 
 
----------------------------------------------------------------------
-
---CREATE TABLE [VADIUM].PREMIO(
--- premioId int PRIMARY KEY IDENTITY(1,1),
--- descripcion varchar(255),
--- puntos numeric(18,0),
--- stock int, 
--- fechaVencimiento datetime
---)
---CREATE TABLE [VADIUM].PREMIO_POR_CLIENTE(
--- premioId int,
--- cliente_id int,
--- puntos int,
--- fecha datetime,
---)
---GO
-
-
 CREATE TABLE [VADIUM].PUNTOS (
 	puntos_id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
 	fechaVencimiento DATETIME NOT NULL,
@@ -392,84 +409,10 @@ CREATE TABLE [VADIUM].CANJES (
 )
 GO
 
+----------------------------------------------------------------------------------------------
+								/** TRIGGERS **/
+----------------------------------------------------------------------------------------------
 
-----------------------------TRIGGERS-------------------------------
-
-    -----------EMPRESA-------
---CREATE TRIGGER [VADIUM].TR_NuevaEmpresa
---ON VADIUM.EMPRESA
---INSTEAD OF INSERT
---AS
---BEGIN
---	BEGIN TRY
---		INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_activo, usuario_intentosLogin, primera_vez)
---		SELECT I.mail,  HashBytes('SHA2_256',I.cuit), 1,0, 1
---		FROM inserted I
---		WHERE I.mail NOT IN(SELECT us2.usuario_username FROM VADIUM.USUARIO us2 )
-
---		INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
---		SELECT 2, us.usuario_id
---		FROM inserted I JOIN USUARIO us ON (us.usuario_username = I.mail)
---		WHERE NOT EXISTS(SELECT 2 FROM VADIUM.ROL_POR_USUARIO rolUser WHERE rolUser.rol_id = 1 AND rolUser.usuario_id = us.usuario_id)
-
-
---		INSERT INTO VADIUM.EMPRESA(razonSocial, cuit, mail,  fechaCreacion, usuario_id, calle, piso, depto, cod_postal)
---		SELECT ins.razonSocial, ins.cuit, ins.mail, ins.fechaCreacion, 
---			(SELECT usuario_id FROM VADIUM.USUARIO WHERE usuario_username = ins.mail), ins.calle, ins.piso, ins.depto, ins.cod_postal
---		FROM inserted ins
---	END TRY
---	BEGIN CATCH
---	  SELECT 'ERROR', ERROR_MESSAGE()
---	END CATCH
---END
---GO
---CREATE TRIGGER [VADIUM].
-
---ON VADIUM.UBICACION
---AFTER INSERT, update
---AS
---BEGIN
---	BEGIN TRY	
-		
-		
-		
---		DECLARE  @codEspec numeric(18,0)
-
---		print'cursor'
-
---		DECLARE espectaculo CURSOR FOR
---		SELECT i.codigoEspectaculo
---		FROM inserted i
---		group by i.codigoEspectaculo
-		
-		 
---		OPEN espectaculo
---		FETCH NEXT FROM espectaculo INTO  @codEspec
-
---		WHILE @@FETCH_STATUS = 0
---		BEGIN 
-
---				DECLARE @stock int
---				SET @stock = 0
---				print @stock 
---				SELECT @stock = COUNT(*) FROM VADIUM.UBICACION u WHERE u.codigoEspectaculo = @codEspec AND u.compra_id IS NULL
-				
---				print @stock 
---				print @codEspec
---				UPDATE PUBLICACION SET stock = @stock WHERE codigoEspectaculo =@codEspec
-
-
---				FETCH NEXT FROM espectaculo INTO @codEspec
---		END
---		CLOSE espectaculo  
---		DEALLOCATE espectaculo 
-
---	END TRY
---	BEGIN CATCH
---	  SELECT 'ERROR', ERROR_MESSAGE()
---	END CATCH
---END
---GO
 CREATE TRIGGER [VADIUM].TR_NuevaCompra
 ON VADIUM.COMPRA
 AFTER INSERT
@@ -533,8 +476,10 @@ END
 GO
 
 
+----------------------------------------------------------------------------------------------
+								/** DATOS PRE CARGADOS **/
+----------------------------------------------------------------------------------------------
 
-----------------------------DATOS PRE CARGADOS-------------------------
 CREATE PROCEDURE [VADIUM].PR_DATOS_INSERT_DATOS_INICIALES
 AS
 BEGIN
@@ -565,15 +510,48 @@ BEGIN
 	VALUES (0,'admin','8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918',0,1,0); --pass admin en SHA256
 	SET IDENTITY_INSERT VADIUM.USUARIO OFF
 
-	INSERT INTO VADIUM.CLIENTE(apellido, calle,cod_postal, CUIL, depto, fechaCreacion,fechaNacimiento, localidad, mail, nombre, numeroDocumento, piso,tipoDocumento,telefono, usuario_id)
-	VALUES('Martinez', 'Medrano', '1179', '20-29705392-7', 'C',  CONVERT(datetime, '2018-12-30'), CONVERT(datetime, '1984-10-19'), 'Buenos aires', 'LucasMartinez@gmail.com', 'Lucas', '29705392', 9, 'DNI', '1553783566', 0 )
+	--INSERT INTO VADIUM.CLIENTE(apellido, calle,cod_postal, CUIL, depto, fechaCreacion,fechaNacimiento, localidad, mail, nombre, numeroDocumento, piso,tipoDocumento,telefono, usuario_id)
+	--VALUES('Martinez', 'Medrano', '1179', '20-29705392-7', 'C',  CONVERT(datetime, '2018-12-30'), CONVERT(datetime, '1984-10-19'), 'Buenos aires', 'LucasMartinez@gmail.com', 'Lucas', '29705392', 9, 'DNI', '1553783566', 0 )
 	
-	INSERT INTO VADIUM.EMPRESA(ciudad, calle,cod_postal,cuit, depto, fechaCreacion, localidad, mail,  piso,razonSocial,telefono, usuario_id)
-	VALUES('CABA', 'Cordoba','1414', '30-70875678-0', 'C',  CONVERT(datetime, '2018-12-30'), 'Buenos aires', 'LucasMartinez@gmail.com',  9, 'BALIHAI', '1553783566', 0 )
+	--INSERT INTO VADIUM.EMPRESA(ciudad, calle,cod_postal,cuit, depto, fechaCreacion, localidad, mail,  piso,razonSocial,telefono, usuario_id)
+	--VALUES('CABA', 'Cordoba','1414', '30-70875678-0', 'C',  CONVERT(datetime, '2018-12-30'), 'Buenos aires', 'LucasMartinez@gmail.com',  9, 'BALIHAI', '1553783566', 0 )
 
-	
-	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(2,0)
-	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(1,0)
+
+	--USUARIOS_EMPRESA
+	INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_intentosLogin, usuario_activo, primera_vez)
+	SELECT DISTINCT e.razonSocial, e.razonSocial, 0, 1, 2
+	FROM VADIUM.EMPRESA e
+	ORDER BY 1; 
+
+	--USUARIOS_CLIENTE
+	INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_intentosLogin, usuario_activo, primera_vez)
+	SELECT DISTINCT c.numeroDocumento, c.numeroDocumento,0,1, 2
+	FROM VADIUM.CLIENTE c
+	ORDER BY 1;
+
+	--USUARIOS ROL_POR_USUARIO ADMIN
+	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
+	SELECT rol_id,usuario_id 
+	FROM VADIUM.USUARIO, VADIUM.ROL
+	WHERE usuario_username like 'admin' and rol_nombre in ('Administrativo','Empresa','Cliente')	
+
+
+	--USUARIOS ROL_POR_USUARIO CLIENTE
+	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
+	SELECT rol_id,usuario_id 
+	FROM VADIUM.USUARIO, VADIUM.ROL
+	WHERE usuario_username NOT like 'admin' 
+	AND usuario_username not like 'Razon Social%' and rol_nombre in ('Cliente')
+
+
+	--USUARIOS ROL_POR_USUARIO EMPRESA
+	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id)
+	SELECT rol_id,usuario_id 
+	FROM VADIUM.USUARIO, VADIUM.ROL
+	WHERE usuario_username not like 'admin' 
+	AND usuario_username like 'Razon Social%' and rol_nombre in ('Empresa')
+
+
 	--RUBRO
 	INSERT INTO [VADIUM].RUBRO(descripcion) values('Ciencia ficcion')
 	INSERT INTO [VADIUM].RUBRO(descripcion) values('Comedia')
@@ -587,9 +565,6 @@ BEGIN
 	INSERT INTO [VADIUM].ESTADO(descripcion) values('Finalizado')
 
 	-- PREMIOS
-	--INSERT INTO [VADIUM].PREMIO (puntos, descripcion, stock, fechaVencimiento) VALUES (100, ' voucher entrada gratis', 10, convert(datetime,'18-06-19 10:34:09 PM',5))
-	--INSERT INTO [VADIUM].PREMIO (puntos, descripcion,stock, fechaVencimiento) VALUES (50, ' voucher 50% descuento en entradas', 10 ,convert(datetime,'31-12-18 10:34:09 PM',5))
-
 	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('Descuento','25% descuento en entradas', 200, 350)
 	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('Descuento','50% descuento en entradas', 100, 600)
 	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('Descuento','75% descuento en entradas', 50, 750)
@@ -599,7 +574,9 @@ END
 GO
 
 	
-------------------------------MIGRACION------------------------------
+----------------------------------------------------------------------------------------------
+								/** MIGRACION **/
+----------------------------------------------------------------------------------------------
 
 CREATE PROCEDURE [VADIUM].PR_MIGRACION
 AS
@@ -701,7 +678,9 @@ END
 GO
 
 
---------------------------------FKS------------------------------
+----------------------------------------------------------------------------------------------
+								/** FKS **/
+----------------------------------------------------------------------------------------------
 
 ALTER TABLE [VADIUM].ROL_POR_USUARIO ADD FOREIGN KEY (rol_id) REFERENCES [VADIUM].ROL
 ALTER TABLE [VADIUM].ROL_POR_USUARIO ADD FOREIGN KEY (usuario_id) REFERENCES [VADIUM].USUARIO
@@ -723,20 +702,15 @@ ALTER TABLE [VADIUM].UBICACION ADD FOREIGN KEY (compra_id) REFERENCES [VADIUM].C
 ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (factura_nro) REFERENCES [VADIUM].FACTURA
 ALTER TABLE [VADIUM].ITEMFACTURA ADD FOREIGN KEY (ubicacion_id) REFERENCES [VADIUM].UBICACION
 
---ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (cliente_id) REFERENCES [VADIUM].CLIENTE
---ALTER TABLE [VADIUM].PREMIO_POR_CLIENTE ADD FOREIGN KEY (premioId) REFERENCES [VADIUM].PREMIO
-
 ALTER TABLE [VADIUM].COMPRA ADD FOREIGN KEY (id_cliente_comprador) REFERENCES [VADIUM].CLIENTE
 
 ALTER TABLE [VADIUM].FACTURA ADD FOREIGN KEY (empresa_id) REFERENCES [VADIUM].EMPRESA
 GO
 
 
---------------------------------Estadisticas------------------------------
-CREATE TYPE [VADIUM].[ids] AS TABLE(
-	[id] [int] NULL
-)
-GO
+----------------------------------------------------------------------------------------------
+								/** ESTADISTICAS **/
+----------------------------------------------------------------------------------------------
 
 CREATE PROCEDURE [VADIUM].MayorCantLocalidadesNoVendidos @year int, @month int, @grado int
 
@@ -789,9 +763,13 @@ FROM VADIUM.CLIENTE cli  JOIN VADIUM.COMPRA com on (cli.cliente_id = com.id_clie
 
 END
 GO
---------------------------ROLES-----------------------------------
 
----------------------------LOGIN------------------------------------
+
+----------------------------------------------------------------------------------------------
+								/** LOGIN **/
+----------------------------------------------------------------------------------------------
+
+
 CREATE	 PROCEDURE [VADIUM].VERIFICAR_USUARIO_PASSWORD @user nvarchar(255),@pass NVARCHAR(255)
 AS
 BEGIN TRY
@@ -851,7 +829,10 @@ BEGIN CATCH
   SELECT 'ERROR', ERROR_MESSAGE()
 END CATCH
 GO
----------------------------CLIENTE -----------------------------------
+
+----------------------------------------------------------------------------------------------
+								/** CLIENTE **/
+----------------------------------------------------------------------------------------------
 
 CREATE	 PROCEDURE [VADIUM].LISTADO_SELECCION_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI NVARCHAR(50), @mail nvarchar(255)
 AS
@@ -868,6 +849,7 @@ BEGIN CATCH
   SELECT 'ERROR', ERROR_MESSAGE()
 END CATCH
 GO
+
 CREATE	 PROCEDURE [VADIUM].OBTENER_CLIENTE @NOMBRE NVARCHAR(255),@APELLIDO NVARCHAR(255),@DNI NVARCHAR(50), @mail nvarchar(255)
 AS
 BEGIN TRY
@@ -883,6 +865,7 @@ BEGIN CATCH
   SELECT 'ERROR', ERROR_MESSAGE()
 END CATCH
 GO
+
 CREATE PROCEDURE [VADIUM].HistorialCliente @clienteId int
 AS
 BEGIN
@@ -898,8 +881,9 @@ WHERE compra.id_cliente_comprador = @clienteId
 END
 GO
 
----------------------------EMPRESA -----------------------------------
-
+----------------------------------------------------------------------------------------------
+								/** EMPRESA **/
+----------------------------------------------------------------------------------------------
 
 CREATE PROCEDURE [VADIUM].LISTADO_SELECCION_EMPRESA @razonSocial NVARCHAR(255),@CUIT NVARCHAR(255),@mail NVARCHAR(255)
 AS
@@ -915,37 +899,11 @@ BEGIN CATCH
   SELECT 'ERROR', ERROR_MESSAGE()
 END CATCH
 GO
-------------------- Canje de puntos ----------------------------------
 
---CREATE PROCEDURE [VADIUM].puntajeCliente  @cliente int, @fechaActual datetime
+----------------------------------------------------------------------------------------------
+								/** PUBLICACIONES **/
+----------------------------------------------------------------------------------------------
 
---AS
---BEGIN
-
-
---SELECT sum(item.monto) as puntos
---FROM VADIUM.ITEMFACTURA item JOIN VADIUM.FACTURA fact ON (item.factura_nro = fact.factura_nro)
---	WHERE dateadd(yy,1, fact.fecha) > @fechaActual AND item.cliente_id = @cliente
---group by item.cliente_id
---END
---GO
-
---CREATE PROCEDURE [VADIUM].CanjearPremio  @id_Cliente int, @premioId int ,  @fechaActual datetime
-
---AS
---BEGIN
-
---DECLARE @puntos int
-
---SELECT TOP 1 @puntos = puntos from VADIUM.PREMIO pr WHERE pr.premioId = @premioId
-
---INSERT INTO VADIUM.PREMIO_POR_CLIENTE(cliente_id, premioId, fecha,puntos) VALUES (@id_Cliente,@premioId, @fechaActual, @puntos )
-
-
-
---END
---GO
-----------------Publicaciones--------------------------------------
 CREATE PROCEDURE [VADIUM].ObtenerPublicaciones @desde datetime, @hasta datetime, @rubro nvarchar(255), @descripcion nvarchar(255)
 AS 
 BEGIN
@@ -972,7 +930,11 @@ BEGIN
 END
 GO
 
----------------COMISIONES--------------------
+
+-------------------------------------
+--	SP DE RENDICION DE COMISIONES 
+-------------------------------------
+
 CREATE PROCEDURE [VADIUM].obtenerCompras @cantidad int
 AS 
 BEGIN
@@ -1018,7 +980,10 @@ END CATCH
 END
 GO
 
----------------UBICACIONES------------------------------------------
+-------------------------------------
+--	SP UBICACIONES
+-------------------------------------
+
 CREATE PROCEDURE [VADIUM].UBICACIONES_NO_VENDIDAS @publicacion_id int = NULL, @tipoUbicacionId int = NULL
 AS
 BEGIN
@@ -1030,6 +995,7 @@ BEGIN
 			ubi.compra_id IS NULL
 END
 GO
+
 CREATE PROCEDURE [VADIUM].AgregarUbicacion @fila nvarchar(3), @asiento numeric(18,0), @sinNumerar bit, @precio numeric(18,0), @codigoTipoubicacion numeric(18,0), @codigoEspectaculo numeric(18,0), @compra_id int
 AS
 BEGIN
@@ -1039,7 +1005,11 @@ BEGIN
 	 SELECT  SCOPE_IDENTITY();
 END
 GO
-------------------COMPRAR-------------------------------------------
+
+-------------------------------------
+--	SP COMPRARS
+-------------------------------------
+
 CREATE PROCEDURE [VADIUM].COMPRAR @codCliente int, @FormaPago nvarchar(255), @fecha datetime, @monto numeric(18,0), @cantidad int
 AS
 BEGIN
@@ -1052,7 +1022,11 @@ BEGIN
 
 END
 GO
----------------GRADO DE PUBLICACION-----------------------------------
+
+-------------------------------------
+--	SP GRADO DE PUBLICACION
+-------------------------------------
+
 CREATE PROCEDURE [VADIUM].InsertGrado  @comision numeric(18,0), @descripcion nvarchar(255)
 AS
 BEGIN
@@ -1068,6 +1042,7 @@ BEGIN
 
 END 
 GO
+
 CREATE PROCEDURE [VADIUM].UpdateGrado  @gradoId int, @comision numeric(18,0), @descripcion nvarchar(255)
 AS
 BEGIN TRY
@@ -1090,8 +1065,9 @@ END TRY
   END CATCH
 GO
 
-
-	-------------------- SP agregar ROL al USUARIO ------------------------
+-------------------------------------
+--	SP agregar ROL al USUARIO
+-------------------------------------
 
 	CREATE PROCEDURE VADIUM.AGREGAR_ROL_USUARIO(@iduser int, @idrol int) AS
 	BEGIN
@@ -1101,8 +1077,9 @@ GO
 	END 
 	GO
 
-
-	-------------------- SP agregar ROL a la base ------------------------
+-------------------------------------
+--	SP agregar ROL a la base
+-------------------------------------
 
 	CREATE PROCEDURE VADIUM.AGREGAR_ROL_NUEVO(@rol_nombre nvarchar(255), @ret numeric (18,0) output)
 	AS BEGIN
@@ -1112,7 +1089,10 @@ GO
 	GO
 
 
-	--------------------- SP Agregar FUNCIONALIDAD al ROL --------------------------
+-------------------------------------
+--	SP Agregar FUNCIONALIDAD al ROL 
+-------------------------------------
+
 	CREATE PROCEDURE VADIUM.AGREGAR_FUNCIONALIDAD(@rol nvarchar(255), @funcionalidad nvarchar(255)) AS
 	BEGIN
 		INSERT INTO VADIUM.ROL_POR_FUNCIONALIDAD(rol_id, funcionalidad_id)
@@ -1122,7 +1102,10 @@ GO
 	GO
 
 
-	--------------------- SP Quitar FUNCIONALIDAD al ROL --------------------------
+-------------------------------------
+--	SP Quitar FUNCIONALIDAD al ROL 
+-------------------------------------
+
 	CREATE PROCEDURE VADIUM.QUITAR_FUNCIONALIDAD(@rol nvarchar(255), @funcionalidad nvarchar(255)) AS
 	BEGIN
 		DELETE FROM VADIUM.ROL_POR_FUNCIONALIDAD
@@ -1134,7 +1117,9 @@ GO
 	GO
 
 
-	------------------------------SP REALIZAR CANJE DE PUNTOS--------------------------
+-------------------------------------
+--		SP REALIZAR CANJE DE PUNTOS
+-------------------------------------
 
 	CREATE PROCEDURE VADIUM.CANJEAR_PREMIO(@cliente_id INT, @premio_id INT, @fecha_actual DATETIME)
 	AS
@@ -1172,7 +1157,9 @@ GO
 	END
 	GO
 
-	------------------------------------SP MODIFICAR PUNTOS-----------------------------------
+-------------------------------------
+--		SP MODIFICAR PUNTOS
+-------------------------------------
 
 	CREATE PROCEDURE VADIUM.MODIFICAR_PUNTOS(@cliente_id INT, @cantidad NUMERIC(18,0), @fecha_actual DATETIME)
 	AS
@@ -1194,20 +1181,27 @@ GO
 	END
 	GO
 
---------------Ejecutar datos iniciales y migracion------------------
-EXECUTE VADIUM.PR_DATOS_INSERT_DATOS_INICIALES;
+
+----------------------------------------------------------------------------------------------
+						/** EJECUTAR DATOS INICIALES Y MIGRACION **/
+----------------------------------------------------------------------------------------------
+
 EXECUTE VADIUM.PR_MIGRACION;
+EXECUTE VADIUM.PR_DATOS_INSERT_DATOS_INICIALES;
 
 
---------------Asignacion de Funcionalidades-------------------
+----------------------------------------------------------------------------------------------
+							/** ASIGNACION DE FUNCIONALIDADES **/
+----------------------------------------------------------------------------------------------
 
 EXEC VADIUM.AGREGAR_ROL_USUARIO
 	@iduser = 0, @idrol = 0;
 GO
 
 
------ ADMIN ------
-
+----------------------------------------------------------------------------------------------
+								/** FUNCIONALIDADES ADMIN **/
+----------------------------------------------------------------------------------------------
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Administrador', @funcionalidad = 'AdministrarClientes';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
@@ -1233,10 +1227,9 @@ EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Administrador', @funcionalidad = 'ListadoEstadistico';		
 			
-	
-
-
------ Cliente -----
+----------------------------------------------------------------------------------------------
+								/** FUNCIONALIDADES CLIENTE **/
+----------------------------------------------------------------------------------------------
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 	@rol = 'Cliente', @funcionalidad = 'AdministrarCompras';		
@@ -1246,10 +1239,10 @@ EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Cliente', @funcionalidad = 'TarjetaDeCredito';		
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Cliente', @funcionalidad = 'AdministrarClientes';		
-
-
 		
------ Empresas ----
+----------------------------------------------------------------------------------------------
+								/** FUNCIONALIDADES EMPRESA **/
+----------------------------------------------------------------------------------------------
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 	@rol = 'Empresa', @funcionalidad = 'EditarPublicacion';		

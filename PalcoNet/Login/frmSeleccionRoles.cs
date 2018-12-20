@@ -13,6 +13,8 @@ namespace PalcoNet.Login
 {
     public partial class frmSeleccionRoles : Form
     {
+        public frmLogin frmLogin { get; set; }
+        public frmSeleccionFuncionalidades frmSeleccionFuncionalidades { get; set; }
         public Usuario usuario { get; set; }
 
         public class itemComboBox
@@ -31,8 +33,17 @@ namespace PalcoNet.Login
             }
         }
 
-        public frmSeleccionRoles(Usuario usuarioLogin)
+        public frmSeleccionRoles(Usuario usuarioLogin, frmLogin _frmLogin)
         {
+            this.frmLogin = _frmLogin;
+            this.usuario = usuarioLogin;
+            InitializeComponent();
+            completarCombo();
+        }
+
+        public frmSeleccionRoles(Usuario usuarioLogin, frmSeleccionFuncionalidades _frmSeleccionFuncionalidades)
+        {
+            this.frmSeleccionFuncionalidades = _frmSeleccionFuncionalidades;
             this.usuario = usuarioLogin;
             InitializeComponent();
             completarCombo();
@@ -41,13 +52,6 @@ namespace PalcoNet.Login
         public void completarCombo()
         {
             usuario.Roles.Where(x => x.habilitado).ToList().ForEach(x => cmbRoles.Items.Add(new ComboBoxItem { Value = x.Id, Text = x.nombre }));
-            //for (int i = 0; i < usuario.Roles.Count(); i++)
-            //{
-            //    if (usuario.Roles[i].habilitado) // TOMANDO EN CUENTA QUE 1 ES HABILITADO
-            //    {
-            //        cmbRoles.Items.Add(new itemComboBox(usuario.Roles[i].nombre, usuario.Roles[i].Id));
-            //    }
-            //}
         }
 
 
@@ -63,8 +67,7 @@ namespace PalcoNet.Login
                 if (this.usuario.Roles[cmbRoles.SelectedIndex].Funcionalidades.Count != 0)
                 {
                     ComboBoxItem seleccion = cmbRoles.SelectedItem as ComboBoxItem;
-                    //UserInstance.getUserInstance().loadRol(usuario.Roles.Where(x => x.Id == seleccion.rol_id).FirstOrDefault());
-                    frmSeleccionFuncionalidades formFuncionalidades = new frmSeleccionFuncionalidades(usuario, Convert.ToInt32(seleccion.Value), false);
+                    frmSeleccionFuncionalidades formFuncionalidades = new frmSeleccionFuncionalidades(usuario, Convert.ToInt32(seleccion.Value), false, this);
                     this.Hide();
                     formFuncionalidades.Show();
                 }
@@ -72,6 +75,20 @@ namespace PalcoNet.Login
                 {
                     MessageBox.Show("El rol seleccionado no posee funcionalidades.", "Error");
                 }
+            }
+        }
+
+        private void frmSeleccionRoles_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (frmLogin != null)
+            {
+                this.Hide();
+                this.frmLogin.Show();
+            }
+            else
+            {
+                this.Hide();
+                this.frmSeleccionFuncionalidades.Show();
             }
         }
     }

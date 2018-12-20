@@ -31,7 +31,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cmbFuncionalidades = new System.Windows.Forms.ComboBox();
             this.btnAceptar = new System.Windows.Forms.Button();
-            this.btnAtras = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -39,7 +38,6 @@
             // 
             this.groupBox1.Controls.Add(this.cmbFuncionalidades);
             this.groupBox1.Controls.Add(this.btnAceptar);
-            this.groupBox1.Controls.Add(this.btnAtras);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
@@ -70,17 +68,6 @@
             this.btnAceptar.UseVisualStyleBackColor = true;
             this.btnAceptar.Click += new System.EventHandler(this.btnAceptar_Click);
             // 
-            // btnAtras
-            // 
-            this.btnAtras.Location = new System.Drawing.Point(13, 62);
-            this.btnAtras.Margin = new System.Windows.Forms.Padding(4);
-            this.btnAtras.Name = "btnAtras";
-            this.btnAtras.Size = new System.Drawing.Size(107, 37);
-            this.btnAtras.TabIndex = 2;
-            this.btnAtras.Text = "Atras";
-            this.btnAtras.UseVisualStyleBackColor = true;
-            this.btnAtras.Click += new System.EventHandler(this.btnAtras_Click);
-            // 
             // frmSeleccionFuncionalidades
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -100,6 +87,5 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox cmbFuncionalidades;
         private System.Windows.Forms.Button btnAceptar;
-        private System.Windows.Forms.Button btnAtras;
     }
 }

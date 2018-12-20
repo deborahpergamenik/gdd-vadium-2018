@@ -202,9 +202,6 @@ GO
 IF SCHEMA_ID('VADIUM.ids') IS NOT NULL
 	DROP TYPE VADIUM.ids
 GO
-IF SCHEMA_ID('VADIUM.UbicacionesAgregadas') IS NOT NULL
-	DROP TYPE VADIUM.UbicacionesAgregadas
-GO
 
 ----------------------------------------------------------------------------------------------
 								/** DROP SCHEMA **/
@@ -293,7 +290,7 @@ GO
 
 CREATE TABLE [VADIUM].CLIENTE(
 	cliente_id int PRIMARY KEY IDENTITY(1,1),
-	usuario_id int,
+	usuario_id int references VADIUM.USUARIO,
 	nombre nvarchar(255),
 	apellido nvarchar(255),
 	tipoDocumento nvarchar(50),
@@ -325,7 +322,7 @@ CREATE TABLE [VADIUM].TARJETADECREDITO(
 GO
 CREATE TABLE [VADIUM].EMPRESA(
 	 empresa_id int PRIMARY KEY IDENTITY(1,1),
-	 usuario_id int, 
+	 usuario_id int references VADIUM.USUARIO, 
 	 fechaCreacion datetime,
 	 razonSocial nvarchar(255),
 	 cuit nvarchar(255),
@@ -507,7 +504,6 @@ GO
 ----------------------------------------------------------------------------------------------
 								/** DATOS PRE CARGADOS **/
 ----------------------------------------------------------------------------------------------
-
 CREATE PROCEDURE [VADIUM].PR_DATOS_INSERT_DATOS_INICIALES
 AS
 BEGIN
@@ -523,27 +519,13 @@ BEGIN
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarEmpresas');
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarGrados');
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarRoles');
-	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarRubros');
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarPuntos');
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('AdministrarCompras');
-	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('EditarPublicacion');
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('GenerarPublicacion');
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('RendicionesPorComision');
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('HistorialClientes');
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('ListadoEstadistico');
 	INSERT INTO [VADIUM].FUNCIONALIDAD (funcionalidad_descripcion) VALUES ('TarjetaDeCredito');
-
-	SET IDENTITY_INSERT VADIUM.USUARIO ON
-	INSERT INTO VADIUM.USUARIO(usuario_id,usuario_username,usuario_password,usuario_intentosLogin,usuario_activo,primera_vez) 
-	VALUES (0,'admin','8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918',0,1,0); --pass admin en SHA256
-	SET IDENTITY_INSERT VADIUM.USUARIO OFF
-
-	--INSERT INTO VADIUM.CLIENTE(apellido, calle,cod_postal, CUIL, depto, fechaCreacion,fechaNacimiento, localidad, mail, nombre, numeroDocumento, piso,tipoDocumento,telefono, usuario_id)
-	--VALUES('Martinez', 'Medrano', '1179', '20-29705392-7', 'C',  CONVERT(datetime, '2018-12-30'), CONVERT(datetime, '1984-10-19'), 'Buenos aires', 'LucasMartinez@gmail.com', 'Lucas', '29705392', 9, 'DNI', '1553783566', 0 )
-	
-	--INSERT INTO VADIUM.EMPRESA(ciudad, calle,cod_postal,cuit, depto, fechaCreacion, localidad, mail,  piso,razonSocial,telefono, usuario_id)
-	--VALUES('CABA', 'Cordoba','1414', '30-70875678-0', 'C',  CONVERT(datetime, '2018-12-30'), 'Buenos aires', 'LucasMartinez@gmail.com',  9, 'BALIHAI', '1553783566', 0 )
-
 
 	--USUARIOS_EMPRESA
 	INSERT INTO VADIUM.USUARIO(usuario_username, usuario_password, usuario_intentosLogin, usuario_activo, primera_vez)
@@ -579,6 +561,34 @@ BEGIN
 	WHERE usuario_username not like 'admin' 
 	AND usuario_username like 'Razon Social%' and rol_nombre in ('Empresa')
 
+	--ACTUALIZACION usuario_Id EN TABLAS CLIENTE Y EMPRESA
+	UPDATE [VADIUM].CLIENTE
+	SET usuario_id = u.usuario_Id 
+	FROM [VADIUM].CLIENTE c
+	INNER JOIN [VADIUM].USUARIO u ON u.usuario_username = c.numeroDocumento 
+
+	UPDATE [VADIUM].EMPRESA 
+	SET usuario_id = u.usuario_Id 
+	FROM [VADIUM].Empresa e
+	INNER JOIN [VADIUM].USUARIO u ON u.usuario_username = e.razonSocial 
+
+
+	--ADMIN
+
+	SET IDENTITY_INSERT VADIUM.USUARIO ON
+	INSERT INTO VADIUM.USUARIO(usuario_id,usuario_username,usuario_password,usuario_intentosLogin,usuario_activo,primera_vez) 
+	VALUES (0,'admin','8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918',0,1,0); --pass admin en SHA256
+	
+	INSERT INTO VADIUM.CLIENTE(apellido, calle,cod_postal, CUIL, depto, fechaCreacion,fechaNacimiento, localidad, mail, nombre, numeroDocumento, piso,tipoDocumento,telefono, usuario_id)
+	VALUES('Martinez', 'Medrano', '1179', '20-29705392-7', 'C',  CONVERT(datetime, '2018-12-30'), CONVERT(datetime, '1984-10-19'), 'Buenos aires', 'LucasMartinez@gmail.com', 'Lucas', '29705392', 9, 'DNI', '1553783566', 0 )
+	
+	INSERT INTO VADIUM.EMPRESA(ciudad, calle,cod_postal,cuit, depto, fechaCreacion, localidad, mail,  piso,razonSocial,telefono, usuario_id)
+	VALUES('CABA', 'Cordoba','1414', '30-70875678-0', 'C',  CONVERT(datetime, '2018-12-30'), 'Buenos aires', 'LucasMartinez@gmail.com',  9, 'BALIHAI', '1553783566', 0 )
+	SET IDENTITY_INSERT VADIUM.USUARIO OFF
+
+	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(2,0)
+    INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(1,0)
+
 
 	--RUBRO
 	INSERT INTO [VADIUM].RUBRO(descripcion) values('Ciencia ficcion')
@@ -598,6 +608,7 @@ BEGIN
 	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('Descuento','75% descuento en entradas', 50, 750)
 	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('VIP','Entrada VIP', 150, 750)
 	INSERT INTO [VADIUM].PREMIO(nombre,descripcion, stock, valor) VALUES('VIP','Entrada VIP + pochoclos + gaseosa', 200, 750)
+
 END
 GO
 
@@ -1260,13 +1271,9 @@ EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Administrador', @funcionalidad = 'AdministrarRoles';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @funcionalidad = 'AdministrarRubros';
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Administrador', @funcionalidad = 'AdministrarPuntos';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Administrador', @funcionalidad = 'AdministrarCompras';		
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Administrador', @funcionalidad = 'EditarPublicacion';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Administrador', @funcionalidad = 'GenerarPublicacion';
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
@@ -1276,27 +1283,23 @@ EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Administrador', @funcionalidad = 'ListadoEstadistico';		
 			
+			
 ----------------------------------------------------------------------------------------------
 								/** FUNCIONALIDADES CLIENTE **/
 ----------------------------------------------------------------------------------------------
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @funcionalidad = 'AdministrarCompras';		
+@rol = 'Cliente', @funcionalidad = 'AdministrarCompras';		
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Cliente', @funcionalidad = 'AdministrarPuntos';	
+@rol = 'Cliente', @funcionalidad = 'AdministrarPuntos';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Cliente', @funcionalidad = 'TarjetaDeCredito';		
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-@rol = 'Cliente', @funcionalidad = 'AdministrarClientes';		
+@rol = 'Cliente', @funcionalidad = 'HistorialClientes';		
 		
 ----------------------------------------------------------------------------------------------
 								/** FUNCIONALIDADES EMPRESA **/
 ----------------------------------------------------------------------------------------------
 
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @funcionalidad = 'EditarPublicacion';		
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @funcionalidad = 'GenerarPublicacion';	
-EXEC VADIUM.AGREGAR_FUNCIONALIDAD
-	@rol = 'Empresa', @funcionalidad = 'AdministrarEmpresas';	
-
+@rol = 'Empresa', @funcionalidad = 'GenerarPublicacion';	

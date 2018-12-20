@@ -170,12 +170,6 @@
     <Compile Include="Comprar\frmDetallePublicacion.Designer.cs">
       <DependentUpon>frmDetallePublicacion.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editar Publicacion\frmEditarPublicacion.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Editar Publicacion\frmEditarPublicacion.Designer.cs">
-      <DependentUpon>frmEditarPublicacion.cs</DependentUpon>
-    </Compile>
     <Compile Include="Generar Publicacion\frmAsignarUbicaciones.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -349,6 +343,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Generar Publicacion\frmPublicaiconesPorLotes.resx">
       <DependentUpon>frmPublicaiconesPorLotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Historial Cliente\frmHistorialCliente.resx">
+      <DependentUpon>frmHistorialCliente.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Listado Estadistico\frmListadoEstadistico.resx">
       <DependentUpon>frmListadoEstadistico.cs</DependentUpon>

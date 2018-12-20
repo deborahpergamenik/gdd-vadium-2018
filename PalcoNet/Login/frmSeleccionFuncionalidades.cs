@@ -3,11 +3,10 @@ using PalcoNet.Abm_Empresa_Espectaculo;
 using PalcoNet.Abm_Grado;
 using PalcoNet.Abm_Rol;
 using PalcoNet.Abm_Rubro;
-
+using PalcoNet.Abm_Tarjeta_Credito;
 using PalcoNet.Canje_Puntos;
 using PalcoNet.Common;
 using PalcoNet.Comprar;
-using PalcoNet.Editar_Publicacion;
 using PalcoNet.Generar_Publicacion;
 using PalcoNet.Generar_Rendicion_Comisiones;
 using PalcoNet.Historial_Cliente;
@@ -27,6 +26,8 @@ namespace PalcoNet.Login
 {
     public partial class frmSeleccionFuncionalidades : Form
     {
+        public frmLogin frmLogin { get; set; }
+        public frmSeleccionRoles frmSeleccionRoles { get; set; }
         public Usuario usuario { get; set; }
         public Rol rolActual { get; set; }
 
@@ -46,10 +47,9 @@ namespace PalcoNet.Login
             }
         }
 
-        public frmSeleccionFuncionalidades(Usuario usuario, int rol_id, Boolean bypass)
+        public frmSeleccionFuncionalidades(Usuario usuario, int rol_id, frmLogin _frmLogin)
         {
-            //Genera el diccionario de tipoPublicacion, usuario_activoPublicacion, tipoOperacion y Visibilidades
-            //Interfaz.generarDiccionarios();
+            this.frmLogin = _frmLogin;
             this.usuario = usuario;
             var rolQuery = from rol in this.usuario.Roles where rol.Id == rol_id select rol;
             foreach (var item in rolQuery)
@@ -61,15 +61,23 @@ namespace PalcoNet.Login
             cmbFuncionalidades.DisplayMember = "Descripcion";
             cmbFuncionalidades.ValueMember = "funcionalidad_id";
             listarFuncionalidades();
+        }
 
-            if (!bypass)
+
+        public frmSeleccionFuncionalidades(Usuario usuario, int rol_id, Boolean bypass, frmSeleccionRoles _frmSeleccionRoles)
+        {
+            this.frmSeleccionRoles = _frmSeleccionRoles;
+            this.usuario = usuario;
+            var rolQuery = from rol in this.usuario.Roles where rol.Id == rol_id select rol;
+            foreach (var item in rolQuery)
             {
-                btnAtras.Visible = true;
+                this.rolActual = item;
             }
-            else
-            {
-                btnAtras.Visible = false;
-            }
+
+            InitializeComponent();
+            cmbFuncionalidades.DisplayMember = "Descripcion";
+            cmbFuncionalidades.ValueMember = "funcionalidad_id";
+            listarFuncionalidades();
         }
 
         public void listarFuncionalidades()
@@ -101,47 +109,37 @@ namespace PalcoNet.Login
 
                     if (rolActual.Funcionalidades[i].Id == 5)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Rubro", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Puntos", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 6)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Puntos", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Compras", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 7)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Compras", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Publicaciones", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 8)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Editar Publicación", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Generar Rendiciones por Comisión", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 9)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Generar Publicación", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Historial de Cliente", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 10)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Generar Rendiciones por Comisión", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Listado Estadístico", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 11)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Historial de Cliente", rolActual.Funcionalidades[i].Id));
-                    }
-
-                    if (rolActual.Funcionalidades[i].Id == 12)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Listado Estadístico", rolActual.Funcionalidades[i].Id));
-                    }
-
-                    if (rolActual.Funcionalidades[i].Id == 13)
-                    {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Tarjeta de Crédito", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Tarjeta Crédito", rolActual.Funcionalidades[i].Id));
                     }
                 }
             }
@@ -185,75 +183,64 @@ namespace PalcoNet.Login
                         form4.Show();
                         break;
                     case 5:
-                        frmRubro form5 = new frmRubro(this);
+                        frmCanjePuntos form5 = new frmCanjePuntos(this.usuario.usuario_id, this);
                         this.Hide();
                         form5.ShowDialog();
                         this.Show();
                         break;
                     case 6:
-                        frmCanjePuntos form6 = new frmCanjePuntos(this.usuario.usuario_id, this);
+                        frmComprar form6 = new frmComprar(this);
                         this.Hide();
                         form6.ShowDialog();
                         this.Show();
                         break;
                     case 7:
-                        frmComprar form7 = new frmComprar(this);
+                        string modo = "Nuevo";
+                        frmGenerarPublicacion form7 = new frmGenerarPublicacion(modo);
                         this.Hide();
                         form7.ShowDialog();
                         this.Show();
                         break;
                     case 8:
-                        frmEditarPublicacion form8 = new frmEditarPublicacion();
+                        frmGenerarRendicionesComisiones form8 = new frmGenerarRendicionesComisiones();
                         this.Hide();
                         form8.ShowDialog();
                         this.Show();
                         break;
                     case 9:
-                        string modo = "Nuevo";
-                        frmGenerarPublicacion form9 = new frmGenerarPublicacion(modo);
+                        frmHistorialCliente form9 = new frmHistorialCliente(this);
                         this.Hide();
                         form9.ShowDialog();
                         this.Show();
                         break;
                     case 10:
-                        frmGenerarRendicionesComisiones form10 = new frmGenerarRendicionesComisiones();
+                        frmListadoEstadistico form10 = new frmListadoEstadistico();
                         this.Hide();
                         form10.ShowDialog();
                         this.Show();
                         break;
                     case 11:
-                        frmHistorialCliente form11 = new frmHistorialCliente(this);
+                        frmAbmTarjetaDeCredito form11 = new frmAbmTarjetaDeCredito(this, (int)UserInstance.getUserInstance().clienteId);
                         this.Hide();
                         form11.ShowDialog();
                         this.Show();
-                        break;
-                    case 12:
-                        frmListadoEstadistico form12 = new frmListadoEstadistico();
-                        this.Hide();
-                        form12.Show();
-                        break;
-                    case 13:
-                        frmAgregarTarjetaDeCredito form13 = new frmAgregarTarjetaDeCredito();//this, (int)UserInstance.getUserInstance().clienteId
-                        this.Hide();
-                        form13.Show();
                         break;
                 }
             }
         }
 
-        private void btnAtras_Click(object sender, EventArgs e)
-        {
-            frmSeleccionRoles formRoles = new frmSeleccionRoles(Interfaz.usuario);
-            this.Hide();
-            formRoles.Show();
-        }
 
         private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
+            if (this.frmLogin != null)
             {
-
-                Environment.Exit(0);
+                this.Hide();
+                this.frmLogin.Show();
+            }
+            else
+            {
+                this.Hide();
+                this.frmSeleccionRoles.Show();
             }
         }
     }

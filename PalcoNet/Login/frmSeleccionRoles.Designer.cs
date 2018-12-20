@@ -88,6 +88,7 @@
             this.Controls.Add(this.label1);
             this.Name = "frmSeleccionRoles";
             this.Text = "frmSeleccionRoles";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmSeleccionRoles_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

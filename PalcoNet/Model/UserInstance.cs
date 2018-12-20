@@ -14,6 +14,7 @@ namespace PalcoNet.Model
         public Usuario usuario = null;
         public int? clienteId = null;
         public int? empresaId = null;
+        public bool esAdmin = false;
         public Rol rol;
         public List<Ubicacion> ubicacionesAGuardar = new List<Ubicacion>();
         public static void createUserInstance()
@@ -33,7 +34,7 @@ namespace PalcoNet.Model
             this.rol = rol;
             this.usuario = user;
 
-           
+
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros, "@usuario_id", user.usuario_id);
             SqlDataReader lector = SqlConnector.ejecutarReader("SELECT c.cliente_id " +
@@ -46,9 +47,9 @@ namespace PalcoNet.Model
                 lector.Read();
                 clienteId = Convert.ToInt32(lector["cliente_id"]);
             }
-                
+
             SqlConnector.cerrarConexion();
-            
+
 
             List<SqlParameter> listaParametros2 = new List<SqlParameter>();
             SqlConnector.agregarParametro(listaParametros2, "@usuario_id", user.usuario_id);
@@ -64,7 +65,14 @@ namespace PalcoNet.Model
             }
 
             SqlConnector.cerrarConexion();
+
+
+            if (this.clienteId == null && this.empresaId == null)
+            {
+                esAdmin = true;
+            }
         }
+
         public void clearUbicaiones()
         {
             ubicacionesAGuardar = new List<Ubicacion>();

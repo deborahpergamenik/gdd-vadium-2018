@@ -41,21 +41,27 @@ namespace PalcoNet.Canje_Puntos
             dgvCanjearPuntos.DataSource = premios;
             dgvCanjearPuntos.Columns["premio_id"].Visible = false;
 
-            idCliente = (int)UserInstance.getUserInstance().clienteId;
-
-
-            List<SqlParameter> listaParametros2 = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros2, "@cliente_id", this.idCliente);
-            SqlConnector.agregarParametro(listaParametros2, "@anioVencimiento", Configuration.getActualDate().Year + 1);
-            SqlDataReader lector2 = SqlConnector.ejecutarReader("SELECT cantidad FROM VADIUM.PUNTOS WHERE cliente_id = @cliente_id AND anioVencimiento = @anioVencimiento", listaParametros2, SqlConnector.iniciarConexion());
-            if (lector2.HasRows)
+            if (!UserInstance.getUserInstance().esAdmin)
             {
-                lector2.Read();
-                puntos = Convert.ToDouble(lector["cantidad"]);
-            }
+                idCliente = (int)UserInstance.getUserInstance().clienteId;
 
-            SqlConnector.cerrarConexion();
-            txtPuntos.Text = puntos.ToString();
+                List<SqlParameter> listaParametros2 = new List<SqlParameter>();
+                SqlConnector.agregarParametro(listaParametros2, "@cliente_id", this.idCliente);
+                SqlConnector.agregarParametro(listaParametros2, "@anioVencimiento", Configuration.getActualDate().Year + 1);
+                SqlDataReader lector2 = SqlConnector.ejecutarReader("SELECT cantidad FROM VADIUM.PUNTOS WHERE cliente_id = @cliente_id AND anioVencimiento = @anioVencimiento", listaParametros2, SqlConnector.iniciarConexion());
+                if (lector2.HasRows)
+                {
+                    lector2.Read();
+                    puntos = Convert.ToDouble(lector["cantidad"]);
+                }
+
+                SqlConnector.cerrarConexion();
+                txtPuntos.Text = puntos.ToString();
+            }
+            else
+            {
+                MessageBox.Show("Usuario ADMIN. Solo puede tener visualización de los premios a canjear.", "Aviso");
+            }
         }
 
         private void btnAtras_Click(object sender, EventArgs e)
@@ -66,7 +72,7 @@ namespace PalcoNet.Canje_Puntos
 
         private void dgvCanjearPuntos_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 0)
+            if (e.ColumnIndex == 0 && !UserInstance.getUserInstance().esAdmin)
             {
                 double costoPuntos = double.Parse(dgvCanjearPuntos.Rows[e.RowIndex].Cells["valor"].Value.ToString());
                 int stock = (int)dgvCanjearPuntos.Rows[e.RowIndex].Cells["stock"].Value;

@@ -49,13 +49,13 @@ namespace PalcoNet
                                     {
                                         this.Hide();
                                         UserInstance.getUserInstance().loadInformation(usuarioLogin, usuarioLogin.Roles[0]);
-                                        frmSeleccionFuncionalidades formSeleccionFuncionalidades = new frmSeleccionFuncionalidades(usuarioLogin, usuarioLogin.Roles[0].Id, true);
+                                        frmSeleccionFuncionalidades formSeleccionFuncionalidades = new frmSeleccionFuncionalidades(usuarioLogin, usuarioLogin.Roles[0].Id, this);
                                         formSeleccionFuncionalidades.Show();
                                     }
                                     else
                                     {
                                         this.Hide();
-                                        frmSeleccionRoles formSeleccionRoles = new frmSeleccionRoles(usuarioLogin);
+                                        frmSeleccionRoles formSeleccionRoles = new frmSeleccionRoles(usuarioLogin, this);
                                         formSeleccionRoles.Show();
                                     }
                                 }

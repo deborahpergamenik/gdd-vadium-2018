@@ -1,4 +1,5 @@
 ﻿using PalcoNet.Common;
+using PalcoNet.Comprar;
 using PalcoNet.Model;
 using System;
 using System.Collections.Generic;
@@ -23,12 +24,21 @@ namespace PalcoNet.Abm_Cliente
         public string anioVencimiento { get; set; }
         public frmAbmCliente frmAbmCliente { get; set; }
         public frmModificarCliente frmModificarCliente { get; set; }
+        public frmDetallePublicacion frmDetallePublicacion { get; set; }
         public string tipoRegistroDeTarjeta { get; set; }
 
 
         public frmAgregarTarjetaDeCredito(frmAbmCliente _frmAbmCliente)
         {
             this.frmAbmCliente = _frmAbmCliente;
+            InitializeComponent();
+            setearComboBoxes();
+        }
+
+
+        public frmAgregarTarjetaDeCredito(frmDetallePublicacion _frmDetallePublicacion)
+        {
+            this.frmDetallePublicacion = _frmDetallePublicacion;
             InitializeComponent();
             setearComboBoxes();
         }
@@ -104,9 +114,13 @@ namespace PalcoNet.Abm_Cliente
                 {
                     frmAbmCliente.tarjetaAsociada = tarjeta;
                 }
-                else
+                else if (frmModificarCliente != null)
                 {
                     frmModificarCliente.tarjetaAsociada = tarjeta;
+                }
+                else
+                {
+                    frmDetallePublicacion.tarjetaAsociada = tarjeta;
                 }
 
                 MessageBox.Show("Asociación de tarjeta realizada con éxito.", "Asociación tarjeta exitoso");
@@ -121,11 +135,14 @@ namespace PalcoNet.Abm_Cliente
                 {
                     frmAbmCliente.Show();
                 }
-                else
+                else if (frmModificarCliente != null)
                 {
                     frmModificarCliente.Show();
                 }
-          
+                else
+                {
+                    frmDetallePublicacion.Show();
+                }
             }
             else
             {
@@ -180,10 +197,14 @@ namespace PalcoNet.Abm_Cliente
             {
                 frmAbmCliente.Show();
             }
-            else
+            else if (frmModificarCliente != null)
             {
                 frmModificarCliente.Show();
-            }          
+            }
+            else
+            {
+                frmDetallePublicacion.Show();
+            }
         }
 
         private void frmAgregarTarjetaDeCredito_Load(object sender, EventArgs e)

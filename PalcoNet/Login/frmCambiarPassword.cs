@@ -16,9 +16,20 @@ namespace PalcoNet.Login
 {
     public partial class frmCambiarpassword : Form
     {
-        public frmCambiarpassword()
+        public Boolean primeraVez { get; set; }
+
+        public frmCambiarpassword(Boolean pVez)
         {
+            this.primeraVez = pVez;
             InitializeComponent();
+
+            if (primeraVez)
+            {
+                passViejoNH.Enabled = false;
+                MessageBox.Show("Con el fin de mejorar la protección de sus datos personales, " +
+                    "hemos implementado junto al nuevo sistema de gestión una nueva política de seguridad." +
+                    "\n\nPara ello, le solicitamos que ingrese nuevamente su contraseña, o escoja una nueva.", "Bienvenido al nuevo sistema");
+            }
         }
 
         private void pass2_TextChanged(object sender, EventArgs e)
@@ -49,14 +60,34 @@ namespace PalcoNet.Login
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (!passViejoNH.Text.Equals("") && !pass1.Text.Equals("") && !pass2.Text.Equals(""))
+            if ((!passViejoNH.Text.Equals("") || primeraVez == true) && !pass1.Text.Equals("") && !pass2.Text.Equals(""))
             {
-                UTF8Encoding encoderHash = new UTF8Encoding();
-                SHA256Managed hasher = new SHA256Managed();
-                byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passViejoNH.Text));
-                string passViejo = bytesDeHasheoToString(bytesDeHasheo);
+                if (primeraVez == false)
+                {
+                    UTF8Encoding encoderHash = new UTF8Encoding();
+                    SHA256Managed hasher = new SHA256Managed();
+                    byte[] bytesDeHasheo = hasher.ComputeHash(encoderHash.GetBytes(passViejoNH.Text));
+                    string passViejo = bytesDeHasheoToString(bytesDeHasheo);
 
-                if (chequearPassword(passViejo))
+                    if (chequearPassword(passViejo))
+                    {
+                        if (pass1.Text == pass2.Text)
+                        {
+                            Interfaz.usuario.cambiarPassword(pass1.Text);
+                            MessageBox.Show("Contraseña modificada.");
+                            this.Hide();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Las contraseñas no coinciden.", "Error");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("El password viejo no es correcto.", "Error");
+                    }
+                }
+                else
                 {
                     if (pass1.Text == pass2.Text)
                     {
@@ -68,10 +99,6 @@ namespace PalcoNet.Login
                     {
                         MessageBox.Show("Las contraseñas no coinciden.", "Error");
                     }
-                }
-                else
-                {
-                    MessageBox.Show("El password viejo no es correcto.", "Error");
                 }
 
             }

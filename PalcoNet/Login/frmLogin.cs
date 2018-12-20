@@ -80,9 +80,31 @@ namespace PalcoNet
                         }
                         else
                         {
+                            if (pVez == 2)
+                            {
+                                if (usuarioLogin.verificarContraseniaSinHash(txtpassword.Text))
+                                {
+                                    frmCambiarpassword frmPassword = new frmCambiarpassword(true);
+                                    frmPassword.Show();
+                                }
+                                else
+                                {
+                                    usuarioLogin.sumarIntentoFallido();
+                                    if (usuarioLogin.cantidadusuario_intentosLoginFallidos() == CANTIDAD_MAXIMA_usuario_intentosLogin)
+                                    {
+                                        usuarioLogin.inhabilitarUsuario();
+                                        MessageBox.Show("Usuario inhabilitado.", "Error");
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Usuario o contraseña incorrecta, le quedan " + (CANTIDAD_MAXIMA_usuario_intentosLogin - usuarioLogin.usuario_intentosLoginFallidos()).ToString() + " intentos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }
+                                }
+                            }
+
                             if (pVez == 1)
                             {
-                                frmCambiarpassword frmPassword = new frmCambiarpassword();
+                                frmCambiarpassword frmPassword = new frmCambiarpassword(false);
                                 frmPassword.Show();
                             }
                         }

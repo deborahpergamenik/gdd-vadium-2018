@@ -99,8 +99,13 @@ namespace PalcoNet.Model
                     query = query + " WHERE " + filtros;
                 }
                 query = AgregarOrderBy(query);
+                
                 int cant = finish - start;
-                query = agregarPaginacion(query, start, cant);
+                if(cant > 0 )
+                {
+                    query = agregarPaginacion(query, start, cant);
+                }
+                
                 DataTable table = SqlConnector.obtenerDataTable(query, "T");
 
                 SqlConnector.cerrarConexion();

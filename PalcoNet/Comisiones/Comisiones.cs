@@ -32,7 +32,21 @@ namespace PalcoNet.Comisiones
 
         private void Comisiones_Load(object sender, EventArgs e)
         {
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlDataReader lector = SqlConnector.ejecutarReader("SELECT empresa_id, razonSocial FROM VADIUM.EMPRESA", listaParametros, SqlConnector.iniciarConexion());
+            if (lector.HasRows())
+            {
+                while (lector.Read())
+                {
+                    int empId = Convert.ToInt32(lector["empresa_id"]);
+                    cmbEmpresa.Items.Add(new ComboBoxItem { Text = lector["razonSocial"].ToString(), Value = empId });
+                }
 
+               
+            }
+            
+            SqlConnector.cerrarConexion();
+            MessageBox.Show("Ingresar Los la empresa de las compras a filtrar y luego de que se carguen las publicaciones ingresar seleccionar la publicacion a facturar");
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -42,14 +56,33 @@ namespace PalcoNet.Comisiones
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (ValidNumber(this.textBox1.Text))
+            {
+                int cant = Convert.ToInt32(textBox1.Text);
+                buscar(cant);
+            }
+        }
+
+        private bool ValidNumber(string text)
+        {
+            int outval;
+            if (!int.TryParse(text, out outval))
+            {
+                MessageBox.Show("La cantidad debe ser un valor numerico");
+                return false;
+            }
+            return true;
+        }
+
+        public void buscar(int cantidad)
+        {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@cantidad", this.textBox1.Text);
+            SqlConnector.agregarParametro(listaParametros, "@cantidad", cantidad);
             String commandtext = "VADIUM.obtenerCompras";
             DataTable table = SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
             this.dataGridView1.DataSource = table;
             dataGridView1.Update();
         }
-
         private void button2_Click(object sender, System.EventArgs e)
         {
             DataTable dt = new DataTable();
@@ -71,6 +104,24 @@ namespace PalcoNet.Comisiones
             this.dataGridView1.DataSource = table;
             dataGridView1.Update();
 
+        }
+
+
+        private void textboxNumerico_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar)
+                   && !char.IsDigit(e.KeyChar)
+                   )
+            {
+                e.Handled = true;
+            }
+        }
+
+
+        private void btnAtras_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            _frmSeleccionFuncionalidad.Show();
         }
     }
 }

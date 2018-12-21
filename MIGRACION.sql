@@ -5,6 +5,9 @@ GO
 								/** DROP PROCEDURES **/
 ----------------------------------------------------------------------------------------------
 
+IF OBJECT_ID('VADIUM.PR_BLOQUEAR_USUARIO') IS NOT NULL
+DROP PROCEDURE VADIUM.PR_BLOQUEAR_USUARIO;
+GO
 IF OBJECT_ID('VADIUM.obtenerCompras') IS NOT NULL
 DROP PROCEDURE VADIUM.obtenerCompras;
 GO
@@ -90,6 +93,9 @@ DROP PROCEDURE VADIUM.ObtenerPublicaciones;
 GO
 IF OBJECT_ID('VADIUM.InsertGrado') IS NOT NULL
 DROP PROCEDURE VADIUM.InsertGrado;
+GO
+IF OBJECT_ID('VADIUM.PR_Get_Funcionalidades') IS NOT NULL
+DROP PROCEDURE VADIUM.PR_Get_Funcionalidades;
 GO
 IF OBJECT_ID('VADIUM.UpdateGrado') IS NOT NULL
 DROP PROCEDURE VADIUM.UpdateGrado;
@@ -601,7 +607,7 @@ BEGIN
 
 	SET IDENTITY_INSERT VADIUM.USUARIO ON
 	INSERT INTO VADIUM.USUARIO(usuario_id,usuario_username,usuario_password,usuario_intentosLogin,usuario_activo,primera_vez) 
-	VALUES (0,'admin','8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918',0,1,0); --pass admin en SHA256
+	VALUES (0,'admin','e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7',0,1,0); --user:admin pass: w23e en SHA256
 	
 	INSERT INTO VADIUM.CLIENTE(apellido, calle,cod_postal, CUIL, depto, fechaCreacion,fechaNacimiento, localidad, mail, nombre, numeroDocumento, piso,tipoDocumento,telefono, usuario_id)
 	VALUES('Martinez', 'Medrano', '1179', '20-29705392-7', 'C',  CONVERT(datetime, '2018-12-30'), CONVERT(datetime, '1984-10-19'), 'Buenos aires', 'LucasMartinez@gmail.com', 'Lucas', '29705392', 9, 'DNI', '1553783566', 0 )
@@ -612,8 +618,6 @@ BEGIN
 
 	INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(2,0)
     INSERT INTO VADIUM.ROL_POR_USUARIO(rol_id,usuario_id) VALUES(1,0)
-
-
 	
 
 	-- PREMIOS
@@ -724,7 +728,7 @@ BEGIN
 		
 		FROM gd_esquema.Maestra m 
 		GROUP BY m.Item_Factura_Monto, m.Item_Factura_Cantidad, m.Item_Factura_Descripcion, m.Factura_Nro, m.Factura_Fecha, m.Factura_Total,
-		 m.Forma_Pago_Desc, m.Ubicacion_Fila,m.Ubicacion_Asiento,m.Ubicacion_Sin_numerar,m.Ubicacion_Tipo_Codigo,m.Espectaculo_Cod, m.Cli_Mail, m.Forma_Pago_Desc
+		 m.Forma_Pago_Desc, m.Ubicacion_Fila,m.Ubicacion_Asiento,m.Ubicacion_Sin_numerar,m.Ubicacion_Tipo_Codigo,m.Espectaculo_Cod, m.Cli_Mail
 		HAVING m.Factura_Nro IS NOT NULL AND m.Cli_Mail IS NOT NULL
 
 		
@@ -960,20 +964,16 @@ GO
 								/** PUBLICACIONES **/
 ----------------------------------------------------------------------------------------------
 
-CREATE PROCEDURE [VADIUM].ObtenerPublicaciones @desde datetime, @hasta datetime, @rubro nvarchar(255), @descripcion nvarchar(255)
+CREATE PROCEDURE [VADIUM].ObtenerPublicacionesAFacturar @empresaId int
 AS 
 BEGIN
-	SELECT pub.codigoEspectaculo, pub.descripcion,pub.fecha, pub.fechaVencimiento, rub.rubro_id, rub.descripcion as rubro_descripcion, 
-			pub.direccion as direccionEspectaculo, gr.descripcion as grado_descripcion, gr.comision as comision, gr.grado_id as grado_id,
-			pub.empresa_id, es.codigo as estado_id, es.descripcion as estado_descripcion
-	FROM VADIUM.PUBLICACION pub JOIN ESTADO es ON (pub.estado_id = es.codigo)
-								JOIN RUBRO rub ON (pub.rubro_id = rub.rubro_id)
-								JOIN GRADO gr ON (pub.grado_id = gr.grado_id)
-								--JOIN EMPRESA emp ON (pub.empresa_id = emp.empresa_id)
-	WHERE (@desde IS NULL OR @desde > pub.fecha) AND
-		 (@hasta IS NULL OR @hasta < pub.fecha) AND
-		 (@rubro = '' OR @rubro is null OR  lower(rub.descripcion) LIKE '%' + lower(@rubro) + '%') AND
-		 (@descripcion = '' OR @descripcion is null OR  lower(pub.descripcion) LIKE '%' + lower(@descripcion) + '%') 
+	SELECT pub.codigoEspectaculo, pub.descripcion
+	FROM VADIUM.PUBLICACION pub 
+	join VADIUM.UBICACION ubi on ubi.codigoEspectaculo = pub.codigoEspectaculo
+	where not exists (select 1 from VADIUM.ITEMFACTURA item where ubi.ubicacion_id = item.ubicacion_id)		
+	AND pub.empresa_id = @empresaId								
+							
+	
 END
 GO
 CREATE PROCEDURE [VADIUM].AgregarPublicacion @desc nvarchar(255), @fechEsp datetime, @fechaPub datetime, @estado_id int, @direccion nvarchar(255), @rubro_id int, @grado_id int, @empresa_id int, @stock int, @precio int
@@ -1004,14 +1004,15 @@ GO
 --	SP DE RENDICION DE COMISIONES 
 -------------------------------------
 
-CREATE PROCEDURE [VADIUM].obtenerCompras @cantidad int
+CREATE PROCEDURE [VADIUM].obtenerCompras @cantidad int, @codPubli int
 AS 
 BEGIN
-	select top (@cantidad) compra.compra_id , compra.fecha_compra
+	select top (@cantidad) compra.compra_id , compra.fecha_compra, compra.cantidad, MIN(ubi.codigoEspectaculo)
 							from VADIUM.COMPRA compra
 							join VADIUM.UBICACION ubi on ubi.compra_id = compra.compra_id
-							where not exists (select 1 from VADIUM.ITEMFACTURA item where ubi.ubicacion_id = item.ubicacion_id)										
-							group by compra.compra_id, compra.fecha_compra
+							where not exists (select 1 from VADIUM.ITEMFACTURA item where ubi.ubicacion_id = item.ubicacion_id)		
+									AND ubi.codigoEspectaculo = @codPubli								
+							group by compra.compra_id, compra.fecha_compra, compra.cantidad
 							order by compra.fecha_compra asc
 
 END
@@ -1273,7 +1274,8 @@ EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Administrador', @funcionalidad = 'HistorialClientes';	
 EXEC VADIUM.AGREGAR_FUNCIONALIDAD
 @rol = 'Administrador', @funcionalidad = 'ListadoEstadistico';		
-			
+EXEC VADIUM.AGREGAR_FUNCIONALIDAD
+@rol = 'Administrador', @funcionalidad = 'TarjetaDeCredito';		
 			
 ----------------------------------------------------------------------------------------------
 								/** FUNCIONALIDADES CLIENTE **/

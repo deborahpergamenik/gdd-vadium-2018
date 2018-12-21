@@ -8,7 +8,6 @@ using PalcoNet.Canje_Puntos;
 using PalcoNet.Common;
 using PalcoNet.Comprar;
 using PalcoNet.Generar_Publicacion;
-using PalcoNet.Generar_Rendicion_Comisiones;
 using PalcoNet.Historial_Cliente;
 using PalcoNet.Listado_Estadistico;
 using PalcoNet.Model;
@@ -109,7 +108,7 @@ namespace PalcoNet.Login
 
                     if (rolActual.Funcionalidades[i].Id == 5)
                     {
-                        cmbFuncionalidades.Items.Add(new itemComboBox("Administrar Puntos", rolActual.Funcionalidades[i].Id));
+                        cmbFuncionalidades.Items.Add(new itemComboBox("Canje Premios", rolActual.Funcionalidades[i].Id));
                     }
 
                     if (rolActual.Funcionalidades[i].Id == 6)
@@ -202,7 +201,7 @@ namespace PalcoNet.Login
                         this.Show();
                         break;
                     case 8:
-                        frmGenerarRendicionesComisiones form8 = new frmGenerarRendicionesComisiones();
+                        Comisiones.Comisiones form8 = new Comisiones.Comisiones(this);
                         this.Hide();
                         form8.ShowDialog();
                         this.Show();

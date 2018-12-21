@@ -69,8 +69,17 @@ namespace PalcoNet.Abm_Tarjeta_Credito
 
         public void cargarGrillaTarjetas()
         {
-            this.dgvTarjetas.DataSource = Tarjeta.ObtenerTodasLasTarjetas(cliente_id);
-            this.dgvTarjetas.Refresh();
+            if (!UserInstance.getUserInstance().esAdmin)
+            {
+                this.dgvTarjetas.DataSource = Tarjeta.ObtenerTodasLasTarjetas(cliente_id);
+                this.dgvTarjetas.Refresh();
+            }
+            else
+            {
+                MessageBox.Show("Usuario ADMIN. Solo puede tener visualización del ABM de tarjetas de Credito.", "Aviso");
+                groupBox1.Enabled = false;
+                groupBox2.Enabled = false;        
+            }
         }
 
         public void formatearDataGrid()

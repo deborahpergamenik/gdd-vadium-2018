@@ -61,13 +61,16 @@
             this.cmbTipoDocumento = new System.Windows.Forms.ComboBox();
             this.txtNumeroDocumento = new System.Windows.Forms.TextBox();
             this.btnAceptar = new System.Windows.Forms.Button();
+            this.btnAsociarTarjeta = new System.Windows.Forms.Button();
+            this.mskNumeroTarjeta = new System.Windows.Forms.MaskedTextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Location = new System.Drawing.Point(213, 394);
+            this.btnCancelar.Location = new System.Drawing.Point(213, 414);
             this.btnCancelar.Margin = new System.Windows.Forms.Padding(4);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(180, 37);
@@ -79,7 +82,8 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(13, 361);
+            this.label10.ForeColor = System.Drawing.Color.Red;
+            this.label10.Location = new System.Drawing.Point(572, 414);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(159, 17);
@@ -88,6 +92,9 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btnAsociarTarjeta);
+            this.groupBox2.Controls.Add(this.mskNumeroTarjeta);
+            this.groupBox2.Controls.Add(this.label14);
             this.groupBox2.Controls.Add(this.txtApellido);
             this.groupBox2.Controls.Add(this.txtNombre);
             this.groupBox2.Controls.Add(this.label13);
@@ -114,7 +121,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox2.Size = new System.Drawing.Size(718, 235);
+            this.groupBox2.Size = new System.Drawing.Size(718, 288);
             this.groupBox2.TabIndex = 31;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Datos personales";
@@ -415,7 +422,7 @@
             // 
             // btnAceptar
             // 
-            this.btnAceptar.Location = new System.Drawing.Point(13, 394);
+            this.btnAceptar.Location = new System.Drawing.Point(13, 414);
             this.btnAceptar.Margin = new System.Windows.Forms.Padding(4);
             this.btnAceptar.Name = "btnAceptar";
             this.btnAceptar.Size = new System.Drawing.Size(180, 37);
@@ -424,11 +431,41 @@
             this.btnAceptar.UseVisualStyleBackColor = true;
             this.btnAceptar.Click += new System.EventHandler(this.btnAceptar_Click);
             // 
+            // btnAsociarTarjeta
+            // 
+            this.btnAsociarTarjeta.Location = new System.Drawing.Point(351, 240);
+            this.btnAsociarTarjeta.Margin = new System.Windows.Forms.Padding(4);
+            this.btnAsociarTarjeta.Name = "btnAsociarTarjeta";
+            this.btnAsociarTarjeta.Size = new System.Drawing.Size(148, 29);
+            this.btnAsociarTarjeta.TabIndex = 47;
+            this.btnAsociarTarjeta.Text = "Asociar Tarjeta";
+            this.btnAsociarTarjeta.UseVisualStyleBackColor = true;
+            this.btnAsociarTarjeta.Click += new System.EventHandler(this.btnAsociarTarjeta_Click);
+            // 
+            // mskNumeroTarjeta
+            // 
+            this.mskNumeroTarjeta.Enabled = false;
+            this.mskNumeroTarjeta.Location = new System.Drawing.Point(186, 243);
+            this.mskNumeroTarjeta.Mask = "0000-0000-0000-0000";
+            this.mskNumeroTarjeta.Name = "mskNumeroTarjeta";
+            this.mskNumeroTarjeta.Size = new System.Drawing.Size(158, 22);
+            this.mskNumeroTarjeta.TabIndex = 46;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(8, 246);
+            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(169, 17);
+            this.label14.TabIndex = 45;
+            this.label14.Text = "Número Tarjeta Asociada";
+            // 
             // frmRegistroUsuarioCliente
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(750, 444);
+            this.ClientSize = new System.Drawing.Size(750, 466);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.groupBox2);
@@ -480,5 +517,8 @@
         private System.Windows.Forms.TextBox txtCUIL;
         private System.Windows.Forms.TextBox txtApellido;
         private System.Windows.Forms.TextBox txtNombre;
+        private System.Windows.Forms.Button btnAsociarTarjeta;
+        private System.Windows.Forms.MaskedTextBox mskNumeroTarjeta;
+        private System.Windows.Forms.Label label14;
     }
 }

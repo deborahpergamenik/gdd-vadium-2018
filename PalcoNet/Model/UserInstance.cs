@@ -67,7 +67,7 @@ namespace PalcoNet.Model
             SqlConnector.cerrarConexion();
 
 
-            if (this.clienteId == null && this.empresaId == null)
+            if (this.usuarioAdmin())
             {
                 esAdmin = true;
             }
@@ -78,5 +78,43 @@ namespace PalcoNet.Model
             ubicacionesAGuardar = new List<Ubicacion>();
         }
 
-    }
+
+        public Boolean usuarioAdmin()
+        {
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            SqlConnector.agregarParametro(listaParametros, "@usuario_id", this.usuario.usuario_id);
+
+            string commandText = "SELECT rol_id FROM VADIUM.ROL_POR_USUARIO WHERE usuario_id = @usuario_id";
+
+            SqlDataReader lector = SqlConnector.ObtenerDataReader(commandText, "T", listaParametros);
+            if (lector.HasRows)
+            {
+                lector.Read();
+
+                int idRol = Convert.ToInt32(lector["rol_id"]);
+                SqlConnector.cerrarConexion();
+
+                listaParametros.Clear();
+                SqlConnector.agregarParametro(listaParametros, "@rol_id", idRol);
+
+                commandText = "SELECT rol_nombre FROM VADIUM.ROL WHERE rol_id = @rol_id";
+
+                lector = SqlConnector.ObtenerDataReader(commandText, "T", listaParametros);
+
+                if (lector.HasRows)
+                {
+                    lector.Read();
+
+                    string nombre = Convert.ToString(lector["rol_nombre"]);
+                    SqlConnector.cerrarConexion();
+
+                    if (nombre == "Administrador")
+                        return true;
+                    else
+                        return false;
+                }
+            }
+            return false;
+        }
+    }    
 }

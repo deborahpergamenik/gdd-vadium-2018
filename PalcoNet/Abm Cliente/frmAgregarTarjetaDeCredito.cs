@@ -1,6 +1,7 @@
 ﻿using PalcoNet.Common;
 using PalcoNet.Comprar;
 using PalcoNet.Model;
+using PalcoNet.Registro_de_Usuario;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,8 +26,16 @@ namespace PalcoNet.Abm_Cliente
         public frmAbmCliente frmAbmCliente { get; set; }
         public frmModificarCliente frmModificarCliente { get; set; }
         public frmDetallePublicacion frmDetallePublicacion { get; set; }
+        public frmRegistroUsuarioCliente frmRegistroUsuarioCliente { get; set; }
         public string tipoRegistroDeTarjeta { get; set; }
 
+
+        public frmAgregarTarjetaDeCredito(frmRegistroUsuarioCliente _frmRegistroUsuarioCliente)
+        {
+            this.frmRegistroUsuarioCliente = _frmRegistroUsuarioCliente;
+            InitializeComponent();
+            setearComboBoxes();
+        }
 
         public frmAgregarTarjetaDeCredito(frmAbmCliente _frmAbmCliente)
         {
@@ -110,7 +119,11 @@ namespace PalcoNet.Abm_Cliente
             {
                 Tarjeta tarjeta = new Tarjeta(null, this.numeroTarjeta, this.banco, this.codigoSeguridad, this.tipo, 0, this.mesVencimiento, this.anioVencimiento);
 
-                if (frmAbmCliente != null)
+                if (frmRegistroUsuarioCliente != null)
+                {
+                    frmRegistroUsuarioCliente.tarjetaAsociada = tarjeta;
+                }
+                else if (frmAbmCliente != null)
                 {
                     frmAbmCliente.tarjetaAsociada = tarjeta;
                 }
@@ -131,7 +144,11 @@ namespace PalcoNet.Abm_Cliente
                 cmbAno.SelectedIndex = -1;
                 this.Hide();
 
-                if (frmAbmCliente != null)
+                if (frmRegistroUsuarioCliente != null)
+                {
+                    frmRegistroUsuarioCliente.Show();
+                }
+                else if (frmAbmCliente != null)
                 {
                     frmAbmCliente.Show();
                 }
@@ -193,7 +210,11 @@ namespace PalcoNet.Abm_Cliente
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.Hide();
-            if (frmAbmCliente != null)
+            if (frmRegistroUsuarioCliente != null)
+            {
+                frmRegistroUsuarioCliente.Show();
+            }
+            else if (frmAbmCliente != null)
             {
                 frmAbmCliente.Show();
             }

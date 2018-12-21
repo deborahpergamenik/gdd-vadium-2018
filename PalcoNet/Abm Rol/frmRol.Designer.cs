@@ -65,6 +65,7 @@
             this.btnAsignarRoles.TabIndex = 4;
             this.btnAsignarRoles.Text = "Asignar roles";
             this.btnAsignarRoles.UseVisualStyleBackColor = true;
+            this.btnAsignarRoles.Visible = false;
             this.btnAsignarRoles.Click += new System.EventHandler(this.btnAsignarRoles_Click);
             // 
             // btnNuevo

@@ -188,12 +188,6 @@
     <Compile Include="Generar Publicacion\frmPublicaiconesPorLotes.Designer.cs">
       <DependentUpon>frmPublicaiconesPorLotes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Generar Rendicion Comisiones\frmGenerarRendicionesComisiones.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Generar Rendicion Comisiones\frmGenerarRendicionesComisiones.Designer.cs">
-      <DependentUpon>frmGenerarRendicionesComisiones.cs</DependentUpon>
-    </Compile>
     <Compile Include="Historial Cliente\frmHistorialCliente.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -391,6 +391,9 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             MessageBox.Show("Usuario inhabilitado.");
         }
 
+        private void frmAbmEmpresa_Load(object sender, EventArgs e)
+        {
 
+        }
     }
 }

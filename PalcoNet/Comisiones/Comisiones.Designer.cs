@@ -44,7 +44,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(109, 80);
+            this.label1.Location = new System.Drawing.Point(317, 87);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(189, 17);
@@ -63,7 +63,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(402, 74);
+            this.button1.Location = new System.Drawing.Point(610, 81);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 28);
@@ -85,11 +85,12 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(306, 77);
+            this.textBox1.Location = new System.Drawing.Point(514, 84);
             this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(70, 22);
             this.textBox1.TabIndex = 5;
+            this.textBox1.Text = "5";
             this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxNumerico_KeyPress);
             // 
             // btnAtras
@@ -106,15 +107,16 @@
             // cmbEmpresa
             // 
             this.cmbEmpresa.FormattingEnabled = true;
-            this.cmbEmpresa.Location = new System.Drawing.Point(146, 33);
+            this.cmbEmpresa.Location = new System.Drawing.Point(89, 35);
             this.cmbEmpresa.Name = "cmbEmpresa";
-            this.cmbEmpresa.Size = new System.Drawing.Size(121, 24);
+            this.cmbEmpresa.Size = new System.Drawing.Size(209, 24);
             this.cmbEmpresa.TabIndex = 15;
+            this.cmbEmpresa.SelectedIndexChanged += new System.EventHandler(this.cmbEmpresa_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(76, 36);
+            this.label2.Location = new System.Drawing.Point(19, 38);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(64, 17);
             this.label2.TabIndex = 16;
@@ -134,7 +136,7 @@
             this.cmbPublicaciones.FormattingEnabled = true;
             this.cmbPublicaciones.Location = new System.Drawing.Point(415, 32);
             this.cmbPublicaciones.Name = "cmbPublicaciones";
-            this.cmbPublicaciones.Size = new System.Drawing.Size(121, 24);
+            this.cmbPublicaciones.Size = new System.Drawing.Size(295, 24);
             this.cmbPublicaciones.TabIndex = 17;
             // 
             // Comisiones

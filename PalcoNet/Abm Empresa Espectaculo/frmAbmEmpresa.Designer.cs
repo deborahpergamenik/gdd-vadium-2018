@@ -449,6 +449,7 @@
             this.Name = "frmAbmEmpresa";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmAbmEmpresa";
+            this.Load += new System.EventHandler(this.frmAbmEmpresa_Load);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);

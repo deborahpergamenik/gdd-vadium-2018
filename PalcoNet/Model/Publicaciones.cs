@@ -87,6 +87,25 @@ namespace PalcoNet.Model
                 return null;
             }
         }
+        public static List<ComboBoxItem> ObtenerPublicaicionesParaFacturar(int empresaId)
+        {
+            List<ComboBoxItem> publiItems = new List<ComboBoxItem>();
+            List<SqlParameter> listaParametros = new List<SqlParameter>();
+            listaParametros.Add(new SqlParameter("@empresaId", empresaId));
+            SqlDataReader lector = SqlConnector.ObtenerDataReader("VADIUM.ObtenerPublicacionesAFacturar","SP" , listaParametros);
+            if (lector.HasRows)
+            {
+                while (lector.Read())
+                {
+                    int pubId = Convert.ToInt32(lector["codigoEspectaculo"]);
+                    publiItems.Add(new ComboBoxItem { Text = lector["descripcion"].ToString(), Value = pubId });
+                }
+
+
+            }
+            SqlConnector.cerrarConexion();
+            return publiItems;
+        }
         public static DataTable ObtenerPublicacionesPorEmpresa(int start, int finish,  string desc, int? estado = null, int? empresaId = null)
         {
             try
@@ -101,10 +120,9 @@ namespace PalcoNet.Model
                 query = AgregarOrderBy(query);
                 
                 int cant = finish - start;
-                if(cant > 0 )
-                {
-                    query = agregarPaginacion(query, start, cant);
-                }
+                
+                  query = agregarPaginacion(query, start, cant);
+               
                 
                 DataTable table = SqlConnector.obtenerDataTable(query, "T");
 

@@ -34,7 +34,7 @@ namespace PalcoNet.Comisiones
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
             SqlDataReader lector = SqlConnector.ejecutarReader("SELECT empresa_id, razonSocial FROM VADIUM.EMPRESA", listaParametros, SqlConnector.iniciarConexion());
-            if (lector.HasRows())
+            if (lector.HasRows)
             {
                 while (lector.Read())
                 {
@@ -58,6 +58,11 @@ namespace PalcoNet.Comisiones
         {
             if (ValidNumber(this.textBox1.Text))
             {
+                if (cmbPublicaciones.SelectedItem == null)
+                {
+                    MessageBox.Show("Seleccione una publicacion para ver las compras a facturar");
+                    return;
+                }
                 int cant = Convert.ToInt32(textBox1.Text);
                 buscar(cant);
             }
@@ -77,7 +82,9 @@ namespace PalcoNet.Comisiones
         public void buscar(int cantidad)
         {
             List<SqlParameter> listaParametros = new List<SqlParameter>();
+            int codPubli =  Convert.ToInt32(((ComboBoxItem)cmbPublicaciones.SelectedItem).Value);
             SqlConnector.agregarParametro(listaParametros, "@cantidad", cantidad);
+            SqlConnector.agregarParametro(listaParametros, "@codPubli", codPubli);
             String commandtext = "VADIUM.obtenerCompras";
             DataTable table = SqlConnector.obtenerDataTable(commandtext, "SP", listaParametros);
             this.dataGridView1.DataSource = table;
@@ -90,19 +97,15 @@ namespace PalcoNet.Comisiones
 
             dt.Columns.Add("id");
             foreach (DataRow row in dtSource.Rows) {
-                dt.Rows.Add(row["id"].ToString());
+                string compraid = row["compra_id"].ToString();
+                dt.Rows.Add(Convert.ToInt32(compraid));
             }
             List<SqlParameter> listaParametros2 = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros2, "@compras", dt);
+            SqlConnector.agregarParametro(listaParametros2, "@items", dt);
             SqlConnector.ExecStoredProcedureSinRet("VADIUM.crearFactura", listaParametros2);
             SqlConnector.cerrarConexion();
-            
-            //vuelvo a cargar el DG
-            List<SqlParameter> listaParametros = new List<SqlParameter>();
-            SqlConnector.agregarParametro(listaParametros, "@cantidad", this.textBox1.Text);
-            DataTable table = SqlConnector.obtenerDataTable( "VADIUM.obtenerCompras", "SP", listaParametros);
-            this.dataGridView1.DataSource = table;
-            dataGridView1.Update();
+
+            clearAll();// borrar datagrid, borrar cmb publicacion y message volver a seleccionar empresa a facturar
 
         }
 
@@ -122,6 +125,24 @@ namespace PalcoNet.Comisiones
         {
             this.Hide();
             _frmSeleccionFuncionalidad.Show();
+        }
+
+        private void cmbEmpresa_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbEmpresa.SelectedItem != null)
+            {
+                int empId = Convert.ToInt32(((ComboBoxItem)cmbEmpresa.SelectedItem).Value);
+                List<ComboBoxItem> publis = Publicaciones.ObtenerPublicaicionesParaFacturar(empId);
+               if(publis.Count > 0)
+                {
+                    publis.ForEach(x => cmbPublicaciones.Items.Add(x));
+                }
+                else
+                {
+                    MessageBox.Show("Esta empresa no tiene publicaciones con compras pendiente de facturacions");
+                }
+
+            }
         }
     }
 }

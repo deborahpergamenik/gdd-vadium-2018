@@ -88,8 +88,8 @@ GO
 IF OBJECT_ID('VADIUM.CanjearPremio') IS NOT NULL
 DROP PROCEDURE VADIUM.CanjearPremio;
 GO
-IF OBJECT_ID('VADIUM.ObtenerPublicaciones') IS NOT NULL
-DROP PROCEDURE VADIUM.ObtenerPublicaciones;
+IF OBJECT_ID('VADIUM.ObtenerPublicacionesAFacturar') IS NOT NULL
+DROP PROCEDURE VADIUM.ObtenerPublicacionesAFacturar;
 GO
 IF OBJECT_ID('VADIUM.InsertGrado') IS NOT NULL
 DROP PROCEDURE VADIUM.InsertGrado;
@@ -970,8 +970,10 @@ BEGIN
 	SELECT pub.codigoEspectaculo, pub.descripcion
 	FROM VADIUM.PUBLICACION pub 
 	join VADIUM.UBICACION ubi on ubi.codigoEspectaculo = pub.codigoEspectaculo
-	where not exists (select 1 from VADIUM.ITEMFACTURA item where ubi.ubicacion_id = item.ubicacion_id)		
-	AND pub.empresa_id = @empresaId								
+	where not exists (select 1 from VADIUM.ITEMFACTURA item where ubi.ubicacion_id = item.ubicacion_id)	AND
+	ubi.compra_id IS NOT NULL	
+	AND pub.empresa_id = @empresaId		
+	group by pub.codigoEspectaculo, pub.descripcion				
 							
 	
 END

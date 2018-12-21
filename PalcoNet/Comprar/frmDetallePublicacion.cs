@@ -62,8 +62,8 @@ namespace PalcoNet.Comprar
 
 
         private void btnBuscar_Click(object sender, EventArgs e)
-        {
-            int tipoUbi = Convert.ToInt32(((ComboBoxItem)cmbTipo.SelectedValue).Value);
+        {        
+            int tipoUbi = Convert.ToInt32(((ComboBoxItem)cmbTipo.SelectedItem).Value);
             dgvUbicaciones.DataSource = Ubicaciones.ObtenerUbicacionesLibresPorPublicacio(codPublicacionActual, tipoUbi);
         }
 

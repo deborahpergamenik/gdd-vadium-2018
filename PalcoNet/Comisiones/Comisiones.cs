@@ -105,10 +105,16 @@ namespace PalcoNet.Comisiones
             SqlConnector.ExecStoredProcedureSinRet("VADIUM.crearFactura", listaParametros2);
             SqlConnector.cerrarConexion();
 
-            clearAll();// borrar datagrid, borrar cmb publicacion y message volver a seleccionar empresa a facturar
-
+            clearAll();
         }
 
+
+        public void clearAll()
+        {
+            cmbPublicaciones.Items.Clear();
+            dataGridView1.Rows.Clear();
+            MessageBox.Show("Si desea seguir facturando, seleccione una empresa nuevamente");
+        }
 
         private void textboxNumerico_KeyPress(object sender, KeyPressEventArgs e)
         {
